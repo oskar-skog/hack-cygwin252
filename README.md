@@ -1,7 +1,11 @@
 ## Hacked Cygwin 2.5.2
 
-This is a version of newlib-cygwin with (yet to be added) debug logging
-and maybe some hacks to improve a few things (like fork).
+This is a version of newlib-cygwin with (yet to be added) debug logging to
+figure out why things are broken on ReactOS, and maybe some hacks to improve
+a few things (like a less unreliable fork).
+
+This is based on the tag `cygwin-2_5_2-release` from
+git://cygwin.com/git/newlib-cygwin.git
 
 
 ## Build environent
@@ -10,20 +14,20 @@ Cygwin 2.5.2 on Windows Server 2003, may also work on XP but has not been
 tested.
 
 You need to install the following packages:
-    - gcc-g++
-    - make
-    - automake
-    - autoconf
-    - git
-    - perl
-    - gettext-devel
-    - libiconv-devel
-    - zlib-devel
-    - cocom
-    - mingw64-i686-gcc-g++
-    - mingw64-i686-zlib
-    - mingw64-x86_64-gcc-g++
-    - mingw64-x86_64-zlib
+- gcc-g++
+- make
+- automake
+- autoconf
+- git
+- perl
+- gettext-devel
+- libiconv-devel
+- zlib-devel
+- cocom
+- mingw64-i686-gcc-g++
+- mingw64-i686-zlib
+- mingw64-x86_64-gcc-g++
+- mingw64-x86_64-zlib
 
 
 The list of build dependencies above and build instructions below are based
