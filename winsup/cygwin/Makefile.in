@@ -312,6 +312,7 @@ DLL_OFILES:= \
 	glob_pattern_p.o \
 	globals.o \
 	grp.o \
+	hack.o \
 	heap.o \
 	hookapi.o \
 	inet_addr.o \

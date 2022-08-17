@@ -58,3 +58,17 @@ make install
 `cygwin1.dll` will be created in `install/bin`.
 To install it you need to end all Cygwin applications and copy it to
 `C:\cygwin\bin` (or wherever your Cygwin /bin happens to be).
+
+
+## Hacking
+
+`winsup/cygwin` contains all the things of interest.
+
+`winsup/cygwin/hack.cc` will implement the debugging stuff (currently just
+a test.)
+
+`winsup/cygwin/hack.h` header for configuring stuff, make sure to `touch` all
+files that include it as needed to ensure they actually get compiled.
+
+`winsup/cygwin/dcrt0.cc` calls `main()` of the program. `hack_init` will be
+called immediately before.

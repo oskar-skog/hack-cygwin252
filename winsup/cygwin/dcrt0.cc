@@ -37,6 +37,8 @@ details. */
 #include "ntdll.h"
 #include "wow64.h"
 
+#include "hack.h"
+
 #define MAX_AT_FILE_LEVEL 10
 
 #define PREMAIN_LEN (sizeof (user_data->premain) / sizeof (user_data->premain[0]))
@@ -1035,6 +1037,8 @@ dll_crt0_1 (void *)
       sig_dispatch_pending (false);
       _my_tls.call_signal_handler ();
       _my_tls.incyg--;	/* Not in Cygwin anymore */
+      // Just before calling main() of the program
+      hack_init(__argc, __argv);
 #ifdef __x86_64__
       cygwin_exit (user_data->main (__argc, newargv, __cygwin_environ));
 #else
