@@ -22,7 +22,7 @@ void hack_init(int argc, const char * const * argv)
     char timestamp[20];
     time_t t = time(NULL);
     struct tm * tmp = gmtime(&t);
-    strftime(timestamp, sizeof(timestamp), "%Y-%m-%dT%H:%M:%S", tmp);
+    strftime(timestamp, sizeof(timestamp), "%Y-%m-%d_%H:%M:%S", tmp);
     // Produce filename
     char *filename;
     asprintf(
@@ -31,7 +31,7 @@ void hack_init(int argc, const char * const * argv)
     );
     fprintf(stderr, "Filename: %s\n", filename);        // REMOVE
     // Open log file
-    debug_log = CreateFile(
+    debug_log = CreateFileA(
                     filename,
                     GENERIC_WRITE,  // dwDesiredAccess
                     0,              // dwShareMode      7 for POSIXy
