@@ -1,5 +1,7 @@
+#define _GNU_SOURCE
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
 #include "winlean.h"
@@ -14,6 +16,8 @@ static HANDLE debug_log;
 
 void hack_init(int argc, const char * const * argv)
 {
+    // Disable debug logging to allow using POSIX functions
+    hack_debug_enabled = false;
     // Get ISO8601 timestamp
     char timestamp[20];
     time_t t = time(NULL);
@@ -23,7 +27,7 @@ void hack_init(int argc, const char * const * argv)
     char *filename;
     asprintf(
         &filename, "C:\\cygdbg\\%s-[%s]-%d.txt",
-        timestamp_s, argv[0], getpid()
+        timestamp, argv[0], (int) getpid()
     );
     // Open log file
     debug_log = CreateFile(
