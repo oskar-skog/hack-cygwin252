@@ -6,21 +6,23 @@
 #include <unistd.h>
 #include "winlean.h"
 
+#define _HACK_CC
 #include "hack.h"
-#define MAXLEN 1024
+// hack.h defines MAXLEN
 
 // POSIX functions may only be used until hack_debug_enabled is set to true.
-bool hack_debug_enabled = false;
+bool hack_debug_enabled;
 
+// debug log file
 static HANDLE debug_log;
 
 // Sanitize filenames (not paths), modifies supplied string.
 static void sanitize(char *s)
 {
-    for (; char c = s[0]; s++) {
-        if (c < 32 || c > 126)
+    for (; s[0]; s++) {
+        if (s[0] < 32 || s[0] > 126)
             s[0] = '_';
-        switch (c) {
+        switch (s[0]) {
             case '<':
             case '>':
             case ':':
@@ -36,11 +38,14 @@ static void sanitize(char *s)
     }
 }
 
+// Open the log file
+// This function is called immediately before main() so all POSIX functions
+// can be used until hack_debug_enabled = true.
 void hack_init(int argc, const char * const * argv)
 {
     // Disable debug logging to allow using POSIX functions
     hack_debug_enabled = false;
-    // Get ISO8601 timestamp
+    // Generate timestamp
     char timestamp[20];
     time_t t = time(NULL);
     struct tm * tmp = gmtime(&t);
@@ -62,24 +67,39 @@ void hack_init(int argc, const char * const * argv)
                     NULL,           // lpSecurityAttribytes
                     CREATE_ALWAYS,  // dwCreationDisposition
                     // dwFlagsandAttributes:
-                    FILE_ATTRIBUTE_NORMAL | FILE_FLAG_WRITE_THROUGH,
+                    FILE_ATTRIBUTE_NORMAL, // | FILE_FLAG_WRITE_THROUGH,
                     // hTemplateFile
                     NULL
     );
     // Init completed
     free(filename);
     free(path);
-    if (debug_log == INVALID_HANDLE_VALUE) {
-        return;
-    }
     // Only set to true if the file actually exists
-    hack_debug_enabled = true;
+    if (debug_log != INVALID_HANDLE_VALUE)
+        hack_debug_enabled = true;
+    hack_print("Test\r\n");         // REMOVE
 }
 
-static void no_op(...)
+// Write NUL terminated string to debug_log, does not flush
+static void writestr(const char *str)
 {
+    DWORD bytes_written = 0;
+    DWORD bytes_to_write = strlen(str);
+    DWORD tmp;
+    while (bytes_written < bytes_to_write) {
+        WriteFile(
+            debug_log,
+            str+bytes_written,
+            bytes_to_write-bytes_written,
+            &tmp,
+            NULL
+        );
+        bytes_written += tmp;
+    }
 }
 
+// Basically a printf(3) that writes to debug_log without calling any unix
+// syscalls.  Only uses stdarg.h macros and vsnprintf(3)
 void hack_print(const char *format, ...)
 {
     if (!hack_debug_enabled)
@@ -89,7 +109,79 @@ void hack_print(const char *format, ...)
     va_start(args, format);
     bool truncated = vsnprintf(buf, MAXLEN, format, args) > MAXLEN;
     va_end(args);
-    // -Werror for unused variables
-    no_op(truncated);
-    // Write to debug_log
+    writestr(buf);
+    if (truncated)
+        writestr("!!!TRUNCATED!!!\r\n");
+    FlushFileBuffers(debug_log);
 }
+
+// Called by do_exit in winsup/cygwin/dcrt0.cc
+// stdio cleanup may have occured
+void hack_end()
+{
+    CloseHandle(debug_log);
+}
+
+static void push_utf8(
+    unsigned char *dst,
+    size_t dst_size,
+    size_t &dst_index,
+    int codepoint)
+{
+    // -2 to always allow space for a trailing NUL
+    size_t freespace = dst_size - dst_index - 2;
+    if (codepoint == 0) {
+        if (freespace >= 0)
+            dst[dst_index++] = 0;
+    } else if (codepoint < 1<<7) {
+        if (freespace >= 1) {
+            dst[dst_index++] = codepoint;
+        }
+    } else if (codepoint < 1<<11) {
+        if (freespace >= 2) {
+            dst[dst_index++] = 0xc0 | 0x1f & (codepoint >> 6);
+            dst[dst_index++] = 0x80 | 0x3f & codepoint;
+        }
+    } else if (codepoint < 1<<16) {
+        if (freespace >= 3) {
+            dst[dst_index++] = 0xd0 | 0x0f & (codepoint >> 12);
+            dst[dst_index++] = 0x80 | 0x3f & (codepoint >> 6);
+            dst[dst_index++] = 0x80 | 0x3f & codepoint;
+        }
+    } else {
+        if (freespace >= 4) {
+            dst[dst_index++] = 0xe0 | 0x07 & (codepoint >> 18);
+            dst[dst_index++] = 0x80 | 0x3f & (codepoint >> 12);
+            dst[dst_index++] = 0x80 | 0x3f & (codepoint >> 6);
+            dst[dst_index++] = 0x80 | 0x3f & codepoint;
+        }
+    }
+}
+
+void hack_utf16_to_utf8(char *dst, size_t dst_size, LPWCSTR src)
+{
+    size_t dst_index = 0;
+    int in_char, tmp, code_point;
+    while (in_char = *src++) {
+        if (in_char >= 0xd800 && in_char <= 0xdbff) {
+            tmp = in_char;
+            in_char = *src++;
+            if (in_char >= 0xdc00 && in_char <= 0xdfff) {
+                // Valid surrogate pair
+                code_point = ( (tmp&0x3ff)<<10 | (in_char&0x3ff) ) + 0x10000;
+                push_utf8(dst, dst_size, dst_index, codepoint);
+            } else {
+                // Invalid pair: valid high surrogate, invalid low surrogate
+                push_utf8(dst, dst_size, dst_index, tmp);
+                push_utf8(dst, dst_size, dst_index, in_char);
+            }
+        } else {
+            // BMP or lone low surrogate
+            push_utf8(dst, dst_size, dst_index, in_char);
+        }
+    }
+    // Terminate string
+    push_utf8(dst, dst_size, dst_index, 0);
+    dst[dst_size - 1] = 0;
+}
+
