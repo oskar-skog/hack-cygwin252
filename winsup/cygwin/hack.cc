@@ -123,12 +123,15 @@ void hack_end()
 }
 
 static void push_utf8(
-    unsigned char *dst,
+    char *_dst,
     size_t dst_size,
     size_t &dst_index,
     int codepoint)
 {
-    // -2 to always allow space for a trailing NUL
+    // Need to be unsigned for math to not be crazy, but I'm too lazy
+    // to write unsigned char all the time
+    unsigned char *dst = (unsigned char *) _dst;
+    // -2 to preserve a single byte for a trailing NUL
     size_t freespace = dst_size - dst_index - 2;
     if (codepoint == 0) {
         if (freespace >= 0)
@@ -158,17 +161,17 @@ static void push_utf8(
     }
 }
 
-void hack_utf16_to_utf8(char *dst, size_t dst_size, LPWCSTR src)
+void hack_utf16_to_utf8(char *dst, size_t dst_size, LPWSTR src)
 {
     size_t dst_index = 0;
-    int in_char, tmp, code_point;
+    int in_char, tmp, codepoint;
     while (in_char = *src++) {
         if (in_char >= 0xd800 && in_char <= 0xdbff) {
             tmp = in_char;
             in_char = *src++;
             if (in_char >= 0xdc00 && in_char <= 0xdfff) {
                 // Valid surrogate pair
-                code_point = ( (tmp&0x3ff)<<10 | (in_char&0x3ff) ) + 0x10000;
+                codepoint = ( (tmp&0x3ff)<<10 | (in_char&0x3ff) ) + 0x10000;
                 push_utf8(dst, dst_size, dst_index, codepoint);
             } else {
                 // Invalid pair: valid high surrogate, invalid low surrogate
