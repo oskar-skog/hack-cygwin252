@@ -136,8 +136,8 @@ static void push_utf8(
     // Need to be unsigned for math to not be crazy, but I'm too lazy
     // to write unsigned char all the time
     unsigned char *dst = (unsigned char *) _dst;
-    // -2 to preserve a single byte for a trailing NUL
-    size_t freespace = dst_size - dst_index - 2;
+    // -1 to preserve a single byte for a trailing NUL
+    size_t freespace = dst_size - dst_index - 1;
     if (codepoint == 0) {
         if (freespace >= 0)
             dst[dst_index++] = 0;
