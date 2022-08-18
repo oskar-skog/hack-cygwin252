@@ -80,7 +80,7 @@ void hack_init(int argc, const char * const * argv)
 
     // REMOVE test code
     char test[5];
-    LPWSTR codepoint10437[] = {0xd801, 0xdc37, 0};
+    LPWSTR codepoint10437 = {0xd801, 0xdc37, 0};
     hack_utf16_to_utf8(test, sizeof(test), codepoint10437);
     hack_print("Test %s\r\n", test);
 }
