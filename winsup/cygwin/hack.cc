@@ -55,13 +55,13 @@ void hack_init(int argc, const char * const * argv)
     debug_log = CreateFileA(
                     path,
                     GENERIC_WRITE,  // dwDesiredAccess
-                    0,              // dwShareMode      7 for POSIXy
+                    // dwShareMode:
+                    FILE_SHARE_READ | FILE_SHARE_DELETE,
                     NULL,           // lpSecurityAttribytes
                     CREATE_ALWAYS,  // dwCreationDisposition
                     // dwFlagsandAttributes:
                     FILE_ATTRIBUTE_NORMAL, // | FILE_FLAG_WRITE_THROUGH,
-                    // hTemplateFile
-                    NULL
+                    NULL            // hTemplateFile
     );
     // Init completed
     free(filename);
