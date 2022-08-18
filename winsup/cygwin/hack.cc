@@ -18,15 +18,17 @@ static HANDLE debug_log;
 
 
 // Function prototypes for various internal functions
-static void sanitize(char *s);              // Sanitize filename
-static void writestr(const char *str);      // Write string to debug_log
-static void push_utf8(
+static void sanitize(char *s);          // Sanitize filename (not for paths)
+static void writestr(const char *str);  // Write string to debug_log
+static void push_utf8(                  // Push single code point to char[]
     char *_dst,
     size_t dst_size,
     size_t &dst_index,
     int codepoint
 );
 
+
+    /** hack_init and hack_end **/
 
 // Open the log file
 // This function is called immediately before main() so all POSIX functions
@@ -67,46 +69,18 @@ void hack_init(int argc, const char * const * argv)
     // Only set to true if the file actually exists
     if (debug_log != INVALID_HANDLE_VALUE)
         hack_debug_enabled = true;
-
-    // REMOVE test code
-    char test[12];
-    // "𐐷 € ä"
-    wchar_t codepoint10437[] = {0xd801, 0xdc37, ' ', 0x20ac, ' ', 0xe4, 0};
-    hack_utf16_to_utf8(test, sizeof(test), codepoint10437);
-    hack_print("Test %s\r\n", test);
 }
-
-// Sanitize filenames (not paths), modifies supplied string.
-static void sanitize(char *s)
-{
-    for (; s[0]; s++) {
-        if (s[0] < 32 || s[0] > 126)
-            s[0] = '_';
-        switch (s[0]) {
-            case '<':
-            case '>':
-            case ':':
-            case '"':
-            case '/':
-            case '\\':
-            case '|':
-            case '?':
-            case '*':
-            case '^':
-                s[0] = '_';
-        }
-    }
-}
-
 
 // Called by do_exit in winsup/cygwin/dcrt0.cc
-// stdio cleanup may have occured
+// stdio cleanup may have occured and maybe something else, avoid stdlid
+// and POSIX syscalls.
 void hack_end()
 {
     CloseHandle(debug_log);
 }
 
 
+    /** hack_print **/
 
 // Basically a printf(3) that writes to debug_log without calling any unix
 // syscalls.  Only uses stdarg.h macros and vsnprintf(3)
@@ -144,11 +118,9 @@ static void writestr(const char *str)
 }
 
 
+    /** Unicode conversion **/
 
-
-
-// Unicode conversion
-
+// dst_size is the size of the buffer.  Will always append NUL.
 void hack_utf16_to_utf8(char *dst, size_t dst_size, LPWSTR src)
 {
     size_t dst_index = 0;
@@ -212,6 +184,29 @@ static void push_utf8(
             dst[dst_index++] = 0x80 | (0x3f & (codepoint >> 12));
             dst[dst_index++] = 0x80 | (0x3f & (codepoint >> 6));
             dst[dst_index++] = 0x80 | (0x3f & codepoint);
+        }
+    }
+}
+
+
+// Sanitize filenames (not paths), modifies supplied string.
+static void sanitize(char *s)
+{
+    for (; s[0]; s++) {
+        if (s[0] < 32 || s[0] > 126)
+            s[0] = '_';
+        switch (s[0]) {
+            case '<':
+            case '>':
+            case ':':
+            case '"':
+            case '/':
+            case '\\':
+            case '|':
+            case '?':
+            case '*':
+            case '^':
+                s[0] = '_';
         }
     }
 }
