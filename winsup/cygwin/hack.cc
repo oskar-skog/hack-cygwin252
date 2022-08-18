@@ -77,7 +77,12 @@ void hack_init(int argc, const char * const * argv)
     // Only set to true if the file actually exists
     if (debug_log != INVALID_HANDLE_VALUE)
         hack_debug_enabled = true;
-    hack_print("Test\r\n");         // REMOVE
+
+    // REMOVE test code
+    char test[5];
+    LPWSTR codepoint10437[] = {0xd801, 0xdc37, 0};
+    hack_utf16_to_utf8(test, sizeof(test), codepoint10437);
+    hack_print("Test %s\r\n", test);
 }
 
 // Write NUL terminated string to debug_log, does not flush
