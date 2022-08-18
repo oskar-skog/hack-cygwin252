@@ -53,7 +53,6 @@ void hack_init(int argc, const char * const * argv)
     );
     sanitize(filename);
     asprintf(&path, "C:\\cygdbg\\%s", filename);
-    fprintf(stderr, "Path: %s\n", path);        // REMOVE
     // Open log file
     // CreateFileA takes a LPCSTR (8-bit char string) filename
     debug_log = CreateFileA(
@@ -67,14 +66,13 @@ void hack_init(int argc, const char * const * argv)
                     // hTemplateFile
                     NULL
     );
+    // Init completed
     free(filename);
     free(path);
     if (debug_log == INVALID_HANDLE_VALUE) {
-        fprintf(stderr, "debug_log == INVALID_HANDLE_VALUE\n");     // REMOVE
-        fprintf(stderr, "%lx\n", (long) GetLastError());            // REMOVE
         return;
     }
-    // Init completed
+    // Only set to true if the file actually exists
     hack_debug_enabled = true;
 }
 
