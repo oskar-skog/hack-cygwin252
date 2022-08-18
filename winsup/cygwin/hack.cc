@@ -165,7 +165,7 @@ void hack_utf16_to_utf8(char *dst, size_t dst_size, LPWSTR src)
 {
     size_t dst_index = 0;
     int in_char, tmp, codepoint;
-    while (in_char = *src++) {
+    while ((in_char = *src++)) {
         if (in_char >= 0xd800 && in_char <= 0xdbff) {
             tmp = in_char;
             in_char = *src++;
