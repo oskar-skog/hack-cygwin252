@@ -14,6 +14,28 @@ bool hack_debug_enabled = false;
 
 static HANDLE debug_log;
 
+// Sanitize filenames (not paths), modifies supplied string.
+static void sanitize(char *s)
+{
+    for (; char c = s[0]; s++) {
+        if (c < 32 || c > 126)
+            s[0] = '_';
+        switch (c) {
+            case '<':
+            case '>':
+            case ':':
+            case '"':
+            case '/':
+            case '\\':
+            case '|':
+            case '?':
+            case '*':
+            case '^':
+                s[0] = '_';
+        }
+    }
+}
+
 void hack_init(int argc, const char * const * argv)
 {
     // Disable debug logging to allow using POSIX functions
@@ -22,17 +44,20 @@ void hack_init(int argc, const char * const * argv)
     char timestamp[20];
     time_t t = time(NULL);
     struct tm * tmp = gmtime(&t);
-    strftime(timestamp, sizeof(timestamp), "%Y-%m-%d_%H:%M:%S", tmp);
+    strftime(timestamp, sizeof(timestamp), "%Y-%m-%d_%H.%M.%S", tmp);
     // Produce filename
-    char *filename;
+    char *filename, *path;
     asprintf(
-        &filename, "C:\\cygdbg\\%s-[%s]-%d.txt",
+        &filename, "%s-[%s]-%d.txt",
         timestamp, argv[0], (int) getpid()
     );
-    fprintf(stderr, "Filename: %s\n", filename);        // REMOVE
+    sanitize(filename);
+    asprintf(&path, "C:\\cygdbg\\%s", filename);
+    fprintf(stderr, "Path: %s\n", path);        // REMOVE
     // Open log file
+    // CreateFileA takes a LPCSTR (8-bit char string) filename
     debug_log = CreateFileA(
-                    filename,
+                    path,
                     GENERIC_WRITE,  // dwDesiredAccess
                     0,              // dwShareMode      7 for POSIXy
                     NULL,           // lpSecurityAttribytes
@@ -43,6 +68,7 @@ void hack_init(int argc, const char * const * argv)
                     NULL
     );
     free(filename);
+    free(path);
     if (debug_log == INVALID_HANDLE_VALUE) {
         fprintf(stderr, "debug_log == INVALID_HANDLE_VALUE\n");     // REMOVE
         fprintf(stderr, "%lx\n", (long) GetLastError());            // REMOVE
