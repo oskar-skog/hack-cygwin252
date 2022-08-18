@@ -29,6 +29,7 @@ void hack_init(int argc, const char * const * argv)
         &filename, "C:\\cygdbg\\%s-[%s]-%d.txt",
         timestamp, argv[0], (int) getpid()
     );
+    fprintf(stderr, "Filename: %s\n", filename);        // REMOVE
     // Open log file
     debug_log = CreateFile(
                     filename,
@@ -43,6 +44,7 @@ void hack_init(int argc, const char * const * argv)
     );
     free(filename);
     if (debug_log == INVALID_HANDLE_VALUE) {
+        fprintf(stderr, "debug_log == INVALID_HANDLE_VALUE\n");     // REMOVE
         return;
     }
     // Init completed
