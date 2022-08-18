@@ -2,12 +2,11 @@
 #define _HACK_H
 
 // Define buffer size
-#ifdef _HACK_CC
-#define MAXLEN 1024
-#endif
+#define HACK_MAXLEN 1024
 
 // Print string to the debug log
 // Uses vsnprintf(3)
+// Truncated to HACK_MAXLEN (adds notice about it in debug log)
 void hack_print(const char * format, ...);
 
 // Convert UTF-16 to UTF-8.  Needs pre-allocated buffer for dst.
@@ -22,5 +21,9 @@ extern bool hack_debug_enabled;
 // Internal use
 void hack_init(int argc, const char * const * argv);    // Open debug log file
 void hack_end(void);                                    // Close debug log file
+
+#ifdef _HACK_CC
+#define MAXLEN HACK_MAXLEN
+#endif
 
 #endif

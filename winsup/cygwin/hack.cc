@@ -69,8 +69,9 @@ void hack_init(int argc, const char * const * argv)
         hack_debug_enabled = true;
 
     // REMOVE test code
-    char test[5];
-    wchar_t codepoint10437[] = {0xd801, 0xdc37, 0};
+    char test[12];
+    // "𐐷 € ä"
+    wchar_t codepoint10437[] = {0xd801, 0xdc37, ' ', 0x20ac, ' ', 0xe4, 0};
     hack_utf16_to_utf8(test, sizeof(test), codepoint10437);
     hack_print("Test %s\r\n", test);
 }
