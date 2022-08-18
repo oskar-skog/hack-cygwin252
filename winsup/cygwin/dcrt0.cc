@@ -1190,6 +1190,8 @@ __main (void)
 void __reg1
 do_exit (int status)
 {
+  // All ways a Cygwin application can exit end up here
+  hack_end();
   syscall_printf ("do_exit (%d), exit_state %d", status, exit_state);
 
   lock_process until_exit (true);
