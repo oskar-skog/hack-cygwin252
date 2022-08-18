@@ -142,21 +142,21 @@ static void push_utf8(
         }
     } else if (codepoint < 1<<11) {
         if (freespace >= 2) {
-            dst[dst_index++] = 0xc0 | 0x1f & (codepoint >> 6);
-            dst[dst_index++] = 0x80 | 0x3f & codepoint;
+            dst[dst_index++] = 0xc0 | (0x1f & (codepoint >> 6));
+            dst[dst_index++] = 0x80 | (0x3f & codepoint);
         }
     } else if (codepoint < 1<<16) {
         if (freespace >= 3) {
-            dst[dst_index++] = 0xd0 | 0x0f & (codepoint >> 12);
-            dst[dst_index++] = 0x80 | 0x3f & (codepoint >> 6);
-            dst[dst_index++] = 0x80 | 0x3f & codepoint;
+            dst[dst_index++] = 0xd0 | (0x0f & (codepoint >> 12));
+            dst[dst_index++] = 0x80 | (0x3f & (codepoint >> 6));
+            dst[dst_index++] = 0x80 | (0x3f & codepoint);
         }
     } else {
         if (freespace >= 4) {
-            dst[dst_index++] = 0xe0 | 0x07 & (codepoint >> 18);
-            dst[dst_index++] = 0x80 | 0x3f & (codepoint >> 12);
-            dst[dst_index++] = 0x80 | 0x3f & (codepoint >> 6);
-            dst[dst_index++] = 0x80 | 0x3f & codepoint;
+            dst[dst_index++] = 0xe0 | (0x07 & (codepoint >> 18));
+            dst[dst_index++] = 0x80 | (0x3f & (codepoint >> 12));
+            dst[dst_index++] = 0x80 | (0x3f & (codepoint >> 6));
+            dst[dst_index++] = 0x80 | (0x3f & codepoint);
         }
     }
 }
