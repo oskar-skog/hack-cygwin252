@@ -655,7 +655,7 @@ build_fh_pc (path_conv& pc)
     {
       debug_printf ("found an archetype for %s(%d/%d) io_handle %p", fh->get_name (), fh->dev ().get_major (), fh->dev ().get_minor (),
 		    fh->archetype->get_io_handle ());
-      if (HACK_DEBUG_OPEN) {
+      if (HACK_DEBUG_OPEN && 0) {
           hack_print(
               "dbg: found an archetype for %s(%d/%d) io_handle %p\r\n",
               fh->get_name(), fh->dev().get_major(), fh->dev().get_minor(),
@@ -673,7 +673,7 @@ build_fh_pc (path_conv& pc)
 	fh->set_name (fh->dev ().native);
       fh->archetype = fh->clone ();
       debug_printf ("created an archetype (%p) for %s(%d/%d)", fh->archetype, fh->get_name (), fh->dev ().get_major (), fh->dev ().get_minor ());
-      if (HACK_DEBUG_OPEN) {
+      if (HACK_DEBUG_OPEN && 0) {
           hack_print(
               "dbg: created an archetype (%p) for %s(%d/%d)\r\n",
               fh->archetype, fh->get_name(), fh->dev().get_major(),
@@ -695,8 +695,8 @@ build_fh_pc (path_conv& pc)
 out:
   debug_printf ("fh %p, dev %08x", fh, fh ? (dev_t) fh->dev () : 0);
   if (HACK_DEBUG_OPEN) {
-      hack_print("dbg: fh %p, dev %08x\r\n", fh, fh ? (dev_t) fh->dev () : 0);
-      hack_print("errno = %d\r\nReturn fh\r\n\r\n", get_errno());
+      //hack_print("dbg: fh %p, dev %08x\r\n", fh, fh ? (dev_t) fh->dev () : 0);
+      hack_print("errno = %d\r\nReturn fh ptr\r\n\r\n", get_errno());
   }
   return fh;
 }
