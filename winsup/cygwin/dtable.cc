@@ -434,7 +434,7 @@ fhandler_base *
 build_fh_name (const char *name, unsigned opt, suffix_info *si)
 {
   if (HACK_DEBUG_OPEN)
-      hack_print("build_fh_name(\"%s\", %u, ptr)\r\n", name, opt);
+      hack_print("build_fh_name(\name="%s\", opt=%u, si)\r\n", name, opt);
   path_conv pc (name, opt | PC_NULLEMPTY | PC_POSIX, si);
   if (pc.error)
     {
@@ -656,8 +656,8 @@ build_fh_pc (path_conv& pc)
       debug_printf ("found an archetype for %s(%d/%d) io_handle %p", fh->get_name (), fh->dev ().get_major (), fh->dev ().get_minor (),
 		    fh->archetype->get_io_handle ());
       if (HACK_DEBUG_OPEN) {
-          debug_printf(
-              "dbg: found an archetype for %s(%d/%d) io_handle %p",
+          hack_print(
+              "dbg: found an archetype for %s(%d/%d) io_handle %p\r\n",
               fh->get_name(), fh->dev().get_major(), fh->dev().get_minor(),
               fh->archetype->get_io_handle()
           );
@@ -696,7 +696,7 @@ out:
   debug_printf ("fh %p, dev %08x", fh, fh ? (dev_t) fh->dev () : 0);
   if (HACK_DEBUG_OPEN) {
       hack_print("dbg: fh %p, dev %08x\r\n", fh, fh ? (dev_t) fh->dev () : 0);
-      hack_print("errno = %d\r\nReturn\r\n\r\n", get_errno());
+      hack_print("errno = %d\r\nReturn fh\r\n\r\n", get_errno());
   }
   return fh;
 }

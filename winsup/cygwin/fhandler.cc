@@ -357,7 +357,8 @@ int
 fhandler_base::fhaccess (int flags, bool effective)
 {
   if (HACK_DEBUG_OPEN)
-      hack_print("fhandler_base::fhaccess(%d, %d)\r\n", flags, effective);
+      hack_print("fhandler_base::fhaccess(flags=%d, effective=%d)\r\n",
+                 flags, effective);
   int res = -1;
   if (error ())
     {
@@ -467,7 +468,7 @@ int
 fhandler_base::open_with_arch (int flags, mode_t mode)
 {
   if (HACK_DEBUG_OPEN) {
-      hack_print("fhandler_base::open_with_arch(flags=%d, mode=%o\r\n",
+      hack_print("fhandler_base::open_with_arch(flags=%d, mode=%o)\r\n",
                  flags, (unsigned int) mode);
   }
   int res;
