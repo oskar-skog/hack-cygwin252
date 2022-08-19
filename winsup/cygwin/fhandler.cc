@@ -356,9 +356,12 @@ fhandler_base::device_access_denied (int flags)
 int
 fhandler_base::fhaccess (int flags, bool effective)
 {
-  if (HACK_DEBUG_OPEN)
-      hack_print("\tfhandler_base::fhaccess(flags=%d, effective=%d)\r\n",
-                 flags, effective);
+  if (HACK_DEBUG_OPEN) {
+      hack_print(
+          "\tfhandler.cc: fhandler_base::fhaccess(flags=0x%x, effective=%d)\r\n",
+          (unsigned int) flags, effective
+      );
+  }
   int res = -1;
   if (error ())
     {
@@ -390,7 +393,7 @@ fhandler_base::fhaccess (int flags, bool effective)
       res = check_registry_access (get_handle (), flags, effective);
       close ();
       if (HACK_DEBUG_OPEN)
-          hack_print("\tReturn (registry) %d, errno = %d\r\n",
+          hack_print("\tfhandler.cc: Return (registry) %d, errno = %d\r\n",
                      res, get_errno());
       return res;
     }
@@ -460,7 +463,7 @@ done:
       res = -1;
     }
   if (HACK_DEBUG_OPEN)
-      hack_print("\tReturn %d, errno = %d\r\n", res, get_errno());
+      hack_print("\tfhandler.cc: Return %d, errno = %d\r\n", res, get_errno());
   debug_printf ("returning %d", res);
   return res;
 }
@@ -469,8 +472,10 @@ int
 fhandler_base::open_with_arch (int flags, mode_t mode)
 {
   if (HACK_DEBUG_OPEN) {
-      hack_print("\tfhandler_base::open_with_arch(flags=%d, mode=%o)\r\n",
-                 flags, (unsigned int) mode);
+    hack_print(
+        "\tfhandler.cc: fhandler_base::open_with_arch(flags=%d, mode=0%o)\r\n",
+        flags, (unsigned int) mode
+    );
   }
   int res;
   if (!(res = (archetype && archetype->io_handle)
@@ -518,7 +523,7 @@ fhandler_base::open_with_arch (int flags, mode_t mode)
   if (!nohandle ())
     set_unique_id ();
   if (HACK_DEBUG_OPEN)
-      hack_print("\tReturn %d, errno=%d\r\n", res, get_errno());
+      hack_print("\tfhandler.cc: Return %d, errno=%d\r\n", res, get_errno());
   return res;
 }
 

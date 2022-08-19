@@ -1376,9 +1376,12 @@ open (const char *unix_path, int flags, ...)
 	  mode = va_arg (ap, mode_t);
 	  va_end (ap);
           
-          if (HACK_DEBUG_OPEN)
-              hack_print("open(path=\"%s\", flags=0x%x[, mode=0%o])\r\n",
-                         unix_path, (unsigned int) flags, (unsigned int) mode);
+          if (HACK_DEBUG_OPEN) {
+              hack_print(
+                  "syscalls.cc: open(path=\"%s\", flags=0x%x[, mode=0%o])\r\n",
+                  unix_path, (unsigned int) flags, (unsigned int) mode
+              );
+          }
 
 	  fhandler_base *fh;
 	  cygheap_fdnew fd;
@@ -1401,9 +1404,12 @@ open (const char *unix_path, int flags, ...)
 	      if (!(fh = build_fh_name (unix_path, opt, stat_suffixes)))
                 {
                     // errno already set
-                    if (HACK_DEBUG_OPEN)
-                        hack_print("A (build_fh_name): errno=%d\r\n",
-                                   get_errno());
+                    if (HACK_DEBUG_OPEN) {
+                        hack_print(
+                            "syscalls.cc: A (build_fh_name): errno=%d\r\n",
+                            get_errno()
+                        );
+                    }
                 }
 	      else if ((flags & O_NOFOLLOW) && fh->issymlink ())
 		{
@@ -1427,7 +1433,7 @@ open (const char *unix_path, int flags, ...)
 		       || !fh->open_with_arch (flags, mode & 07777))
                 {
                   if (HACK_DEBUG_OPEN)
-                      hack_print("B: errno=%d\r\n", get_errno());
+                      hack_print("syscalls.cc: B: errno=%d\r\n", get_errno());
 		  delete fh;
                 }
 	      else
@@ -1445,11 +1451,11 @@ open (const char *unix_path, int flags, ...)
   __except (EFAULT)
     {
         if (HACK_DEBUG_OPEN)
-            hack_print("C (exception): errno=%d\r\n", get_errno());
+            hack_print("syscalls.cc: C (exception): errno=%d\r\n", get_errno());
     }
   __endtry
   if (HACK_DEBUG_OPEN)
-      hack_print("Return %d, errno=%d\r\n\r\n", res, get_errno());
+      hack_print("syscalls.cc: Return %d, errno=%d\r\n\r\n", res, get_errno());
   return res;
 }
 
