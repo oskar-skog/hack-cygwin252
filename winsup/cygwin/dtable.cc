@@ -434,12 +434,12 @@ fhandler_base *
 build_fh_name (const char *name, unsigned opt, suffix_info *si)
 {
   if (HACK_DEBUG_OPEN)
-      hack_print("build_fh_name(name=\"%s\", opt=%u, si)\r\n", name, opt);
+      hack_print("\tbuild_fh_name(name=\"%s\", opt=%u, si)\r\n", name, opt);
   path_conv pc (name, opt | PC_NULLEMPTY | PC_POSIX, si);
   if (pc.error)
     {
       if (HACK_DEBUG_OPEN)
-        hack_print("pc.error = %d\r\n", (int) pc.error);
+        hack_print("\tpc.error = %d\r\n", (int) pc.error);
       fhandler_base *fh = cnew (fhandler_nodevice);
       if (fh)
 	fh->set_error (pc.error);
@@ -448,7 +448,7 @@ build_fh_name (const char *name, unsigned opt, suffix_info *si)
     }
   
   if (HACK_DEBUG_OPEN)
-      hack_print("Tail call build_fh_pc\r\n");
+      hack_print("\tTail call build_fh_pc\r\n");
   return build_fh_pc (pc);
 }
 
@@ -640,7 +640,7 @@ fhandler_base *
 build_fh_pc (path_conv& pc)
 {
   if (HACK_DEBUG_OPEN)
-      hack_print("build_fh_pc(wtf is this)\r\n");
+      hack_print("\tbuild_fh_pc(&pc)\r\n");
   fhandler_base *fh = fh_alloc (pc);
 
   if (!fh)
@@ -657,7 +657,7 @@ build_fh_pc (path_conv& pc)
 		    fh->archetype->get_io_handle ());
       if (HACK_DEBUG_OPEN && 0) {
           hack_print(
-              "dbg: found an archetype for %s(%d/%d) io_handle %p\r\n",
+              "\tdbg: found an archetype for %s(%d/%d) io_handle %p\r\n",
               fh->get_name(), fh->dev().get_major(), fh->dev().get_minor(),
               fh->archetype->get_io_handle()
           );
@@ -675,7 +675,7 @@ build_fh_pc (path_conv& pc)
       debug_printf ("created an archetype (%p) for %s(%d/%d)", fh->archetype, fh->get_name (), fh->dev ().get_major (), fh->dev ().get_minor ());
       if (HACK_DEBUG_OPEN && 0) {
           hack_print(
-              "dbg: created an archetype (%p) for %s(%d/%d)\r\n",
+              "\tdbg: created an archetype (%p) for %s(%d/%d)\r\n",
               fh->archetype, fh->get_name(), fh->dev().get_major(),
               fh->dev().get_minor()
           );
@@ -695,8 +695,8 @@ build_fh_pc (path_conv& pc)
 out:
   debug_printf ("fh %p, dev %08x", fh, fh ? (dev_t) fh->dev () : 0);
   if (HACK_DEBUG_OPEN) {
-      //hack_print("dbg: fh %p, dev %08x\r\n", fh, fh ? (dev_t) fh->dev () : 0);
-      hack_print("errno = %d\r\nReturn fh ptr\r\n\r\n", get_errno());
+      //hack_print("\tdbg: fh %p, dev %08x\r\n", fh, fh ? (dev_t) fh->dev() : 0);
+      hack_print("\terrno = %d\r\nReturn fh ptr\r\n", get_errno());
   }
   return fh;
 }
