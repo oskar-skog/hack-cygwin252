@@ -473,8 +473,8 @@ fhandler_base::open_with_arch (int flags, mode_t mode)
 {
   if (HACK_DEBUG_OPEN) {
     hack_print(
-        "\tfhandler.cc: fhandler_base::open_with_arch(flags=%d, mode=0%o)\r\n",
-        flags, (unsigned int) mode
+        "\tfhandler.cc: fhandler_base::open_with_arch(flags=0x%x, mode=0%o)\r\n",
+        (unsigned int) flags, (unsigned int) mode
     );
   }
   int res;

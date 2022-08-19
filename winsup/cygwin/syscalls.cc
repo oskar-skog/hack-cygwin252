@@ -1377,10 +1377,10 @@ open (const char *unix_path, int flags, ...)
 	  va_end (ap);
           
           if (HACK_DEBUG_OPEN) {
-              hack_print(
-                  "syscalls.cc: open(path=\"%s\", flags=0x%x[, mode=0%o])\r\n",
-                  unix_path, (unsigned int) flags, (unsigned int) mode
-              );
+            hack_print(
+              "\r\nsyscalls.cc: open(path=\"%s\", flags=0x%x[, mode=0%o])\r\n",
+              unix_path, (unsigned int) flags, (unsigned int) mode
+            );
           }
 
 	  fhandler_base *fh;
