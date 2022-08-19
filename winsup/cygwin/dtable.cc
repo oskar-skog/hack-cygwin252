@@ -434,7 +434,7 @@ fhandler_base *
 build_fh_name (const char *name, unsigned opt, suffix_info *si)
 {
   if (HACK_DEBUG_OPEN)
-      hack_print("build_fh_name(\name="%s\", opt=%u, si)\r\n", name, opt);
+      hack_print("build_fh_name(name=\"%s\", opt=%u, si)\r\n", name, opt);
   path_conv pc (name, opt | PC_NULLEMPTY | PC_POSIX, si);
   if (pc.error)
     {
