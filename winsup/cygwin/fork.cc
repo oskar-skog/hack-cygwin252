@@ -649,7 +649,13 @@ fork ()
       hack_debug_enabled = restore_hack_debug_enabled;
 #endif
   if (res == 0) {
-      hack_init("fork() child");
+      // Need to call init_hack in child process
+      char cmdline[HACK_MAXLEN];
+      hack_utf16_to_utf8(cmdline, HACK_MAXLEN, GetCommandLineW());
+      // Lazy way to usually get argv[0] from commandline
+      for (int i = 0; i < HACK_MAXLEN; i++)
+          if (cmdline[i] == ' ') cmdline[i] = 0;
+      hack_init(cmdline);
       hack_print("PPID: %d\r\n", getppid());
   }
   return res;
