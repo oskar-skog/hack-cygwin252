@@ -21,8 +21,8 @@ void hack_utf16_to_utf8(char * dst, size_t dst_size, LPWSTR src);
 extern bool hack_debug_enabled;
 
 // Internal use
-void hack_init(int argc, const char * const * argv);    // Open debug log file
-void hack_end(void);                                    // Close debug log file
+void hack_init(const char * cmd_name);  // Open debug log file
+void hack_end(void);                    // Close debug log file
 
 #ifdef _HACK_CC
 #define MAXLEN HACK_MAXLEN

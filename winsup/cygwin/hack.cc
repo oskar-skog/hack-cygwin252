@@ -15,6 +15,7 @@ bool hack_debug_enabled;
 
 // debug log file
 static HANDLE debug_log;
+static HANDLE mutex;
 
 
 // Function prototypes for various internal functions
@@ -33,7 +34,7 @@ static void push_utf8(                  // Push single code point to char[]
 // Open the log file
 // This function is called immediately before main() so all POSIX functions
 // can be used until hack_debug_enabled = true.
-void hack_init(int argc, const char * const * argv)
+void hack_init(const char *argv0)
 {
     // Disable debug logging to allow using POSIX functions
     hack_debug_enabled = false;
@@ -45,11 +46,11 @@ void hack_init(int argc, const char * const * argv)
     // Produce filename
     char *filename, *path;
     asprintf(
-        &filename, "%s-[%s]-%d.txt",
-        timestamp, argv[0], (int) getpid()
+        &filename, "%s-[%s]-%d.txt", timestamp, argv0, (int) getpid()
     );
     sanitize(filename);
     asprintf(&path, "C:\\cygdbg\\%s", filename);
+    free(filename);
     // Open log file
     // CreateFileA takes a LPCSTR (8-bit char string) filename
     debug_log = CreateFileA(
@@ -63,10 +64,10 @@ void hack_init(int argc, const char * const * argv)
                     FILE_ATTRIBUTE_NORMAL, // | FILE_FLAG_WRITE_THROUGH,
                     NULL            // hTemplateFile
     );
-    // Init completed
-    free(filename);
     free(path);
-    // Only set to true if the file actually exists
+    // Create mutex
+    mutex = CreateMutexA(NULL, false, NULL);
+    // Init completed. Only set to true if the file actually exists
     if (debug_log != INVALID_HANDLE_VALUE)
         hack_debug_enabled = true;
 }
@@ -88,6 +89,7 @@ void hack_print(const char *format, ...)
 {
     if (!hack_debug_enabled)
         return;
+    WaitForSingleObject(mutex, INFINITE);
     char buf[MAXLEN];
     va_list args;
     va_start(args, format);
@@ -97,6 +99,7 @@ void hack_print(const char *format, ...)
     if (truncated)
         writestr("!!!TRUNCATED!!!\r\n");
     FlushFileBuffers(debug_log);
+    ReleaseMutex(mutex);
 }
 
 // Write NUL terminated string to debug_log, does not flush
