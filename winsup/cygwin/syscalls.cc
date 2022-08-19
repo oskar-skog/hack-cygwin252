@@ -1377,8 +1377,8 @@ open (const char *unix_path, int flags, ...)
 	  va_end (ap);
           
           if (HACK_DEBUG_OPEN)
-              hack_print("open(path=\"%s\", flags=%d[, mode=%d])\r\n",
-                         unix_path, flags, mode);
+              hack_print("open(path=\"%s\", flags=0x%x[, mode=0%o])\r\n",
+                         unix_path, (unsigned int) flags, (unsigned int) mode);
 
 	  fhandler_base *fh;
 	  cygheap_fdnew fd;

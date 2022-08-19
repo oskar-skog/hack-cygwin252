@@ -696,7 +696,7 @@ out:
   debug_printf ("fh %p, dev %08x", fh, fh ? (dev_t) fh->dev () : 0);
   if (HACK_DEBUG_OPEN) {
       //hack_print("\tdbg: fh %p, dev %08x\r\n", fh, fh ? (dev_t) fh->dev() : 0);
-      hack_print("\terrno = %d\r\nReturn fh ptr\r\n", get_errno());
+      hack_print("\terrno = %d\r\n\tReturn fh ptr\r\n", get_errno());
   }
   return fh;
 }
