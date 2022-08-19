@@ -30,6 +30,8 @@ details. */
 #include <asm/socket.h>
 #include "cygwait.h"
 
+#include "hack.h"
+
 #define MAX_OVERLAPPED_WRITE_LEN (64 * 1024 * 1024)
 #define MIN_OVERLAPPED_WRITE_LEN (1 * 1024 * 1024)
 
@@ -354,6 +356,8 @@ fhandler_base::device_access_denied (int flags)
 int
 fhandler_base::fhaccess (int flags, bool effective)
 {
+  if (HACK_DEBUG_OPEN)
+      hack_print("fhandler_base::fhaccess(%d, %d)\r\n", flags, effective);
   int res = -1;
   if (error ())
     {
@@ -384,6 +388,8 @@ fhandler_base::fhaccess (int flags, bool effective)
     {
       res = check_registry_access (get_handle (), flags, effective);
       close ();
+      if (HACK_DEBUG_OPEN)
+        hack_print("Return (registry) %d, errno = %d\r\n\r\n", res, get_errno());
       return res;
     }
 
@@ -451,6 +457,8 @@ done:
       set_errno (EROFS);
       res = -1;
     }
+  if (HACK_DEBUG_OPEN)
+      hack_print("Return %d, errno = %d\r\n\r\n", res, get_errno());
   debug_printf ("returning %d", res);
   return res;
 }
@@ -458,6 +466,10 @@ done:
 int
 fhandler_base::open_with_arch (int flags, mode_t mode)
 {
+  if (HACK_DEBUG_OPEN) {
+      hack_print("fhandler_base::open_with_arch(flags=%d, mode=%o\r\n",
+                 flags, (unsigned int) mode);
+  }
   int res;
   if (!(res = (archetype && archetype->io_handle)
 	|| open (flags, mode & 07777)))
@@ -503,6 +515,8 @@ fhandler_base::open_with_arch (int flags, mode_t mode)
      locking is unusable for those anyway. */
   if (!nohandle ())
     set_unique_id ();
+  if (HACK_DEBUG_OPEN)
+      hack_print("Return %d, errno=%d\r\n\r\n", res, get_errno());
   return res;
 }
 

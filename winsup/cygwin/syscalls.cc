@@ -70,6 +70,8 @@ details. */
 #undef _lseek64
 #undef _fstat64
 
+#include "hack.h"
+
 static int __stdcall mknod_worker (const char *, mode_t, mode_t, _major_t,
 				   _minor_t);
 
@@ -1360,6 +1362,7 @@ open (const char *unix_path, int flags, ...)
   mode_t mode = 0;
 
   pthread_testcancel ();
+  
 
   __try
     {
@@ -1372,6 +1375,9 @@ open (const char *unix_path, int flags, ...)
 	  va_start (ap, flags);
 	  mode = va_arg (ap, mode_t);
 	  va_end (ap);
+          
+          if (HACK_DEBUG_OPEN)
+              hack_print("open(\"%s\", %d[, %d])\r\n", unix_path, flags, mode);
 
 	  fhandler_base *fh;
 	  cygheap_fdnew fd;
@@ -1392,7 +1398,12 @@ open (const char *unix_path, int flags, ...)
 		  opt |= PC_CTTY;
 		}
 	      if (!(fh = build_fh_name (unix_path, opt, stat_suffixes)))
-		;		// errno already set
+                {
+                    // errno already set
+                    if (HACK_DEBUG_OPEN)
+                        hack_print("A (build_fh_name): errno=%d\r\n",
+                                   get_errno());
+                }
 	      else if ((flags & O_NOFOLLOW) && fh->issymlink ())
 		{
 		  delete fh;
@@ -1413,7 +1424,11 @@ open (const char *unix_path, int flags, ...)
 	      else if ((fh->is_fs_special ()
 	      		&& fh->device_access_denied (flags))
 		       || !fh->open_with_arch (flags, mode & 07777))
-		delete fh;
+                {
+                  if (HACK_DEBUG_OPEN)
+                      hack_print("B: errno=%d\r\n", get_errno());
+		  delete fh;
+                }
 	      else
 		{
 		  fd = fh;
@@ -1426,8 +1441,14 @@ open (const char *unix_path, int flags, ...)
 
       syscall_printf ("%R = open(%s, %y)", res, unix_path, flags);
     }
-  __except (EFAULT) {}
+  __except (EFAULT)
+    {
+        if (HACK_DEBUG_OPEN)
+            hack_print("C (exception): errno=%d\r\n", get_errno());
+    }
   __endtry
+  if (HACK_DEBUG_OPEN)
+      hack_print("Return %d, errno=%d\r\n\r\n", res, get_errno());
   return res;
 }
 

@@ -28,6 +28,8 @@ details. */
 #include "ntdll.h"
 #include "shared_info.h"
 
+#include "hack.h"
+
 static const DWORD std_consts[] = {STD_INPUT_HANDLE, STD_OUTPUT_HANDLE,
 				   STD_ERROR_HANDLE};
 
@@ -431,16 +433,22 @@ dtable::init_std_file_from_handle (int fd, HANDLE handle)
 fhandler_base *
 build_fh_name (const char *name, unsigned opt, suffix_info *si)
 {
+  if (HACK_DEBUG_OPEN)
+      hack_print("build_fh_name(\"%s\", %u, ptr)\r\n", name, opt);
   path_conv pc (name, opt | PC_NULLEMPTY | PC_POSIX, si);
   if (pc.error)
     {
+      if (HACK_DEBUG_OPEN)
+        hack_print("pc.error = %d\r\n", (int) pc.error);
       fhandler_base *fh = cnew (fhandler_nodevice);
       if (fh)
 	fh->set_error (pc.error);
       set_errno (fh ? pc.error : EMFILE);
       return fh;
     }
-
+  
+  if (HACK_DEBUG_OPEN)
+      hack_print("Tail call build_fh_pc\r\n");
   return build_fh_pc (pc);
 }
 
@@ -631,6 +639,8 @@ fh_alloc (path_conv& pc)
 fhandler_base *
 build_fh_pc (path_conv& pc)
 {
+  if (HACK_DEBUG_OPEN)
+      hack_print("build_fh_pc(wtf is this)\r\n");
   fhandler_base *fh = fh_alloc (pc);
 
   if (!fh)
@@ -645,6 +655,13 @@ build_fh_pc (path_conv& pc)
     {
       debug_printf ("found an archetype for %s(%d/%d) io_handle %p", fh->get_name (), fh->dev ().get_major (), fh->dev ().get_minor (),
 		    fh->archetype->get_io_handle ());
+      if (HACK_DEBUG_OPEN) {
+          debug_printf(
+              "dbg: found an archetype for %s(%d/%d) io_handle %p",
+              fh->get_name(), fh->dev().get_major(), fh->dev().get_minor(),
+              fh->archetype->get_io_handle()
+          );
+      }
       if (!fh->get_name ())
 	fh->set_name (fh->archetype->dev ().name);
     }
@@ -656,6 +673,13 @@ build_fh_pc (path_conv& pc)
 	fh->set_name (fh->dev ().native);
       fh->archetype = fh->clone ();
       debug_printf ("created an archetype (%p) for %s(%d/%d)", fh->archetype, fh->get_name (), fh->dev ().get_major (), fh->dev ().get_minor ());
+      if (HACK_DEBUG_OPEN) {
+          hack_print(
+              "dbg: created an archetype (%p) for %s(%d/%d)\r\n",
+              fh->archetype, fh->get_name(), fh->dev().get_major(),
+              fh->dev().get_minor()
+          );
+      }
       fh->archetype->archetype = NULL;
       *cygheap->fdtab.add_archetype () = fh->archetype;
     }
@@ -670,6 +694,10 @@ build_fh_pc (path_conv& pc)
 
 out:
   debug_printf ("fh %p, dev %08x", fh, fh ? (dev_t) fh->dev () : 0);
+  if (HACK_DEBUG_OPEN) {
+      hack_print("dbg: fh %p, dev %08x\r\n", fh, fh ? (dev_t) fh->dev () : 0);
+      hack_print("errno = %d\r\nReturn\r\n\r\n", get_errno());
+  }
   return fh;
 }
 

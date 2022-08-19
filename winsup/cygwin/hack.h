@@ -1,6 +1,8 @@
 #ifndef _HACK_H
 #define _HACK_H
 
+#define HACK_DEBUG_OPEN     1
+
 // Define buffer size
 #define HACK_MAXLEN 1024
 
