@@ -89,17 +89,19 @@ void hack_print(const char *format, ...)
 {
     if (!hack_debug_enabled)
         return;
-    WaitForSingleObject(mutex, INFINITE);
-    char buf[MAXLEN];
-    va_list args;
-    va_start(args, format);
-    bool truncated = vsnprintf(buf, MAXLEN, format, args) > MAXLEN;
-    va_end(args);
-    writestr(buf);
-    if (truncated)
-        writestr("!!!TRUNCATED!!!\r\n");
-    FlushFileBuffers(debug_log);
-    ReleaseMutex(mutex);
+    DWORD res = WaitForSingleObject(mutex, INFINITE);
+    if ((res == 0) || (res == WAIT_ABANDONED)) {
+        char buf[MAXLEN];
+        va_list args;
+        va_start(args, format);
+        bool truncated = vsnprintf(buf, MAXLEN, format, args) > MAXLEN;
+        va_end(args);
+        writestr(buf);
+        if (truncated)
+            writestr("!!!TRUNCATED!!!\r\n");
+        FlushFileBuffers(debug_log);
+        ReleaseMutex(mutex);
+    }
 }
 
 // Write NUL terminated string to debug_log, does not flush
