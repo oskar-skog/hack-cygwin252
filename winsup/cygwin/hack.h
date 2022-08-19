@@ -1,12 +1,14 @@
 #ifndef _HACK_H
 #define _HACK_H
 
-#define HACK_DEBUG_OPEN     1
-#define HACK_UNBREAK_FORK   1
+#define HACK_DEBUG_OPEN             1
+
+#define HACK_UNBREAK_FORK           1
+#define HACK_FLUSH_FILE_BUFFERS     0
 
 // Define buffer size
-#define HACK_MAXLEN         1024
-#define HACK_MUTEX_TIMEOUT  100
+#define HACK_MAXLEN                 1024
+#define HACK_MUTEX_TIMEOUT          100
 
 // Print string to the debug log
 // Uses vsnprintf(3)

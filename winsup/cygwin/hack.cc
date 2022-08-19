@@ -11,11 +11,15 @@
 // hack.h defines MAXLEN
 
 // POSIX functions may only be used until hack_debug_enabled is set to true.
-bool hack_debug_enabled;
+bool hack_debug_enabled = false;
 
 // debug log file
 static HANDLE debug_log;
 static HANDLE mutex;
+
+static bool mutex_error_timeout = false;
+static bool mutex_error_other = false;
+static bool mutex_error_abandoned = false;
 
 
 // Function prototypes for various internal functions
@@ -77,6 +81,16 @@ void hack_init(const char *argv0)
 // and POSIX syscalls.
 void hack_end()
 {
+    if (mutex_error_abandoned)
+        hack_print(
+            "hack.cc: WaitForSingleObject has returned WAIT_ABANDONED\r\n");
+    if (mutex_error_timeout)
+        hack_print(
+            "hack.cc: WaitForSingleObject has returned WAIT_TIMEOUT\r\n");
+    if (mutex_error_other)
+        hack_print(
+            "hack.cc: WaitForSingleObject has returned WAIT_FAILED or *\r\n");
+    hack_debug_enabled = false;
     CloseHandle(debug_log);
 }
 
@@ -91,6 +105,7 @@ void hack_print(const char *format, ...)
         return;
     DWORD res = WaitForSingleObject(mutex, HACK_MUTEX_TIMEOUT);
     if ((res == 0) || (res == WAIT_ABANDONED)) {
+        // begin
         char buf[MAXLEN];
         va_list args;
         va_start(args, format);
@@ -99,9 +114,20 @@ void hack_print(const char *format, ...)
         writestr(buf);
         if (truncated)
             writestr("!!!TRUNCATED!!!\r\n");
-        FlushFileBuffers(debug_log);
+        // is FlushFileBuffers actually needed?
+        // I think it's equivalent to fsync and not fflush
+        if (HACK_FLUSH_FILE_BUFFERS)
+            FlushFileBuffers(debug_log);
+        // end
         ReleaseMutex(mutex);
-    }
+    } else if (res == WAIT_TIMEOUT)
+        mutex_error_timeout = true;
+    else
+        mutex_error_other = true;
+    // I think this is a non-issue, but any occurence will be logged
+    // nevertheless.
+    if (res == WAIT_ABANDONED)
+        mutex_error_abandoned = true;
 }
 
 // Write NUL terminated string to debug_log, does not flush
