@@ -3,7 +3,9 @@
 
 #define HACK_DEBUG_OPEN             1
 
+// Will finite timoeout unbreak fork, or is this required?
 #define HACK_UNBREAK_FORK           1
+// WriteFileA writes immediately to filesystem (cache), right?  Flush = sync?
 #define HACK_FLUSH_FILE_BUFFERS     0
 
 // Define buffer size

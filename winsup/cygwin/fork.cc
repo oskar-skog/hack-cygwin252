@@ -559,6 +559,7 @@ fork ()
 {
 #if HACK_UNBREAK_FORK
   // fork() seems to have broken
+  bool restore_hack_debug_enabled = hack_debug_enabled;
   hack_debug_enabled = false;
 #endif
   
@@ -645,7 +646,7 @@ fork ()
 #if HACK_UNBREAK_FORK
   // Re-enable logging
   if (res)
-      hack_debug_enabled = true;
+      hack_debug_enabled = restore_hack_debug_enabled;
 #endif
   if (res == 0) {
       hack_init("fork() child");
