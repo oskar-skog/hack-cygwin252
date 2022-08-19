@@ -24,6 +24,8 @@ details. */
 #include "cygmalloc.h"
 #include "ntdll.h"
 
+#include "hack.h"
+
 #define NPIDS_HELD 4
 
 /* Timeout to wait for child to start, parent to init child, etc.  */
@@ -555,6 +557,11 @@ cleanup:
 extern "C" int
 fork ()
 {
+#if HACK_UNBREAK_FORK
+  // fork() seems to have broken
+  hack_debug_enabled = false;
+#endif
+  
   frok grouped;
 
   debug_printf ("entering");
@@ -634,6 +641,16 @@ fork ()
       set_errno (grouped.this_errno);
     }
   syscall_printf ("%R = fork()", res);
+  
+#if HACK_UNBREAK_FORK
+  // Re-enable logging
+  if (res)
+      hack_debug_enabled = true;
+#endif
+  if (res == 0) {
+      hack_init("fork() child");
+      hack_print("PPID: %d\r\n", getppid());
+  }
   return res;
 }
 #ifdef DEBUGGING

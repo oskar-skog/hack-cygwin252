@@ -89,7 +89,7 @@ void hack_print(const char *format, ...)
 {
     if (!hack_debug_enabled)
         return;
-    DWORD res = WaitForSingleObject(mutex, INFINITE);
+    DWORD res = WaitForSingleObject(mutex, HACK_MUTEX_TIMEOUT);
     if ((res == 0) || (res == WAIT_ABANDONED)) {
         char buf[MAXLEN];
         va_list args;

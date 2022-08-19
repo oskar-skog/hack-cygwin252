@@ -2,9 +2,11 @@
 #define _HACK_H
 
 #define HACK_DEBUG_OPEN     1
+#define HACK_UNBREAK_FORK   1
 
 // Define buffer size
-#define HACK_MAXLEN 1024
+#define HACK_MAXLEN         1024
+#define HACK_MUTEX_TIMEOUT  100
 
 // Print string to the debug log
 // Uses vsnprintf(3)
@@ -25,7 +27,7 @@ void hack_init(const char * cmd_name);  // Open debug log file
 void hack_end(void);                    // Close debug log file
 
 #ifdef _HACK_CC
-#define MAXLEN HACK_MAXLEN
+#define MAXLEN              HACK_MAXLEN
 #endif
 
 #endif
