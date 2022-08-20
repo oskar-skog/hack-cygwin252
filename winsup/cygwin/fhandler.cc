@@ -717,7 +717,7 @@ fhandler_base::open (int flags, mode_t mode)
   if (HACK_DEBUG_OPEN)
   {
     hack_print(
-      "\tfhandler_base::open: NtCreateFile(\n"
+      "\tfhandler_base::open: NtCreateFile(\r\n"
       "\t\tFileHandle = &fh,\r\n"
       "\t\tDesiredAccess = 0x%x,\r\n"
       "\t\tObjectAttributes = &attr,\r\n"
