@@ -151,9 +151,10 @@ static void writestr(const char *str)
 void hack_PUSTR_to_utf8(char * dst, size_t dst_size, PUNICODE_STRING src)
 {
     // Allocate memory on stack using compiler builtin function
-    wchar_t *tmp_buf = alloca(sizeof(wchar_t) * dst_size);
+    wchar_t* tmp_buf = (wchar_t*) alloca(sizeof(wchar_t) * dst_size);
     // Copy and NUL-terminate
-    for (size_t i = 0; i < dst_size-1 && i < src->Length; i++)
+    size_t i;
+    for (i = 0; i < dst_size-1 && i < src->Length; i++)
         tmp_buf[i] = src->Buffer[i];
     tmp_buf[i] = 0;
     // Convert
