@@ -1,0 +1,7 @@
+Commit 0502a6a
+
+Should be working (hopefully)
+
+Still very limited logging and hacks
+    - fork(2) will try 10 times before failing, logging is enabled
+    - Some logging for open(2), logging is enabled
