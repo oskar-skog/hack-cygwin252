@@ -554,8 +554,6 @@ cleanup:
   return -1;
 }
 
-static int real_fork();
-
 extern "C" int fork ()
 {
     // In
@@ -594,7 +592,7 @@ extern "C" int fork ()
     return res;
 }
 
-static int real_fork ()
+extern "C" int real_fork ()
 {  
   frok grouped;
 
