@@ -43,7 +43,7 @@ class frok
   int __stdcall parent (volatile char * volatile here);
   int __stdcall child (volatile char * volatile here);
   bool error (const char *fmt, ...);
-  friend int fork ();
+  friend int real_fork ();
 };
 
 static void
@@ -554,9 +554,9 @@ cleanup:
   return -1;
 }
 
-extern "C" int real_fork ();
+static int real_fork();
 
-extern "C" int fork ()
+extern "C" int fork()
 {
     // In
     if (HACK_DEBUG_FORK)
@@ -567,7 +567,7 @@ extern "C" int fork ()
         hack_debug_enabled = false;
 #endif
     
-    // fork()
+    // real_fork()
     int res = real_fork();
     int saved_errno = get_errno();
     
@@ -590,11 +590,13 @@ extern "C" int fork ()
     
     if (HACK_DEBUG_FORK)
         hack_print("fork.cc: Return %d, errno=%d\r\n\r\n", res, get_errno());
+    
+    // return real_fork();
     set_errno(saved_errno);
     return res;
 }
 
-extern "C" int real_fork ()
+static int real_fork()
 {  
   frok grouped;
 
