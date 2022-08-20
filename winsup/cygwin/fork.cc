@@ -558,13 +558,13 @@ cleanup:
 
 extern "C" int fork()
 {
-    // In
     if (HACK_DEBUG_FORK)
         hack_print("\r\nfork.cc: fork()\r\n");
     
     // fork() with multiple attempts
     int res, saved_errno, attempts;
     attempts = 0;
+    
     // Make sure to preserve previous errno value
     saved_errno = get_errno();
     do {
@@ -575,12 +575,12 @@ extern "C" int fork()
     if (res < 0) {
         saved_errno = get_errno();
     }
+    
     if (HACK_DEBUG_FORK)
         hack_print("fork.cc: %d attempts used\r\n", attempts);
     
-    // Out
+    // Need to call init_hack in child process
     if (res == 0) {
-        // Need to call init_hack in child process
         char cmdline[HACK_MAXLEN];
         hack_utf16_to_utf8(cmdline, HACK_MAXLEN, GetCommandLineW());
         // Get command name, doesn't work correctly but close enough
@@ -604,6 +604,7 @@ static int real_fork()
 {
 #if 1
   // fork() seems to have broken
+  // This won't be thread safe.
   bool restore_hack_debug_enabled = hack_debug_enabled;
   hack_debug_enabled = false;
 #endif

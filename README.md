@@ -77,3 +77,8 @@ change some defines in it.
 `dll_crt0_1` in `winsup/cygwin/dcrt0.cc` calls `main` of the program,
 `hack_init` is called immediately before.  `do_exit` in `dcrt0.cc`
 calls `hack_end`.
+
+## Log files
+
+Log files will be created in `C:\cygdbg`.  You must create the directory
+manually.
