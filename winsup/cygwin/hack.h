@@ -21,6 +21,9 @@ void hack_print(const char * format, ...);
 // Silently truncates if input is too long.  Always appends NUL.
 void hack_utf16_to_utf8(char * dst, size_t dst_size, LPWSTR src);
 
+// PUNICODE_STRING (why?)
+void hack_PUSTR_to_utf8(char * dst, size_t dst_size, PUNICODE_STRING src);
+
 // Global variable (not thread or re-entrant safe if you fiddle with it)
 // Disables debug log printing, used by hack_init to use POSIX functions
 // that may have calls to hack_print.

@@ -148,6 +148,18 @@ static void writestr(const char *str)
 
     /** Unicode conversion **/
 
+void hack_PUSTR_to_utf8(char * dst, size_t dst_size, PUNICODE_STRING src)
+{
+    // Allocate memory on stack using compiler builtin function
+    wchar_t *tmp_buf = alloca(sizeof(wchar_t) * dst_size);
+    // Copy and NUL-terminate
+    for (size_t i = 0; i < dst_size-1 && i < src->Length; i++)
+        tmp_buf[i] = src->Buffer[i];
+    tmp_buf[i] = 0;
+    // Convert
+    hack_utf16_to_utf8(dst, dst_size, tmp_buf);
+}
+
 // dst_size is the size of the buffer.  Will always append NUL.
 void hack_utf16_to_utf8(char *dst, size_t dst_size, LPWSTR src)
 {
