@@ -561,19 +561,17 @@ extern "C" int fork()
     // In
     if (HACK_DEBUG_FORK)
         hack_print("\r\nfork.cc: fork()\r\n");
-#if 0
-        // fork() seems to have broken
-        bool restore_hack_debug_enabled = hack_debug_enabled;
-        hack_debug_enabled = false;
-#endif
     
     // fork() with multiple attempts
     int res, saved_errno, attempts;
     attempts = 0;
+    // Make sure to preserve previous errno value
     saved_errno = get_errno();
     do {
         res = real_fork();
-    } while (res < 0 && ++attempts < HACK_FORK_ATTEMPTS);
+        attempts++;
+    } while (res < 0 && attempts < HACK_FORK_ATTEMPTS);
+    // Make sure to preserve the most recent errno value if fork() failed
     if (res < 0) {
         saved_errno = get_errno();
     }
@@ -581,11 +579,6 @@ extern "C" int fork()
         hack_print("fork.cc: %d attempts used\r\n", attempts);
     
     // Out
-#if 0
-    // Re-enable logging
-    if (res)
-        hack_debug_enabled = restore_hack_debug_enabled;
-#endif
     if (res == 0) {
         // Need to call init_hack in child process
         char cmdline[HACK_MAXLEN];
@@ -608,7 +601,12 @@ extern "C" int fork()
 }
 
 static int real_fork()
-{  
+{
+#if 1
+  // fork() seems to have broken
+  bool restore_hack_debug_enabled = hack_debug_enabled;
+  hack_debug_enabled = false;
+#endif
   frok grouped;
 
   debug_printf ("entering");
@@ -688,7 +686,11 @@ static int real_fork()
       set_errno (grouped.this_errno);
     }
   syscall_printf ("%R = fork()", res);
-  
+#if 1
+  // Re-enable logging
+  if (res)
+      hack_debug_enabled = restore_hack_debug_enabled;
+#endif
   return res;
 }
 #ifdef DEBUGGING
