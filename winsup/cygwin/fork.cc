@@ -554,15 +554,48 @@ cleanup:
   return -1;
 }
 
-extern "C" int
-fork ()
+static int real_fork();
+
+extern "C" int fork ()
 {
-#if HACK_UNBREAK_FORK
-  // fork() seems to have broken
-  bool restore_hack_debug_enabled = hack_debug_enabled;
-  hack_debug_enabled = false;
+    // In
+    if (HACK_DEBUG_FORK)
+        hack_print("\r\nfork.cc: fork()\r\n");
+#if 0
+        // fork() seems to have broken
+        bool restore_hack_debug_enabled = hack_debug_enabled;
+        hack_debug_enabled = false;
 #endif
-  
+    
+    // fork()
+    int res = real_fork();
+    int saved_errno = get_errno();
+    
+    // Out
+#if 0
+    // Re-enable logging
+    if (res)
+        hack_debug_enabled = restore_hack_debug_enabled;
+#endif
+    if (res == 0) {
+        // Need to call init_hack in child process
+        char cmdline[HACK_MAXLEN];
+        hack_utf16_to_utf8(cmdline, HACK_MAXLEN, GetCommandLineW());
+        // Get command name, doesn't work correctly but close enough
+        for (int i = 0; i < HACK_MAXLEN; i++)
+            if (cmdline[i] == ' ') cmdline[i] = 0;
+            hack_init(cmdline);
+        hack_print("fork() returned in child, PPID = %d\r\n\r\n", getppid());
+    }
+    
+    if (HACK_DEBUG_FORK)
+        hack_print("fork.cc: Return %d, errno=%d\r\n\r\n", res, get_errno());
+    set_errno(saved_errno);
+    return res;
+}
+
+static int real_fork ()
+{  
   frok grouped;
 
   debug_printf ("entering");
@@ -643,21 +676,6 @@ fork ()
     }
   syscall_printf ("%R = fork()", res);
   
-#if HACK_UNBREAK_FORK
-  // Re-enable logging
-  if (res)
-      hack_debug_enabled = restore_hack_debug_enabled;
-#endif
-  if (res == 0) {
-      // Need to call init_hack in child process
-      char cmdline[HACK_MAXLEN];
-      hack_utf16_to_utf8(cmdline, HACK_MAXLEN, GetCommandLineW());
-      // Lazy way to usually get argv[0] from commandline
-      for (int i = 0; i < HACK_MAXLEN; i++)
-          if (cmdline[i] == ' ') cmdline[i] = 0;
-      hack_init(cmdline);
-      hack_print("PPID: %d\r\n", getppid());
-  }
   return res;
 }
 #ifdef DEBUGGING

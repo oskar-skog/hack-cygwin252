@@ -2,15 +2,12 @@
 #define _HACK_H
 
 #define HACK_DEBUG_OPEN             1
-
-// Will finite timoeout unbreak fork, or is this required?
-#define HACK_UNBREAK_FORK           1
-// WriteFileA writes immediately to filesystem (cache), right?  Flush = sync?
-#define HACK_FLUSH_FILE_BUFFERS     0
+#define HACK_DEBUG_FORK             1
 
 // Define buffer size
 #define HACK_MAXLEN                 1024
-#define HACK_MUTEX_TIMEOUT          100
+// hack_print needs a mutex for some reason, timeout in milliseconds:
+#define HACK_MUTEX_TIMEOUT          10
 
 // Print string to the debug log
 // Uses vsnprintf(3)

@@ -114,10 +114,7 @@ void hack_print(const char *format, ...)
         writestr(buf);
         if (truncated)
             writestr("!!!TRUNCATED!!!\r\n");
-        // is FlushFileBuffers actually needed?
-        // I think it's equivalent to fsync and not fflush
-        if (HACK_FLUSH_FILE_BUFFERS)
-            FlushFileBuffers(debug_log);
+        // FlushFileBuffers(debug_log);
         // end
         ReleaseMutex(mutex);
     } else if (res == WAIT_TIMEOUT)
