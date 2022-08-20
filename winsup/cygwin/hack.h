@@ -4,6 +4,8 @@
 #define HACK_DEBUG_OPEN             1
 #define HACK_DEBUG_FORK             1
 
+#define HACK_FORK_ATTEMPTS          10
+
 // Define buffer size
 #define HACK_MAXLEN                 1024
 // hack_print needs a mutex for some reason, timeout in milliseconds:

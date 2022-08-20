@@ -567,9 +567,18 @@ extern "C" int fork()
         hack_debug_enabled = false;
 #endif
     
-    // real_fork()
-    int res = real_fork();
-    int saved_errno = get_errno();
+    // fork() with multiple attempts
+    int res, saved_errno, attempts;
+    attempts = 0;
+    saved_errno = get_errno();
+    do {
+        res = real_fork();
+    } while (res < 0 && ++attempts < HACK_FORK_ATTEMPTS);
+    if (res < 0) {
+        saved_errno = get_errno();
+    }
+    if (HACK_DEBUG_FORK)
+        hack_print("fork.cc: %d attempts used\r\n", attempts);
     
     // Out
 #if 0
@@ -585,13 +594,15 @@ extern "C" int fork()
         for (int i = 0; i < HACK_MAXLEN; i++)
             if (cmdline[i] == ' ') cmdline[i] = 0;
             hack_init(cmdline);
-        hack_print("fork() returned in child, PPID = %d\r\n\r\n", getppid());
+        hack_print(
+            "fork.cc: fork() returned in child, PPID = %d\r\n", getppid()
+        );
     }
     
     if (HACK_DEBUG_FORK)
         hack_print("fork.cc: Return %d, errno=%d\r\n\r\n", res, get_errno());
     
-    // return real_fork();
+    // return result and errno
     set_errno(saved_errno);
     return res;
 }
