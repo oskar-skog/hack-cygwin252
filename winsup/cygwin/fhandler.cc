@@ -717,7 +717,7 @@ fhandler_base::open (int flags, mode_t mode)
   if (HACK_DEBUG_OPEN)
   {
     char path_utf8[HACK_MAXLEN];
-    hack_PUSTR_to_utf8(path_utf8, HACK_MAXLEN, attr->ObjectName);
+    hack_PUSTR_to_utf8(path_utf8, HACK_MAXLEN, attr.ObjectName);
     hack_print("\tfhandler_base::open: attr->ObjectName=\"%s\"\r\n", path_utf8);
     hack_print(
       "\tfhandler_base::open: NtCreateFile(\r\n"
