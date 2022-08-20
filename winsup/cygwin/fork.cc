@@ -554,6 +554,8 @@ cleanup:
   return -1;
 }
 
+extern "C" int real_fork ();
+
 extern "C" int fork ()
 {
     // In
