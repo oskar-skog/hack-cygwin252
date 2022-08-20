@@ -356,12 +356,6 @@ fhandler_base::device_access_denied (int flags)
 int
 fhandler_base::fhaccess (int flags, bool effective)
 {
-  if (HACK_DEBUG_OPEN) {
-      hack_print(
-          "\tfhandler.cc: fhandler_base::fhaccess(flags=0x%x, effective=%d)\r\n",
-          (unsigned int) flags, effective
-      );
-  }
   int res = -1;
   if (error ())
     {
@@ -392,9 +386,6 @@ fhandler_base::fhaccess (int flags, bool effective)
     {
       res = check_registry_access (get_handle (), flags, effective);
       close ();
-      if (HACK_DEBUG_OPEN)
-          hack_print("\tfhandler.cc: Return (registry) %d, errno = %d\r\n",
-                     res, get_errno());
       return res;
     }
 
@@ -462,8 +453,6 @@ done:
       set_errno (EROFS);
       res = -1;
     }
-  if (HACK_DEBUG_OPEN)
-      hack_print("\tfhandler.cc: Return %d, errno = %d\r\n", res, get_errno());
   debug_printf ("returning %d", res);
   return res;
 }
@@ -523,7 +512,8 @@ fhandler_base::open_with_arch (int flags, mode_t mode)
   if (!nohandle ())
     set_unique_id ();
   if (HACK_DEBUG_OPEN)
-      hack_print("\tfhandler.cc: Return %d, errno=%d\r\n", res, get_errno());
+    hack_print("\tfhandler_base::open_with_arch: Return %d, errno=%d\r\n",
+               res, get_errno());
   return res;
 }
 
@@ -718,7 +708,7 @@ fhandler_base::open (int flags, mode_t mode)
   {
     char path_utf8[HACK_MAXLEN];
     hack_PUSTR_to_utf8(path_utf8, HACK_MAXLEN, attr.ObjectName);
-    hack_print("\tfhandler_base::open: attr->ObjectName=\"%s\"\r\n", path_utf8);
+    hack_print("\tfhandler_base::open: attr.ObjectName=\"%s\"\r\n", path_utf8);
     hack_print(
       "\tfhandler_base::open: NtCreateFile(\r\n"
       "\t\tFileHandle = &fh,\r\n"

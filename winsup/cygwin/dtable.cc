@@ -433,23 +433,15 @@ dtable::init_std_file_from_handle (int fd, HANDLE handle)
 fhandler_base *
 build_fh_name (const char *name, unsigned opt, suffix_info *si)
 {
-  if (HACK_DEBUG_OPEN)
-      hack_print("\tdtable.cc: build_fh_name(name=\"%s\", opt=0x%x, si)\r\n",
-                 name, opt);
   path_conv pc (name, opt | PC_NULLEMPTY | PC_POSIX, si);
   if (pc.error)
     {
-      if (HACK_DEBUG_OPEN)
-        hack_print("\tdtable.cc: pc.error = %d\r\n", (int) pc.error);
       fhandler_base *fh = cnew (fhandler_nodevice);
       if (fh)
 	fh->set_error (pc.error);
       set_errno (fh ? pc.error : EMFILE);
       return fh;
     }
-  
-  if (HACK_DEBUG_OPEN)
-      hack_print("\tdtable.cc: Tail call build_fh_pc\r\n");
   return build_fh_pc (pc);
 }
 
@@ -640,8 +632,6 @@ fh_alloc (path_conv& pc)
 fhandler_base *
 build_fh_pc (path_conv& pc)
 {
-  if (HACK_DEBUG_OPEN)
-      hack_print("\tdtable.cc: build_fh_pc(&pc)\r\n");
   fhandler_base *fh = fh_alloc (pc);
 
   if (!fh)
@@ -681,12 +671,6 @@ build_fh_pc (path_conv& pc)
 
 out:
   debug_printf ("fh %p, dev %08x", fh, fh ? (dev_t) fh->dev () : 0);
-  if (HACK_DEBUG_OPEN) {
-      hack_print(
-          "\tdtable.cc: errno = %d\r\n"
-          "\tdtable.cc: Return fh ptr\r\n", get_errno()
-      );
-  }
   return fh;
 }
 
