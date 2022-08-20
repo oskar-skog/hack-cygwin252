@@ -17,6 +17,8 @@ details. */
 #include "sec_posixacl.h"
 #include <acl/libacl.h>
 
+#include "hack.h"
+
 #define _ENTRY_SIZE(_cnt) ((_cnt) * sizeof (aclent_t))
 #define _ACL_SIZE(_cnt)	  (sizeof (__acl_ext_t) + _ENTRY_SIZE (_cnt))
 #define ACL_SIZE(_acl)    ({ acl_t __acl = _acl; \
@@ -585,6 +587,9 @@ fhandler_disk_file::acl_get (acl_type_t type)
 	}
       if (type == ACL_TYPE_DEFAULT && !pc.isdir ())
 	{
+          if (HACK_DEBUG_OPEN)
+            hack_print(
+              "\tsec_posixacl.cc: fhandler_disk_file::acl_get: ENOTDIR\r\n");
 	  set_errno (ENOTDIR);
 	  __leave;
 	}
@@ -689,6 +694,9 @@ fhandler_disk_file::acl_set (acl_t acl, acl_type_t type)
 	}
       if (type == ACL_TYPE_DEFAULT && !pc.isdir ())
 	{
+          if (HACK_DEBUG_OPEN)
+            hack_print(
+              "\tsec_posixacl.cc: fhandler_disk_file::acl_set: ENOTDIR\r\n");
 	  set_errno (ENOTDIR);
 	  __leave;
 	}

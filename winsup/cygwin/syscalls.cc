@@ -1421,6 +1421,8 @@ open (const char *unix_path, int flags, ...)
 		{
 		  delete fh;
 		  set_errno (ENOTDIR);
+                  hack_print(
+                    "syscalls.cc: D (flags & O_DIRECTORY), ENOTDIR\r\n");
 		}
 	      else if (((flags & (O_CREAT | O_EXCL)) == (O_CREAT | O_EXCL))
 		       && fh->exists ())
@@ -4521,6 +4523,9 @@ gen_full_path_at (char *path_ret, int dirfd, const char *pathname,
 	    return -1;
 	  if (!cfd->pc.isdir ())
 	    {
+              if (HACK_DEBUG_OPEN)
+                hack_print(
+                  "\tsyscalls.cc: gen_full_path_at: ENOTDIR (1)\r\n");
 	      set_errno (ENOTDIR);
 	      return -1;
 	    }
@@ -4528,6 +4533,9 @@ gen_full_path_at (char *path_ret, int dirfd, const char *pathname,
 	}
       if (!p)
 	{
+          if (HACK_DEBUG_OPEN)
+            hack_print(
+              "\tsyscalls.cc: gen_full_path_at: ENOTDIR (2)\r\n");
 	  set_errno (ENOTDIR);
 	  return -1;
 	}

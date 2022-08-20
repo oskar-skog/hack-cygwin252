@@ -74,6 +74,8 @@
 #include <wctype.h>
 #undef basename
 
+#include "hack.h"
+
 suffix_info stat_suffixes[] =
 {
   suffix_info ("", 1),
@@ -906,6 +908,9 @@ path_conv::check (const char *src, unsigned opt,
 		  path_flags = sym.pflags;
 		  if (component)
 		    {
+                      if (HACK_DEBUG_OPEN)
+                        hack_print(
+                          "\tpath.cc: path_conv::check: ENOTDIR (1)\r\n");
 		      error = ENOTDIR;
 		      return;
 		    }
@@ -939,6 +944,9 @@ path_conv::check (const char *src, unsigned opt,
 		{
 		  if (component)
 		    {
+                      if (HACK_DEBUG_OPEN)
+                        hack_print(
+                          "\tpath.cc: path_conv::check: ENOTDIR (2)\r\n");
 		      error = ENOTDIR;
 		      return;
 		    }
@@ -953,6 +961,9 @@ path_conv::check (const char *src, unsigned opt,
 		{
 		  if (component)
 		    {
+                      if (HACK_DEBUG_OPEN)
+                        hack_print(
+                          "\tpath.cc: path_conv::check: ENOTDIR (3)\r\n");
 		      error = ENOTDIR;
 		      return;
 		    }
@@ -996,6 +1007,9 @@ path_conv::check (const char *src, unsigned opt,
 		    add_ext = true;
 		  else if (!(sym.fileattr & FILE_ATTRIBUTE_DIRECTORY))
 		    {
+                      if (HACK_DEBUG_OPEN)
+                        hack_print(
+                          "\tpath.cc: path_conv::check: ENOTDIR (4)\r\n");
 		      error = ENOTDIR;
 		      goto out;
 		    }
@@ -1148,6 +1162,9 @@ path_conv::check (const char *src, unsigned opt,
 	path_flags &= ~PATH_SYMLINK;
       else
 	{
+          if (HACK_DEBUG_OPEN)
+            hack_print(
+              "\tpath.cc: path_conv::check: ENOTDIR (5)\r\n");
 	  debug_printf ("%s is a non-directory", path);
 	  error = ENOTDIR;
 	  return;
@@ -4595,6 +4612,9 @@ cwdstuff::set (path_conv *nat_cwd, const char *posix_cwd)
     {
       drive_length = 0;
       error = ENOTDIR;
+      if (HACK_DEBUG_OPEN)
+        hack_print(
+          "\tpath.cc: cwdstuff::set: ENOTDIR\r\n");
     }
   else
     {
