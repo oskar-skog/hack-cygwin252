@@ -32,6 +32,8 @@ details. */
 /* FIXME: Once things stabilize, bump up to a few minutes.  */
 #define FORK_WAIT_TIMEOUT (300 * 1000)     /* 300 seconds */
 
+static int real_fork();
+
 class frok
 {
   bool load_dlls;
@@ -553,8 +555,6 @@ cleanup:
   debug_printf ("returning -1");
   return -1;
 }
-
-static int real_fork();
 
 extern "C" int fork()
 {
