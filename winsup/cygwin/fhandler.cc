@@ -563,6 +563,13 @@ done:
 int
 fhandler_base::open (int flags, mode_t mode)
 {
+  if (HACK_DEBUG_OPEN)
+    {
+      hack_print(
+        "\tfhandler.cc: fhandler_base::open(flags=0x%x, mode=0%o)\r\n",
+        (unsigned) flags, (unsigned) mode
+      );
+    }
   int res = 0;
   HANDLE fh;
   ULONG file_attributes = 0;
@@ -632,8 +639,14 @@ fhandler_base::open (int flags, mode_t mode)
     {
       /* Add the reparse point flag to native symlinks, otherwise we open the
 	 target, not the symlink.  This would break lstat. */
-      if (pc.is_rep_symlink ())
-	options |= FILE_OPEN_REPARSE_POINT;
+      if (pc.is_rep_symlink ()) {
+        options |= FILE_OPEN_REPARSE_POINT;
+        if (HACK_DEBUG_OPEN)
+          hack_print("\tfhandler_base::open: pc.is_rep_symlink() -> true\r\n");
+      } else {
+        if (HACK_DEBUG_OPEN)
+          hack_print("\tfhandler_base::open: pc.is_rep_symlink() -> false\r\n");
+      }
 
       if (pc.fs_is_nfs ())
 	{
@@ -701,6 +714,37 @@ fhandler_base::open (int flags, mode_t mode)
 
   status = NtCreateFile (&fh, access, &attr, &io, NULL, file_attributes, shared,
 			 create_disposition, options, p, plen);
+  if (HACK_DEBUG_OPEN)
+  {
+    hack_print(
+      "\tfhandler_base::open: NtCreateFile(\n"
+      "\t\tFileHandle = &fh,\r\n"
+      "\t\tDesiredAccess = 0x%x,\r\n"
+      "\t\tObjectAttributes = &attr,\r\n"
+      "\t\tIoStatusBlock = &io,\r\n"
+      "\t\tAllocationSize = NULL,\r\n"
+      "\t\tFileAttributes = 0x%lx,\r\n"
+      "\t\tShareAccess = 0x%lx,\r\n"
+      "\t\tCreateDisposition = 0x%lx,\r\n"
+      "\t\tCreateOptions = 0x%lx,\r\n"
+      "\t\tEaBuffer = p,\r\n"
+      "\t\tEaLength = 0x%lx,\r\n"
+      "\t) -> 0x%x\r\n"
+      ,
+      // &fh
+      (unsigned) access,
+      // &attr
+      // &io
+      // NULL
+      (unsigned long) file_attributes,
+      (unsigned long) shared,
+      (unsigned long) create_disposition,
+      (unsigned long) options,
+      // p
+      (unsigned long) plen,
+      (unsigned) status
+    );
+  }
   if (!NT_SUCCESS (status))
     {
       /* Trying to create a directory should return EISDIR, not ENOENT. */
@@ -776,6 +820,13 @@ done:
 
   syscall_printf ("%d = fhandler_base::open(%S, %y)",
 		  res, pc.get_nt_native_path (), flags);
+  if (HACK_DEBUG_OPEN)
+  {
+    hack_print(
+      "\tfhandler_base::open: return %d, errno=%d\r\n",
+      res, get_errno()
+    );
+  }
   return res;
 }
 

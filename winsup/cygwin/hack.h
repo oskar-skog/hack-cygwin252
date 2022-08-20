@@ -1,10 +1,11 @@
 #ifndef _HACK_H
 #define _HACK_H
 
-#define HACK_DEBUG_OPEN             1
+#define HACK_FORK_ATTEMPTS          10
 #define HACK_DEBUG_FORK             1
 
-#define HACK_FORK_ATTEMPTS          10
+// Misnomer, does all kinds of logging for ReactOS CORE-18247
+#define HACK_DEBUG_OPEN             1
 
 // Define buffer size
 #define HACK_MAXLEN                 1024
