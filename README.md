@@ -62,13 +62,23 @@ To install it you need to end all Cygwin applications and copy it to
 
 ## Hacking
 
+```C++
+#include "hack.h"
+void hack_print(const char * format, ...);
+void hack_utf16_to_utf8(char * dest, size_t bufsize, LPWSTR src);
+```
+
 `winsup/cygwin` contains all the things of interest.
 
-`winsup/cygwin/hack.cc` will implement the debugging stuff (currently just
-a test.)
-
 `winsup/cygwin/hack.h` header for configuring stuff, make sure to `touch` all
-files that include it as needed to ensure they actually get compiled.
+files that include it as needed to ensure they actually get compiled if you
+change some defines in it.
 
-`winsup/cygwin/dcrt0.cc` calls `main()` of the program. `hack_init` will be
-called immediately before.
+`dll_crt0_1` in `winsup/cygwin/dcrt0.cc` calls `main` of the program,
+`hack_init` is called immediately before.  `do_exit` in `dcrt0.cc`
+calls `hack_end`.
+
+## Log files
+
+Log files will be created in `C:\cygdbg`.  You must create the directory
+manually.

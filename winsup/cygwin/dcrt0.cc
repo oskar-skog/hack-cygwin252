@@ -1038,7 +1038,7 @@ dll_crt0_1 (void *)
       _my_tls.call_signal_handler ();
       _my_tls.incyg--;	/* Not in Cygwin anymore */
       // Just before calling main() of the program
-      hack_init(__argc, __argv);
+      hack_init(__argv[0]);
 #ifdef __x86_64__
       cygwin_exit (user_data->main (__argc, newargv, __cygwin_environ));
 #else
@@ -1190,6 +1190,8 @@ __main (void)
 void __reg1
 do_exit (int status)
 {
+  // All ways a Cygwin application can exit end up here
+  hack_end();
   syscall_printf ("do_exit (%d), exit_state %d", status, exit_state);
 
   lock_process until_exit (true);

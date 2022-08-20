@@ -24,11 +24,15 @@ details. */
 #include "cygmalloc.h"
 #include "ntdll.h"
 
+#include "hack.h"
+
 #define NPIDS_HELD 4
 
 /* Timeout to wait for child to start, parent to init child, etc.  */
 /* FIXME: Once things stabilize, bump up to a few minutes.  */
 #define FORK_WAIT_TIMEOUT (300 * 1000)     /* 300 seconds */
+
+static int real_fork();
 
 class frok
 {
@@ -41,7 +45,7 @@ class frok
   int __stdcall parent (volatile char * volatile here);
   int __stdcall child (volatile char * volatile here);
   bool error (const char *fmt, ...);
-  friend int fork ();
+  friend int real_fork ();
 };
 
 static void
@@ -552,9 +556,58 @@ cleanup:
   return -1;
 }
 
-extern "C" int
-fork ()
+extern "C" int fork()
 {
+    if (HACK_DEBUG_FORK)
+        hack_print("\r\nfork.cc: fork()\r\n");
+    
+    // fork() with multiple attempts
+    int res, saved_errno, attempts;
+    attempts = 0;
+    
+    // Make sure to preserve previous errno value
+    saved_errno = get_errno();
+    do {
+        res = real_fork();
+        attempts++;
+    } while (res < 0 && attempts < HACK_FORK_ATTEMPTS);
+    // Make sure to preserve the most recent errno value if fork() failed
+    if (res < 0) {
+        saved_errno = get_errno();
+    }
+    
+    if (HACK_DEBUG_FORK)
+        hack_print("fork.cc: %d attempts used\r\n", attempts);
+    
+    // Need to call init_hack in child process
+    if (res == 0) {
+        char cmdline[HACK_MAXLEN];
+        hack_utf16_to_utf8(cmdline, HACK_MAXLEN, GetCommandLineW());
+        // Get command name, doesn't work correctly but close enough
+        for (int i = 0; i < HACK_MAXLEN; i++)
+            if (cmdline[i] == ' ') cmdline[i] = 0;
+            hack_init(cmdline);
+        hack_print(
+            "fork.cc: fork() returned in child, PPID = %d\r\n", getppid()
+        );
+    }
+    
+    if (HACK_DEBUG_FORK)
+        hack_print("fork.cc: Return %d, errno=%d\r\n\r\n", res, get_errno());
+    
+    // return result and errno
+    set_errno(saved_errno);
+    return res;
+}
+
+static int real_fork()
+{
+#if 1
+  // fork() seems to have broken
+  // This won't be thread safe.
+  bool restore_hack_debug_enabled = hack_debug_enabled;
+  hack_debug_enabled = false;
+#endif
   frok grouped;
 
   debug_printf ("entering");
@@ -634,6 +687,11 @@ fork ()
       set_errno (grouped.this_errno);
     }
   syscall_printf ("%R = fork()", res);
+#if 1
+  // Re-enable logging
+  if (res)
+      hack_debug_enabled = restore_hack_debug_enabled;
+#endif
   return res;
 }
 #ifdef DEBUGGING
