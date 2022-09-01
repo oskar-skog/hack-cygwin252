@@ -1740,7 +1740,7 @@ static void
 stat64_to_stat32 (struct stat *src, struct __stat32 *dst)
 {
   if (HACK_DEBUG_STAT)
-    hack_print("\tsyscalls.cc: stat64_to_stat32: Nothing to see here\r\n")
+    hack_print("\tsyscalls.cc: stat64_to_stat32: Nothing to see here\r\n");
   dst->st_dev = ((src->st_dev >> 8) & 0xff00) | (src->st_dev & 0xff);
   dst->st_ino = ((unsigned) (src->st_ino >> 32)) | (unsigned) src->st_ino;
   dst->st_mode = src->st_mode;
