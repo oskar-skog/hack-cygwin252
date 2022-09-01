@@ -28,6 +28,7 @@ details. */
 #define _COMPILING_NEWLIB
 #include <dirent.h>
 
+#include <string.h>
 #include "hack.h"
 
 class __DIR_mounts
@@ -323,7 +324,7 @@ fhandler_base::fstat_by_handle (struct stat *buf)
       hack_print("\tfhandler_disk_file.cc: "
                  "fhandler_base::fstat_by_handle(struct stat *buf)\r\n");
       hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_by_handle: "
-                 "errno=%d\r\n", get_errno());
+                 "errno=%s\r\n", strerror(get_errno()));
     }
   HANDLE h = get_stat_handle ();
   NTSTATUS status = 0;
@@ -345,7 +346,8 @@ fhandler_base::fstat_by_handle (struct stat *buf)
   if (HACK_DEBUG_STAT)
     {
       hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_by_handle: "
-                 "errno=%d, tail call fstat_helper(buf)\r\n", get_errno());
+                 "errno=%s, tail call fstat_helper(buf)\r\n",
+                 strerror(get_errno()));
     }
   return fstat_helper (buf);
 }
@@ -358,7 +360,7 @@ fhandler_base::fstat_by_name (struct stat *buf)
     hack_print("\tfhandler_disk_file.cc: "
                "fhandler_base::fstat_by_name(struct stat *buf)\r\n");
     hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_by_name: "
-               "errno=%d\r\n", get_errno());
+               "errno=%s\r\n", strerror(get_errno()));
   }
   NTSTATUS status;
   OBJECT_ATTRIBUTES attr;
@@ -401,7 +403,8 @@ fhandler_base::fstat_by_name (struct stat *buf)
   if (HACK_DEBUG_STAT)
   {
     hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_by_name: "
-               "errno=%d, tail call fstat_helper(buf)\r\n", get_errno());
+               "errno=%s, tail call fstat_helper(buf)\r\n",
+               strerror(get_errno()));
   }
   return fstat_helper (buf);
 }
@@ -424,7 +427,8 @@ fhandler_base::fstat_fs (struct stat *buf)
       if (HACK_DEBUG_STAT)
         {
           hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_fs: "
-                     "early return %d, errno=%d\r\n", res, get_errno());
+                     "early return %d, errno=%s\r\n",
+                     res, strerror(get_errno()));
         }
       return res;
     }
@@ -457,7 +461,7 @@ fhandler_base::fstat_fs (struct stat *buf)
   if (HACK_DEBUG_STAT)
     {
       hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_fs: "
-                 "return %d, errno=%d\r\n", res, get_errno());
+                 "return %d, errno=%s\r\n", res, strerror(get_errno()));
     }
   return res;
 }
@@ -665,11 +669,12 @@ fhandler_base::fstat_helper (struct stat *buf)
   if (HACK_DEBUG_STAT)
     hack_print(
       "\tfhandler_disk_file.cc: fhandler_base::fstat_helper: return {\r\n"
-      "\t\terrno = %d\r\n"
+      "\t\terrno = %s\r\n"
       "\t\tsize = %jd\r\n"
       "\t\tmode = 0%o\r\n"
       "\t}\r\n",
-      get_errno(), (intmax_t) buf->st_size, (unsigned int) buf->st_mode
+      strerror(get_errno()),
+      (intmax_t) buf->st_size, (unsigned int) buf->st_mode
     );
   return 0;
 }
@@ -811,7 +816,7 @@ out:
   if (HACK_DEBUG_STAT)
     hack_print("\tfhandler_disk_file.cc: fhandler_disk_file::fstatvfs: "
                "return %d = fstatvfs(\"%s\", struct statvfs *sfs), "
-               "errno=%d\r\n", ret, get_name(), get_errno());
+               "errno=%s\r\n", ret, get_name(), strerror(get_errno()));
   return ret;
 }
 

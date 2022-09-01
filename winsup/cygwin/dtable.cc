@@ -28,8 +28,6 @@ details. */
 #include "ntdll.h"
 #include "shared_info.h"
 
-#include "hack.h"
-
 static const DWORD std_consts[] = {STD_INPUT_HANDLE, STD_OUTPUT_HANDLE,
 				   STD_ERROR_HANDLE};
 

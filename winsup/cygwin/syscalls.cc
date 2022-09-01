@@ -71,6 +71,7 @@ details. */
 #undef _fstat64
 
 #include <stdint.h>
+#include <string.h>
 #include "hack.h"
 
 static int __stdcall mknod_worker (const char *, mode_t, mode_t, _major_t,
@@ -1207,8 +1208,8 @@ read (int fd, void *ptr, size_t len)
   syscall_printf ("%lR = read(%d, %p, %d)", res, fd, ptr, len);
   if (HACK_DEBUG_READ)
     {
-      hack_print("sycalls.cc: read: return %d, errno=%d\r\n\r\n",
-                 res, get_errno());
+      hack_print("sycalls.cc: read: return %d, errno=%s\r\n\r\n",
+                 res, strerror(get_errno()));
     }
   return (ssize_t) res;
 }
@@ -1421,8 +1422,8 @@ open (const char *unix_path, int flags, ...)
                     // errno already set
                     if (HACK_DEBUG_OPEN) {
                         hack_print(
-                            "syscalls.cc: A (build_fh_name): errno=%d\r\n",
-                            get_errno()
+                            "syscalls.cc: A (build_fh_name): errno=%s\r\n",
+                            strerror(get_errno())
                         );
                     }
                 }
@@ -1450,7 +1451,8 @@ open (const char *unix_path, int flags, ...)
 		       || !fh->open_with_arch (flags, mode & 07777))
                 {
                   if (HACK_DEBUG_OPEN)
-                      hack_print("syscalls.cc: B: errno=%d\r\n", get_errno());
+                    hack_print("syscalls.cc: B: errno=%s\r\n",
+                               strerror(get_errno()));
 		  delete fh;
                 }
 	      else
@@ -1467,12 +1469,14 @@ open (const char *unix_path, int flags, ...)
     }
   __except (EFAULT)
     {
-        if (HACK_DEBUG_OPEN)
-            hack_print("syscalls.cc: C (exception): errno=%d\r\n", get_errno());
+      if (HACK_DEBUG_OPEN)
+        hack_print("syscalls.cc: C (exception): errno=%s\r\n",
+                   strerror(get_errno()));
     }
   __endtry
   if (HACK_DEBUG_OPEN)
-      hack_print("syscalls.cc: Return %d, errno=%d\r\n\r\n", res, get_errno());
+      hack_print("syscalls.cc: Return %d, errno=%s\r\n\r\n", res,
+                 strerror(get_errno()));
   return res;
 }
 
@@ -1836,8 +1840,8 @@ fstat64 (int fd, struct stat *buf)
   syscall_printf ("%R = fstat(%d, %p)", res, fd, buf);
   if (HACK_DEBUG_STAT)
     {
-      hack_print("syscalls.cc: fstat64: return %d, errno=%d\r\n",
-                 res, get_errno());
+      hack_print("syscalls.cc: fstat64: return %d, errno=%s\r\n",
+                 res, strerror(get_errno()));
     }
   return res;
 }
@@ -1856,8 +1860,8 @@ _fstat64_r (struct _reent *ptr, int fd, struct stat *buf)
     ptr->_errno = get_errno ();
   if (HACK_DEBUG_STAT)
     {
-      hack_print("syscalls.cc: _fstat64_r: return %d, errno=%d\r\n\r\n",
-                 ret, get_errno());
+      hack_print("syscalls.cc: _fstat64_r: return %d, errno=%s\r\n\r\n",
+                 ret, strerror(get_errno()));
     }
   return ret;
 }
@@ -1881,8 +1885,8 @@ fstat (int fd, struct stat *buf)
     }
   if (HACK_DEBUG_STAT)
     {
-      hack_print("syscalls.cc: fstat: return %d, errno=%d\r\n\r\n",
-                 ret, get_errno());
+      hack_print("syscalls.cc: fstat: return %d, errno=%s\r\n\r\n",
+                 ret, strerror(get_errno()));
     }
   return ret;
 }
@@ -1898,8 +1902,8 @@ _fstat_r (struct _reent *ptr, int fd, struct stat *buf)
     ptr->_errno = get_errno ();
   if (HACK_DEBUG_STAT)
     {
-      hack_print("syscalls.cc: _fstat_r: return %d, errno=%d\r\n\r\n",
-                 ret, get_errno());
+      hack_print("syscalls.cc: _fstat_r: return %d, errno=%s\r\n\r\n",
+                 ret, strerror(get_errno()));
     }
   return ret;
 }
@@ -2025,7 +2029,7 @@ stat64 (const char *__restrict name, struct stat *__restrict buf)
       hack_print("\r\nsyscalls.cc: stat64(name=\"%s\", struct stat *buf)\r\n",
                  name);
       hack_print("syscalls.cc: stat64: before init path_conv, "
-                 "errno=%d\r\n", get_errno());
+                 "errno=%s\r\n", strerror(get_errno()));
     }
   syscall_printf ("entering");
   path_conv pc (name, PC_SYM_FOLLOW | PC_POSIX | PC_KEEP_HANDLE,
@@ -2033,13 +2037,13 @@ stat64 (const char *__restrict name, struct stat *__restrict buf)
   if (HACK_DEBUG_STAT)
     {
       hack_print("syscalls.cc: stat64: after init path_conv, "
-                 "errno=%d\r\n", get_errno());
+                 "errno=%s\r\n", strerror(get_errno()));
     }
   int result = stat_worker (pc, buf);
   if (HACK_DEBUG_STAT)
     {
-      hack_print("syscalls.cc: stat64: return %d, errno=%d\r\n\r\n",
-                 result, get_errno());
+      hack_print("syscalls.cc: stat64: return %d, errno=%s\r\n\r\n",
+                 result, strerror(get_errno()));
     }
   return result;
 }
@@ -2078,7 +2082,7 @@ stat (const char *__restrict name, struct stat *__restrict buf)
   if (HACK_DEBUG_STAT)
     {
       hack_print("syscalls.cc: stat: return %d, errno=%d\r\n\r\n",
-                 ret, get_errno());
+                 ret, strerror(get_errno()));
     }
   return ret;
 }
@@ -2102,22 +2106,22 @@ lstat64 (const char *__restrict name, struct stat *__restrict buf)
   if (HACK_DEBUG_STAT)
     {
       hack_print("\r\nsyscalls.cc: lstat64(name=\"%s\", *buf):\r\n", name);
-      hack_print("syscalls.cc: lstat64: before init path_conv, errno=%d\r\n",
-                 get_errno());
+      hack_print("syscalls.cc: lstat64: before init path_conv, errno=%s\r\n",
+                 strerror(get_errno()));
     }
   syscall_printf ("entering");
   path_conv pc (name, PC_SYM_NOFOLLOW | PC_POSIX | PC_KEEP_HANDLE,
 		stat_suffixes);
   if (HACK_DEBUG_STAT)
     {
-      hack_print("syscalls.cc: lstat64: after init path_conv, errno=%d\r\n",
-                 get_errno());
+      hack_print("syscalls.cc: lstat64: after init path_conv, errno=%s\r\n",
+                 strerror(get_errno()));
     }
   int result = stat_worker (pc, buf);
   if (HACK_DEBUG_STAT)
     {
-      hack_print("syscalls.cc: lstat64: return %d, errno=%d\r\n\r\n",
-                 result, get_errno());
+      hack_print("syscalls.cc: lstat64: return %d, errno=%s\r\n\r\n",
+                 result, strerror(get_errno()));
     }
   return result;
 }

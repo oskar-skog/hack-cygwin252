@@ -30,6 +30,7 @@ details. */
 #include <asm/socket.h>
 #include "cygwait.h"
 
+#include <string.h>
 #include "hack.h"
 
 #define MAX_OVERLAPPED_WRITE_LEN (64 * 1024 * 1024)
@@ -512,8 +513,8 @@ fhandler_base::open_with_arch (int flags, mode_t mode)
   if (!nohandle ())
     set_unique_id ();
   if (HACK_DEBUG_OPEN)
-    hack_print("\tfhandler_base::open_with_arch: Return %d, errno=%d\r\n",
-               res, get_errno());
+    hack_print("\tfhandler_base::open_with_arch: Return %d, errno=%s\r\n",
+               res, strerror(get_errno()));
   return res;
 }
 
@@ -816,8 +817,8 @@ done:
   if (HACK_DEBUG_OPEN)
   {
     hack_print(
-      "\tfhandler_base::open: return %d, errno=%d\r\n",
-      res, get_errno()
+      "\tfhandler_base::open: return %d, errno=%s\r\n",
+      res, strerror(get_errno())
     );
   }
   return res;
