@@ -28,6 +28,8 @@ details. */
 #define _COMPILING_NEWLIB
 #include <dirent.h>
 
+#include "hack.h"
+
 class __DIR_mounts
 {
   int		 count;
