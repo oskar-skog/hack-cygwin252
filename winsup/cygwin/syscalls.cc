@@ -2072,7 +2072,7 @@ stat (const char *__restrict name, struct stat *__restrict buf)
   if (HACK_DEBUG_STAT)
     {
       hack_print("syscalls.cc: stat: return %d, errno=%d\r\n\r\n",
-                 result, get_errno());
+                 ret, get_errno());
     }
   return ret;
 }
