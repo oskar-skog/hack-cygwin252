@@ -1851,7 +1851,7 @@ _fstat64_r (struct _reent *ptr, int fd, struct stat *buf)
   if (HACK_DEBUG_STAT)
     {
       hack_print("syscalls.cc: _fstat64_r: return %d, errno=%d\r\n\r\n",
-                 res, get_errno());
+                 ret, get_errno());
     }
   return ret;
 }
