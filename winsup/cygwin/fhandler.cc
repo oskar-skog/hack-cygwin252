@@ -1739,6 +1739,11 @@ fhandler_base::rmdir ()
 DIR *
 fhandler_base::opendir (int fd)
 {
+  if (HACK_DEBUG_OPEN)
+    {
+      hack_print("\tfhandler.cc: fhandler_base::opendir(fd=%d) "
+                 "set ENOTDIR\r\n", fd);
+    }
   set_errno (ENOTDIR);
   return NULL;
 }
