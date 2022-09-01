@@ -60,7 +60,7 @@ To install it you need to end all Cygwin applications and copy it to
 `C:\cygwin\bin` (or wherever your Cygwin /bin happens to be).
 
 
-## Adding log messages
+## Hacking/Adding log messages
 
 ```C++
 #include "hack.h"
@@ -78,6 +78,8 @@ change some defines in it.
 `dll_crt0_1` in `winsup/cygwin/dcrt0.cc` calls `main` of the program,
 `hack_init` is called immediately before.  `do_exit` in `dcrt0.cc`
 calls `hack_end`.
+
+`fork` will also call `hack_init` in the child process.
 
 ## Log files
 
