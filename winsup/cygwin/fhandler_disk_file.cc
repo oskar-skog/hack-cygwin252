@@ -811,7 +811,6 @@ out:
     hack_print("\tfhandler_disk_file.cc: fhandler_disk_file::fstatvfs: "
                "return %d = fstatvfs(\"%s\", struct statvfs *sfs), "
                "errno=%d\r\n", ret, get_name(), get_errno());
-    )
   return ret;
 }
 
