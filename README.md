@@ -37,7 +37,7 @@ on [current build instructions](https://cygwin.com/faq/faq.html#faq.programming.
 ## Build instructions
 
 ```
-git clone git@github.com:oskar-skog/hack-cygwin252.git
+git clone https://github.com/oskar-skog/hack-cygwin252.git
 cd hack-cygwin252
 
 mkdir build
@@ -60,12 +60,13 @@ To install it you need to end all Cygwin applications and copy it to
 `C:\cygwin\bin` (or wherever your Cygwin /bin happens to be).
 
 
-## Hacking
+## Adding log messages
 
 ```C++
 #include "hack.h"
 void hack_print(const char * format, ...);
 void hack_utf16_to_utf8(char * dest, size_t bufsize, LPWSTR src);
+void hack_PUSTR_to_utf8(char * dst, size_t dst_size, PUNICODE_STRING src);
 ```
 
 `winsup/cygwin` contains all the things of interest.
