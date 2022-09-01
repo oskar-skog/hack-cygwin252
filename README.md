@@ -50,7 +50,7 @@ cd ../installroot
 prefix=$(pwd)
 
 cd ../build
-../configure "--prefix=$prefix"
+../configure "--prefix=$prefix" --enable-debugging
 make
 make install
 ```

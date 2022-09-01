@@ -1819,7 +1819,7 @@ extern "C" int
 fstat64 (int fd, struct stat *buf)
 {
   if (HACK_DEBUG_STAT)
-    hack_print("\r\nsyscalls.cc: fstat64(fd=%d, struct stat *buf)\r\n", fd);
+    hack_print("syscalls.cc: fstat64(fd=%d, struct stat *buf)\r\n", fd);
   int res;
 
   cygheap_fdget cfd (fd);
@@ -1836,7 +1836,7 @@ fstat64 (int fd, struct stat *buf)
   syscall_printf ("%R = fstat(%d, %p)", res, fd, buf);
   if (HACK_DEBUG_STAT)
     {
-      hack_print("syscalls.cc: fstat64: return %d, errno=%d\r\n\r\n",
+      hack_print("syscalls.cc: fstat64: return %d, errno=%d\r\n",
                  res, get_errno());
     }
   return res;
@@ -1870,7 +1870,7 @@ extern "C" int
 fstat (int fd, struct stat *buf)
 {
   if (HACK_DEBUG_STAT)
-    hack_print("\r\nsyscalls.cc: fstat(fd=%d, struct stat *buf)\r\n", fd);
+    hack_print("\r\nsyscalls.cc: fstat(fd=%d, struct stat *buf)", fd);
   struct stat buf64;
   int ret = fstat64 (fd, &buf64);
   if (!ret)

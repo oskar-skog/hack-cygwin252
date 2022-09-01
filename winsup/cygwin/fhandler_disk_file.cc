@@ -678,7 +678,7 @@ int __reg2
 fhandler_disk_file::fstat (struct stat *buf)
 {
   if (HACK_DEBUG_STAT)
-    hack_print("\tfhandler_disk_file.cc:: "
+    hack_print("\tfhandler_disk_file.cc: "
                "fhandler_disk_file::fstat() -> fstat_fs()\r\n");
   return fstat_fs (buf);
 }
