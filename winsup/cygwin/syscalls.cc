@@ -70,6 +70,7 @@ details. */
 #undef _lseek64
 #undef _fstat64
 
+#include <stdint.h>
 #include "hack.h"
 
 static int __stdcall mknod_worker (const char *, mode_t, mode_t, _major_t,
@@ -1169,6 +1170,11 @@ getsid (pid_t pid)
 extern "C" ssize_t
 read (int fd, void *ptr, size_t len)
 {
+  if (HACK_DEBUG_READ)
+    {
+      hack_print("\r\nsyscalls.cc: read(fd=%d, ptr, len=%jd)\r\n",
+                 fd, (intmax_t) len);
+    }
   size_t res = (size_t) -1;
 
   pthread_testcancel ();
@@ -1192,9 +1198,18 @@ read (int fd, void *ptr, size_t len)
       cfd->read (ptr, len);
       res = len;
     }
-  __except (EFAULT) {}
+  __except (EFAULT)
+    {
+      if (HACK_DEBUG_READ)
+        hack_print("syscalls.cc: read: __except (EFAULT)\r\n");
+    }
   __endtry
   syscall_printf ("%lR = read(%d, %p, %d)", res, fd, ptr, len);
+  if (HACK_DEBUG_READ)
+    {
+      hack_print("sycalls.cc: read: return %d, errno=%d\r\n\r\n",
+                 res, get_errno());
+    }
   return (ssize_t) res;
 }
 
@@ -1797,6 +1812,8 @@ fhandler_base::stat_fixup (struct stat *buf)
 extern "C" int
 fstat64 (int fd, struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+    hack_print("\r\nsyscalls.cc: fstat64(fd=%d, struct stat *buf)\r\n", fd);
   int res;
 
   cygheap_fdget cfd (fd);
@@ -1811,16 +1828,31 @@ fstat64 (int fd, struct stat *buf)
     }
 
   syscall_printf ("%R = fstat(%d, %p)", res, fd, buf);
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("syscalls.cc: fstat64: return %d, errno=%d\r\n\r\n",
+                 res, get_errno());
+    }
   return res;
 }
 
 extern "C" int
 _fstat64_r (struct _reent *ptr, int fd, struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("\r\nsyscalls.cc: _fstat64_r(struct _reent *ptr, fd=%d,"
+                 " struct stat *buf)\r\n", fd);
+    }
   int ret;
 
   if ((ret = fstat64 (fd, buf)) == -1)
     ptr->_errno = get_errno ();
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("syscalls.cc: _fstat64_r: return %d, errno=%d\r\n\r\n",
+                 res, get_errno());
+    }
   return ret;
 }
 
@@ -1831,20 +1863,38 @@ EXPORT_ALIAS (_fstat64_r, _fstat_r)
 extern "C" int
 fstat (int fd, struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+    hack_print("\r\nsyscalls.cc: fstat(fd=%d, struct stat *buf)\r\n", fd);
   struct stat buf64;
   int ret = fstat64 (fd, &buf64);
   if (!ret)
-    stat64_to_stat32 (&buf64, (struct __stat32 *) buf);
+    {
+      if (HACK_DEBUG_STAT)
+        hack_print("syscalls.cc: fstat: stat64_to_stat32\r\n");
+      stat64_to_stat32 (&buf64, (struct __stat32 *) buf);
+    }
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("syscalls.cc: fstat: return %d, errno=%d\r\n\r\n",
+                 res, get_errno());
+    }
   return ret;
 }
 
 extern "C" int
 _fstat_r (struct _reent *ptr, int fd, struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+    hack_print("\r\nsyscalls.cc: _fstat_r(fd=%d, struct stat *buf)\r\n", fd);
   int ret;
 
   if ((ret = fstat (fd, buf)) == -1)
     ptr->_errno = get_errno ();
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("syscalls.cc: _fstat_r: return %d, errno=%d\r\n\r\n",
+                 res, get_errno());
+    }
   return ret;
 }
 #endif

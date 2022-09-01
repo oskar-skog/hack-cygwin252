@@ -1359,8 +1359,17 @@ fhandler_base::ioctl (unsigned int cmd, void *buf)
 int __reg2
 fhandler_base::fstat (struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+    hack_print("\tfhandler.cc: fhandler_base::fstat(struct stat *buf)\r\n");
   if (is_fs_special ())
-    return fstat_fs (buf);
+    {
+      if (HACK_DEBUG_STAT)
+        {
+          hack_print("\tfhandler.cc: fhandler_base::fstat: "
+                     "tail call fstat_fs\r\n");
+        }
+      return fstat_fs (buf);
+    }
 
   switch (get_device ())
     {
@@ -1391,6 +1400,8 @@ fhandler_base::fstat (struct stat *buf)
   buf->st_mtim.tv_nsec = 0L;
   buf->st_atim = buf->st_mtim;
 
+  if (HACK_DEBUG_STAT)
+    hack_print("\tfhandler.cc: fhandler_base::fstat: return 0\r\n");
   return 0;
 }
 

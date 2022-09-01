@@ -4,8 +4,10 @@
 #define HACK_FORK_ATTEMPTS          10
 #define HACK_DEBUG_FORK             1
 
-// Misnomer, does all kinds of logging for ReactOS CORE-18247
+// Qll kinds of logging for ReactOS CORE-18247
 #define HACK_DEBUG_OPEN             1
+#define HACK_DEBUG_STAT             1
+#define HACK_DEBUG_READ             1
 
 // Define buffer size
 #define HACK_MAXLEN                 1024
