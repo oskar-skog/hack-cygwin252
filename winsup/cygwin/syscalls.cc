@@ -2026,7 +2026,7 @@ stat64 (const char *__restrict name, struct stat *__restrict buf)
 {
   if (HACK_DEBUG_STAT)
     {
-      hack_print("\r\nsyscalls.cc: stat64(name=\"%s\", struct stat *buf)\r\n",
+      hack_print("syscalls.cc: stat64(name=\"%s\", struct stat *buf)\r\n",
                  name);
       hack_print("syscalls.cc: stat64: before init path_conv, "
                  "errno=%s\r\n", strerror(get_errno()));
@@ -2042,7 +2042,7 @@ stat64 (const char *__restrict name, struct stat *__restrict buf)
   int result = stat_worker (pc, buf);
   if (HACK_DEBUG_STAT)
     {
-      hack_print("syscalls.cc: stat64: return %d, errno=%s\r\n\r\n",
+      hack_print("syscalls.cc: stat64: return %d, errno=%s\r\n",
                  result, strerror(get_errno()));
     }
   return result;
