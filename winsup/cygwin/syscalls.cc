@@ -2014,10 +2014,28 @@ stat_worker (path_conv &pc, struct stat *buf)
 extern "C" int
 stat64 (const char *__restrict name, struct stat *__restrict buf)
 {
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("\r\nsyscalls.cc: stat64(name=\"%s\", struct stat *buf)\r\n",
+                 name);
+      hack_print("syscalls.cc: stat64: before init path_conv, "
+                 "errno=%d\r\n", get_errno());
+    }
   syscall_printf ("entering");
   path_conv pc (name, PC_SYM_FOLLOW | PC_POSIX | PC_KEEP_HANDLE,
 		stat_suffixes);
-  return stat_worker (pc, buf);
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("syscalls.cc: stat64: after init path_conv, "
+                 "errno=%d\r\n", get_errno());
+    }
+  int result = stat_worker (pc, buf);
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("syscalls.cc: stat64: return %d, errno=%d\r\n\r\n",
+                 result, get_errno());
+    }
+  return result;
 }
 
 extern "C" int
@@ -2038,10 +2056,24 @@ EXPORT_ALIAS (_stat64_r, _stat_r)
 extern "C" int
 stat (const char *__restrict name, struct stat *__restrict buf)
 {
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("\r\nsyscalls.cc: stat(name=\"%s\", struct stat *buf)\r\n",
+                 name);
+    }
   struct stat buf64;
   int ret = stat64 (name, &buf64);
   if (!ret)
-    stat64_to_stat32 (&buf64, (struct __stat32 *) buf);
+    {
+      if (HACK_DEBUG_STAT)
+        hack_print("syscalls.cc: stat: Call stat64_to_stat32\r\n");
+      stat64_to_stat32 (&buf64, (struct __stat32 *) buf);
+    }
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("syscalls.cc: stat: return %d, errno=%d\r\n\r\n",
+                 result, get_errno());
+    }
   return ret;
 }
 
