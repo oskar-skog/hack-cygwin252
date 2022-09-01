@@ -1739,6 +1739,8 @@ fchmod (int fd, mode_t mode)
 static void
 stat64_to_stat32 (struct stat *src, struct __stat32 *dst)
 {
+  if (HACK_DEBUG_STAT)
+    hack_print("\tsyscalls.cc: stat64_to_stat32: Nothing to see here\r\n")
   dst->st_dev = ((src->st_dev >> 8) & 0xff00) | (src->st_dev & 0xff);
   dst->st_ino = ((unsigned) (src->st_ino >> 32)) | (unsigned) src->st_ino;
   dst->st_mode = src->st_mode;
@@ -1761,6 +1763,8 @@ static bool dev_st_inited;
 void
 fhandler_base::stat_fixup (struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+    hack_print("\tsyscalls.cc: fhandler_base::stat_fixup(struct stat *)\r\n");
   /* For devices, set inode number to device number.  This gives us a valid,
      unique inode number without having to call hash_path_name.  /dev/tty needs
      a bit of persuasion to get the same st_ino value in stat and fstat. */
@@ -1807,6 +1811,8 @@ fhandler_base::stat_fixup (struct stat *buf)
       else if (gnu_dev_major (buf->st_rdev) == DEV_CDROM_MAJOR)
 	buf->st_nlink = 2;
     }
+  if (HACK_DEBUG_STAT)
+    hack_print("\tsyscalls.cc: fhandler_base::stat_fixup: return void\r\n");
 }
 
 extern "C" int
@@ -2093,10 +2099,27 @@ _stat_r (struct _reent *__restrict ptr, const char *__restrict name,
 extern "C" int
 lstat64 (const char *__restrict name, struct stat *__restrict buf)
 {
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("\r\nsyscalls.cc: lstat64(name=\"%s\", *buf):\r\n", name);
+      hack_print("syscalls.cc: lstat64: before init path_conv, errno=%d\r\n",
+                 get_errno());
+    }
   syscall_printf ("entering");
   path_conv pc (name, PC_SYM_NOFOLLOW | PC_POSIX | PC_KEEP_HANDLE,
 		stat_suffixes);
-  return stat_worker (pc, buf);
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("syscalls.cc: lstat64: after init path_conv, errno=%d\r\n",
+                 get_errno());
+    }
+  int result = stat_worker (pc, buf);
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("syscalls.cc: lstat64: return %d, errno=%d\r\n\r\n",
+                 result, get_errno());
+    }
+  return result;
 }
 
 #ifdef __x86_64__
@@ -2109,7 +2132,10 @@ lstat (const char *__restrict name, struct stat *__restrict buf)
   struct stat buf64;
   int ret = lstat64 (name, &buf64);
   if (!ret)
-    stat64_to_stat32 (&buf64, (struct __stat32 *) buf);
+    {
+      hack_print("syscalls.cc: lstat: Call stat64_to_stat32\r\n");
+      stat64_to_stat32 (&buf64, (struct __stat32 *) buf);
+    }
   return ret;
 }
 #endif
