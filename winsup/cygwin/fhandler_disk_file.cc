@@ -668,7 +668,8 @@ fhandler_base::fstat_helper (struct stat *buf)
       "\t\terrno = %d\r\n"
       "\t\tsize = %jd\r\n"
       "\t\tmode = 0%o\r\n"
-      "\t}\r\n", get_errno(), intmax_t buf->st_size, (unsigned int) buf->st_mode
+      "\t}\r\n",
+      get_errno(), (intmax_t) buf->st_size, (unsigned int) buf->st_mode
     );
   return 0;
 }
