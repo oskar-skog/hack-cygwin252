@@ -139,6 +139,7 @@ public:
 
 class path_conv
 {
+// private:
   DWORD fileattr;
   ULONG caseinsensitive;
   fs_info fs;
@@ -154,6 +155,10 @@ class path_conv
  public:
   int error;
   device dev;
+
+  const char *hack_get_path() {return path ? path : "<NULL>";}
+  const char *hack_get_posix_path() {return posix_path ? posix_path : "<NULL>";}
+  DWORD hack_get_fileattr() {return fileattr;}
 
   const char *known_suffix () { return suffix; }
   bool isremote () const {return fs.is_remote_drive ();}

@@ -480,11 +480,11 @@ fhandler_base::fstat_helper (struct stat *buf)
   if (HACK_DEBUG_STAT)
   {
       hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_helper: "
-                 "pc.fileattr = 0x%x\r\n", pc.fileattr);
+                 "pc.fileattr = 0x%x\r\n", pc.hack_get_fileattr());
       hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_helper: "
-                 "pc.path = \"%s\"\r\n", pc.path);
+                 "pc.path = \"%s\"\r\n", pc.hack_get_path());
       hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_helper: "
-                 "pc.posix_path = \"%s\"\r\n", pc.posix_path);
+                 "pc.posix_path = \"%s\"\r\n", pc.hack_get_posix_path());
   }
 
   to_timestruc_t (&pfai->BasicInformation.LastAccessTime, &buf->st_atim);
