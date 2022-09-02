@@ -2039,7 +2039,7 @@ stat64 (const char *__restrict name, struct stat *__restrict buf)
       hack_print("syscalls.cc: stat64: after init path_conv, "
                  "errno=%s\r\n", strerror(get_errno()));
     }
-  int result = stat_worker (pc, buf);
+  int result = stat_worker (pc, buf);           // CORE-18247
   if (HACK_DEBUG_STAT)
     {
       hack_print("syscalls.cc: stat64: return %d, errno=%s\r\n\r\n",

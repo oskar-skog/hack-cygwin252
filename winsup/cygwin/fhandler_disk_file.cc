@@ -542,6 +542,9 @@ fhandler_base::fstat_helper (struct stat *buf)
   else if (pc.issocket ())
     buf->st_mode = S_IFSOCK;
 
+  // CORE-18247
+  //    W2003: A    (NTFS, btrfs)     B: FAT32
+  //    ReactOS: B  (FAT32, btrfs)
   if (!get_file_attribute (is_fs_special () && !pc.issocket () ? NULL : h, pc,
 			   &buf->st_mode, &buf->st_uid, &buf->st_gid))
     {
@@ -577,6 +580,8 @@ fhandler_base::fstat_helper (struct stat *buf)
 	buf->st_mode |= STD_WBITS;
       /* | S_IWGRP | S_IWOTH; we don't give write to group etc */
 
+      // CORE-18247: Is pc.isdir() returning false for "/cygdrive/d" ??
+      // int isdir () const {return has_attribute (FILE_ATTRIBUTE_DIRECTORY);}
       if (pc.isdir ())
 	buf->st_mode |= S_IFDIR | STD_WBITS | STD_XBITS;
       else if (buf->st_mode & S_IFMT)
@@ -589,6 +594,7 @@ fhandler_base::fstat_helper (struct stat *buf)
 	}
       else
 	{
+          // CORE-18247: "C" only happens on btrfs, not on FAT32.
           if (HACK_DEBUG_STAT)
             hack_print(
               "\tfhandler_disk_file.cc: fhandler_base::fstat_helper: C\r\n"
