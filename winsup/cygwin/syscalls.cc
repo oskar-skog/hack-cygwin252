@@ -2038,7 +2038,7 @@ stat_worker (path_conv &pc, struct stat *buf)
   if (HACK_DEBUG_STAT)
   {
       hack_print("\tsyscalls.cc: stat_worker: return %d, errno=%s\r\n",
-                 res, strerror(get_errno));
+                 res, strerror(get_errno()));
   }
   return res;
 }
