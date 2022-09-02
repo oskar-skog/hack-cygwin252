@@ -1,0 +1,2544 @@
+
+syscalls.cc: open(path="/dev/null", flags=0x2[, mode=00])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8002, mode=00)
+	fhandler.cc: fhandler_base::open(flags=0x8002, mode=00)
+	fhandler_base::open: attr.ObjectName="\Device\Null"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0xc0100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 3, errno=No error
+
+
+syscalls.cc: open(path="/usr/lib/charset.alias", flags=0x100000[, mode=010])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x108000, mode=010)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=010)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\lib\charset.alias"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 3, errno=No error
+
+
+syscalls.cc: _fstat64_r(struct _reent *ptr, fd=3, struct stat *buf)
+syscalls.cc: fstat64(fd=3, struct stat *buf)
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 191
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: fstat64: return 0, errno=No error
+syscalls.cc: _fstat64_r: return 0, errno=No error
+
+
+syscalls.cc: read(fd=3, ptr, len=65536)
+sycalls.cc: read: return 191, errno=No error
+
+
+syscalls.cc: read(fd=3, ptr, len=65536)
+sycalls.cc: read: return 0, errno=No error
+
+
+syscalls.cc: stat64(name=".", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No error
+
+
+syscalls.cc: stat64(name=".git", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+syscalls.cc: stat64: return -1, errno=No such file or directory
+
+
+syscalls.cc: lstat64(name=".git/HEAD", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: after init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: return -1, errno=No such file or directory
+
+
+syscalls.cc: lstat64(name="./HEAD", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: after init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: return -1, errno=No such file or directory
+
+
+syscalls.cc: stat64(name="..", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No such file or directory
+syscalls.cc: stat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: stat64(name=".git", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No such file or directory
+syscalls.cc: stat64: after init path_conv, errno=No such file or directory
+syscalls.cc: stat64: return -1, errno=No such file or directory
+
+
+syscalls.cc: lstat64(name=".git/HEAD", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: after init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: return -1, errno=No such file or directory
+
+
+syscalls.cc: lstat64(name="./HEAD", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: after init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: return -1, errno=No such file or directory
+
+
+syscalls.cc: stat64(name="..", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No such file or directory
+syscalls.cc: stat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: stat64(name=".git", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No such file or directory
+syscalls.cc: stat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: lstat64(name=".git/HEAD", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 23
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: lstat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: open(path=".git/HEAD", flags=0x0[, mode=010])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=010)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=010)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\HEAD"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No such file or directory
+	fhandler_base::open_with_arch: Return 1, errno=No such file or directory
+syscalls.cc: Return 3, errno=No such file or directory
+
+
+syscalls.cc: read(fd=3, ptr, len=255)
+sycalls.cc: read: return 23, errno=No such file or directory
+
+
+syscalls.cc: read(fd=3, ptr, len=232)
+sycalls.cc: read: return 0, errno=No such file or directory
+
+
+syscalls.cc: lstat64(name=".git/commondir", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: after init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: return -1, errno=No such file or directory
+
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+
+syscalls.cc: lstat64(name=".git/commondir", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: after init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: return -1, errno=No such file or directory
+
+
+syscalls.cc: open(path=".git/config", flags=0x0[, mode=0666])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=0666)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=0666)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\config"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No such file or directory
+	fhandler_base::open_with_arch: Return 1, errno=No such file or directory
+syscalls.cc: Return 3, errno=No such file or directory
+
+
+syscalls.cc: _fstat64_r(struct _reent *ptr, fd=3, struct stat *buf)
+syscalls.cc: fstat64(fd=3, struct stat *buf)
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 351
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: fstat64: return 0, errno=No such file or directory
+syscalls.cc: _fstat64_r: return 0, errno=No such file or directory
+
+
+syscalls.cc: read(fd=3, ptr, len=65536)
+sycalls.cc: read: return 351, errno=No such file or directory
+
+
+syscalls.cc: read(fd=3, ptr, len=65536)
+sycalls.cc: read: return 0, errno=No error
+
+
+syscalls.cc: stat64(name=".", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No error
+
+
+syscalls.cc: lstat64(name="/home/Administrator/hack-cygwin252", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No error
+syscalls.cc: lstat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: lstat64: return 0, errno=No error
+
+
+syscalls.cc: stat64(name=".git", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No error
+
+
+syscalls.cc: lstat64(name=".git/commondir", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No error
+syscalls.cc: lstat64: after init path_conv, errno=No error
+syscalls.cc: lstat64: return -1, errno=No such file or directory
+
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 53
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+
+syscalls.cc: open(path="/home/Administrator/.gitconfig", flags=0x0[, mode=0666])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=0666)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=0666)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\.gitconfig"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No such file or directory
+	fhandler_base::open_with_arch: Return 1, errno=No such file or directory
+syscalls.cc: Return 3, errno=No such file or directory
+
+
+syscalls.cc: _fstat64_r(struct _reent *ptr, fd=3, struct stat *buf)
+syscalls.cc: fstat64(fd=3, struct stat *buf)
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 53
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: fstat64: return 0, errno=No such file or directory
+syscalls.cc: _fstat64_r: return 0, errno=No such file or directory
+
+
+syscalls.cc: read(fd=3, ptr, len=65536)
+sycalls.cc: read: return 53, errno=No such file or directory
+
+
+syscalls.cc: read(fd=3, ptr, len=65536)
+sycalls.cc: read: return 0, errno=No such file or directory
+
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 351
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+
+syscalls.cc: open(path=".git/config", flags=0x0[, mode=0666])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=0666)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=0666)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\config"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No such file or directory
+	fhandler_base::open_with_arch: Return 1, errno=No such file or directory
+syscalls.cc: Return 3, errno=No such file or directory
+
+
+syscalls.cc: _fstat64_r(struct _reent *ptr, fd=3, struct stat *buf)
+syscalls.cc: fstat64(fd=3, struct stat *buf)
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 351
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: fstat64: return 0, errno=No such file or directory
+syscalls.cc: _fstat64_r: return 0, errno=No such file or directory
+
+
+syscalls.cc: read(fd=3, ptr, len=65536)
+sycalls.cc: read: return 351, errno=No such file or directory
+
+
+syscalls.cc: read(fd=3, ptr, len=65536)
+sycalls.cc: read: return 0, errno=No such file or directory
+
+
+syscalls.cc: lstat64(name=".git/HEAD", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 23
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: lstat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: open(path=".git/HEAD", flags=0x0[, mode=026043777])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=03777)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=03777)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\HEAD"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No such file or directory
+	fhandler_base::open_with_arch: Return 1, errno=No such file or directory
+syscalls.cc: Return 3, errno=No such file or directory
+
+
+syscalls.cc: read(fd=3, ptr, len=256)
+sycalls.cc: read: return 23, errno=No such file or directory
+
+
+syscalls.cc: read(fd=3, ptr, len=233)
+sycalls.cc: read: return 0, errno=No such file or directory
+
+
+syscalls.cc: lstat64(name=".git/refs/heads/dev002", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 41
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: lstat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: open(path=".git/refs/heads/dev002", flags=0x0[, mode=04000255550])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=05550)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=05550)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\refs\heads\dev002"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No such file or directory
+	fhandler_base::open_with_arch: Return 1, errno=No such file or directory
+syscalls.cc: Return 3, errno=No such file or directory
+
+
+syscalls.cc: read(fd=3, ptr, len=256)
+sycalls.cc: read: return 41, errno=No such file or directory
+
+
+syscalls.cc: read(fd=3, ptr, len=215)
+sycalls.cc: read: return 0, errno=No such file or directory
+
+
+syscalls.cc: stat64(name=".git/refs/heads", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No such file or directory
+syscalls.cc: stat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: stat64(name=".git/refs/tags", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No such file or directory
+syscalls.cc: stat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: stat64(name=".git/refs/remotes", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No such file or directory
+syscalls.cc: stat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: stat64(name=".git/refs/heads/master", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No such file or directory
+syscalls.cc: stat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 41
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: lstat64(name=".git/refs/heads/master", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 41
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: lstat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: open(path=".git/refs/heads/master", flags=0x0[, mode=04000242700])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=02700)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=02700)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\refs\heads\master"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No such file or directory
+	fhandler_base::open_with_arch: Return 1, errno=No such file or directory
+syscalls.cc: Return 4, errno=No such file or directory
+
+
+syscalls.cc: read(fd=4, ptr, len=256)
+sycalls.cc: read: return 41, errno=No such file or directory
+
+
+syscalls.cc: read(fd=4, ptr, len=215)
+sycalls.cc: read: return 0, errno=No such file or directory
+
+
+syscalls.cc: stat64(name=".git/refs/heads/dev002", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No such file or directory
+syscalls.cc: stat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 41
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: lstat64(name=".git/refs/heads/dev002", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 41
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: lstat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: open(path=".git/refs/heads/dev002", flags=0x0[, mode=04000242700])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=02700)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=02700)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\refs\heads\dev002"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No such file or directory
+	fhandler_base::open_with_arch: Return 1, errno=No such file or directory
+syscalls.cc: Return 4, errno=No such file or directory
+
+
+syscalls.cc: read(fd=4, ptr, len=256)
+sycalls.cc: read: return 41, errno=No such file or directory
+
+
+syscalls.cc: read(fd=4, ptr, len=215)
+sycalls.cc: read: return 0, errno=No such file or directory
+
+
+syscalls.cc: stat64(name=".git/refs/remotes/origin", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No such file or directory
+syscalls.cc: stat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: stat64(name=".git/refs/remotes/origin/HEAD", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No such file or directory
+syscalls.cc: stat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 32
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: lstat64(name=".git/refs/remotes/origin/HEAD", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 32
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: lstat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: open(path=".git/refs/remotes/origin/HEAD", flags=0x0[, mode=04000242700])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=02700)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=02700)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\refs\remotes\origin\HEAD"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No such file or directory
+	fhandler_base::open_with_arch: Return 1, errno=No such file or directory
+syscalls.cc: Return 4, errno=No such file or directory
+
+
+syscalls.cc: read(fd=4, ptr, len=256)
+sycalls.cc: read: return 32, errno=No such file or directory
+
+
+syscalls.cc: read(fd=4, ptr, len=224)
+sycalls.cc: read: return 0, errno=No such file or directory
+
+
+syscalls.cc: lstat64(name=".git/refs/remotes/origin/master", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: after init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: return -1, errno=No such file or directory
+
+
+syscalls.cc: open(path=".git/packed-refs", flags=0x0[, mode=0666])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=0666)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=0666)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\packed-refs"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No such file or directory
+	fhandler_base::open_with_arch: Return 1, errno=No such file or directory
+syscalls.cc: Return 4, errno=No such file or directory
+
+syscalls.cc: fstat64(fd=4, struct stat *buf)
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 243
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: fstat64: return 0, errno=No such file or directory
+
+syscalls.cc: _fstat64_r(struct _reent *ptr, fd=4, struct stat *buf)
+syscalls.cc: fstat64(fd=4, struct stat *buf)
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 243
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: fstat64: return 0, errno=No such file or directory
+syscalls.cc: _fstat64_r: return 0, errno=No such file or directory
+
+
+syscalls.cc: read(fd=4, ptr, len=65536)
+sycalls.cc: read: return 243, errno=No such file or directory
+
+
+syscalls.cc: read(fd=4, ptr, len=65536)
+sycalls.cc: read: return 0, errno=No such file or directory
+
+
+syscalls.cc: stat64(name=".git/refs/remotes/origin/dev002", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No such file or directory
+syscalls.cc: stat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 41
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: lstat64(name=".git/refs/remotes/origin/dev002", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No such file or directory
+syscalls.cc: lstat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 41
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: lstat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: open(path=".git/refs/remotes/origin/dev002", flags=0x0[, mode=04000242700])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=02700)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=02700)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\refs\remotes\origin\dev002"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No such file or directory
+	fhandler_base::open_with_arch: Return 1, errno=No such file or directory
+syscalls.cc: Return 4, errno=No such file or directory
+
+
+syscalls.cc: read(fd=4, ptr, len=256)
+sycalls.cc: read: return 41, errno=No such file or directory
+
+
+syscalls.cc: read(fd=4, ptr, len=215)
+sycalls.cc: read: return 0, errno=No such file or directory
+
+
+syscalls.cc: stat64(name=".git/packed-refs", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No such file or directory
+syscalls.cc: stat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 243
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: stat64(name=".git/objects/pack/pack-af1929360fe2fdfd27a5bdfe8ce13a354bd9d649.pack", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No such file or directory
+syscalls.cc: stat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 17013075
+		mode = 0100444
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: stat64(name=".git/objects/pack/pack-b233b4fa8817b0569fac72402cc6f08a76bf2a24.pack", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No such file or directory
+syscalls.cc: stat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 1439793
+		mode = 0100444
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: stat64(name="/home/Administrator/hack-cygwin252", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No such file or directory
+syscalls.cc: stat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: stat64(name="/home/Administrator/hack-cygwin252/testprogs/btrfs-test", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No such file or directory
+syscalls.cc: stat64: after init path_conv, errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No such file or directory, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No such file or directory
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No such file or directory
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No such file or directory
+
+
+syscalls.cc: open(path=".git/objects/info/alternates", flags=0x0[, mode=010541704])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=01704)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=01704)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\objects\info\alternates"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0xc0000034
+	fhandler_base::open: return 0, errno=No such file or directory
+	fhandler_base::open_with_arch: Return 0, errno=No such file or directory
+syscalls.cc: B: errno=No such file or directory
+syscalls.cc: Return -1, errno=No such file or directory
+
+
+syscalls.cc: open(path=".git/objects/pack/pack-b233b4fa8817b0569fac72402cc6f08a76bf2a24.idx", flags=0x0[, mode=0101])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=0101)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=0101)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\objects\pack\pack-b233b4fa8817b0569fac72402cc6f08a76bf2a24.idx"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 3, errno=No error
+
+syscalls.cc: fstat64(fd=3, struct stat *buf)
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 4264
+		mode = 0100444
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: fstat64: return 0, errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 4264
+		mode = 0100444
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+
+syscalls.cc: open(path=".git/objects/pack/pack-af1929360fe2fdfd27a5bdfe8ce13a354bd9d649.idx", flags=0x0[, mode=0101])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=0101)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=0101)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\objects\pack\pack-af1929360fe2fdfd27a5bdfe8ce13a354bd9d649.idx"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 3, errno=No error
+
+syscalls.cc: fstat64(fd=3, struct stat *buf)
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 215524
+		mode = 0100444
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: fstat64: return 0, errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 215524
+		mode = 0100444
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+
+syscalls.cc: open(path=".git/objects/pack/pack-af1929360fe2fdfd27a5bdfe8ce13a354bd9d649.pack", flags=0x0[, mode=00])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=00)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=00)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\objects\pack\pack-af1929360fe2fdfd27a5bdfe8ce13a354bd9d649.pack"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 3, errno=No error
+
+syscalls.cc: fstat64(fd=3, struct stat *buf)
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 17013075
+		mode = 0100444
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: fstat64: return 0, errno=No error
+
+syscalls.cc: read(fd=3, ptr, len=12)
+sycalls.cc: read: return 12, errno=No error
+
+
+syscalls.cc: read(fd=3, ptr, len=20)
+sycalls.cc: read: return 20, errno=No error
+
+
+fork.cc: fork()
+fork.cc: 1 attempts used
+fork.cc: Return 1688, errno=0
+
+
+syscalls.cc: read(fd=8, ptr, len=1)
+sycalls.cc: read: return 0, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=4)
+sycalls.cc: read: return 4, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=202)
+sycalls.cc: read: return 202, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=4)
+sycalls.cc: read: return 4, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=59)
+sycalls.cc: read: return 59, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=4)
+sycalls.cc: read: return 4, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=59)
+sycalls.cc: read: return 59, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=4)
+sycalls.cc: read: return 4, errno=No error
+
+
+syscalls.cc: stat64(name=".git/packed-refs", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 243
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No error
+
+
+syscalls.cc: open(path=".git/objects/a0/1017bfe3fbc3e2f3fa543d08fd6c137e34e5b9", flags=0x0[, mode=00])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=00)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=00)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\objects\a0\1017bfe3fbc3e2f3fa543d08fd6c137e34e5b9"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 4, errno=No error
+
+syscalls.cc: fstat64(fd=4, struct stat *buf)
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 172
+		mode = 0100444
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: fstat64: return 0, errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 172
+		mode = 0100444
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+
+syscalls.cc: open(path=".git/objects/a0/1017bfe3fbc3e2f3fa543d08fd6c137e34e5b9", flags=0x0[, mode=00])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=00)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=00)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\objects\a0\1017bfe3fbc3e2f3fa543d08fd6c137e34e5b9"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 4, errno=No error
+
+syscalls.cc: fstat64(fd=4, struct stat *buf)
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 172
+		mode = 0100444
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: fstat64: return 0, errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 172
+		mode = 0100444
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+
+syscalls.cc: open(path=".git/info/grafts", flags=0x0[, mode=0666])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=0666)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=0666)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\info\grafts"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0xc0000034
+	fhandler_base::open: return 0, errno=No such file or directory
+	fhandler_base::open_with_arch: Return 0, errno=No such file or directory
+syscalls.cc: B: errno=No such file or directory
+syscalls.cc: Return -1, errno=No such file or directory
+
+
+syscalls.cc: open(path=".git/shallow", flags=0x0[, mode=0666])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=0666)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=0666)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\shallow"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0xc0000034
+	fhandler_base::open: return 0, errno=No such file or directory
+	fhandler_base::open_with_arch: Return 0, errno=No such file or directory
+syscalls.cc: B: errno=No such file or directory
+syscalls.cc: Return -1, errno=No such file or directory
+
+
+syscalls.cc: open(path=".git/objects/3e/a729c21379aade23793bc9ab942ff3a19d5208", flags=0x0[, mode=00])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=00)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=00)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\objects\3e\a729c21379aade23793bc9ab942ff3a19d5208"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 4, errno=No error
+
+syscalls.cc: fstat64(fd=4, struct stat *buf)
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 167
+		mode = 0100444
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: fstat64: return 0, errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 167
+		mode = 0100444
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+
+syscalls.cc: open(path=".git/objects/3e/a729c21379aade23793bc9ab942ff3a19d5208", flags=0x0[, mode=00])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=00)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=00)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\objects\3e\a729c21379aade23793bc9ab942ff3a19d5208"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 4, errno=No error
+
+syscalls.cc: fstat64(fd=4, struct stat *buf)
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 167
+		mode = 0100444
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: fstat64: return 0, errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 167
+		mode = 0100444
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+
+syscalls.cc: open(path=".git/objects/6e/feb12ec7f1219fa2150f990c1688052d79e968", flags=0x0[, mode=00])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=00)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=00)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\objects\6e\feb12ec7f1219fa2150f990c1688052d79e968"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 4, errno=No error
+
+syscalls.cc: fstat64(fd=4, struct stat *buf)
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 163
+		mode = 0100444
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: fstat64: return 0, errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 163
+		mode = 0100444
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+
+syscalls.cc: read(fd=6, ptr, len=4)
+
+fork.cc: fork()
+fork.cc: 4 attempts used
+fork.cc: Return 1608, errno=11
+
+
+syscalls.cc: read(fd=10, ptr, len=1)
+sycalls.cc: read: return 0, errno=No such file or directory
+
+
+syscalls.cc: read(fd=4, ptr, len=4)
+sycalls.cc: read: return 4, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=30)
+sycalls.cc: read: return 30, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=4)
+sycalls.cc: read: return 4, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=30)
+sycalls.cc: read: return 30, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=4)
+sycalls.cc: read: return 4, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=30)
+sycalls.cc: read: return 30, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=4)
+sycalls.cc: read: return 4, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=30)
+sycalls.cc: read: return 30, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=4)
+sycalls.cc: read: return 4, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=63)
+sycalls.cc: read: return 63, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=4)
+sycalls.cc: read: return 4, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=15)
+sycalls.cc: read: return 15, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=4)
+sycalls.cc: read: return 4, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=26)
+sycalls.cc: read: return 26, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=4)
+sycalls.cc: read: return 4, errno=No error
+
+
+syscalls.cc: read(fd=4, ptr, len=10)
+sycalls.cc: read: return 10, errno=No error
+
+
+syscalls.cc: read(fd=4, ptr, len=4)
+sycalls.cc: read: return 4, errno=No error
+
+
+syscalls.cc: read(fd=4, ptr, len=21)
+sycalls.cc: read: return 21, errno=No error
+
+
+syscalls.cc: read(fd=4, ptr, len=4)
+sycalls.cc: read: return 4, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=5)
+sycalls.cc: read: return 5, errno=No error
+
+
+syscalls.cc: read(fd=6, ptr, len=4)
+sycalls.cc: read: return 4, errno=No error
+
+sycalls.cc: read: return 4, errno=No error
+
+
+syscalls.cc: lstat64(name=".git/HEAD", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No error
+syscalls.cc: lstat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 23
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: lstat64: return 0, errno=No error
+
+
+syscalls.cc: open(path=".git/HEAD", flags=0x0[, mode=026126365])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=06365)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=06365)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\HEAD"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 4, errno=No error
+
+
+syscalls.cc: read(fd=4, ptr, len=256)
+sycalls.cc: read: return 23, errno=No error
+
+
+syscalls.cc: read(fd=4, ptr, len=233)
+sycalls.cc: read: return 0, errno=No error
+
+
+syscalls.cc: lstat64(name=".git/refs/heads/dev002", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No error
+syscalls.cc: lstat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 41
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: lstat64: return 0, errno=No error
+
+
+syscalls.cc: open(path=".git/refs/heads/dev002", flags=0x0[, mode=04000262750])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=02750)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=02750)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\refs\heads\dev002"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 4, errno=No error
+
+
+syscalls.cc: read(fd=4, ptr, len=256)
+sycalls.cc: read: return 41, errno=No error
+
+
+syscalls.cc: read(fd=4, ptr, len=215)
+sycalls.cc: read: return 0, errno=No error
+
+
+syscalls.cc: lstat64(name=".git/refs/remotes/origin/dev002", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No error
+syscalls.cc: lstat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 41
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: lstat64: return 0, errno=No error
+
+
+syscalls.cc: open(path=".git/refs/remotes/origin/dev002", flags=0x0[, mode=04000312310])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=02310)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=02310)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\refs\remotes\origin\dev002"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 4, errno=No error
+
+
+syscalls.cc: read(fd=4, ptr, len=256)
+sycalls.cc: read: return 41, errno=No error
+
+
+syscalls.cc: read(fd=4, ptr, len=215)
+sycalls.cc: read: return 0, errno=No error
+
+
+syscalls.cc: stat64(name=".git", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No error
+
+
+syscalls.cc: stat64(name=".git/refs", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No error
+
+
+syscalls.cc: stat64(name=".git/refs/remotes", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No error
+
+
+syscalls.cc: stat64(name=".git/refs/remotes/origin", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No error
+
+
+syscalls.cc: stat64(name="/home/Administrator/hack-cygwin252", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=Invalid argument
+syscalls.cc: stat64: after init path_conv, errno=Invalid argument
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=Invalid argument
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=Invalid argument, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = Invalid argument
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=Invalid argument
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=Invalid argument
+
+
+syscalls.cc: stat64(name="/home/Administrator/hack-cygwin252/testprogs/btrfs-test", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=Invalid argument
+syscalls.cc: stat64: after init path_conv, errno=Invalid argument
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=Invalid argument
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=Invalid argument, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = Invalid argument
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=Invalid argument
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=Invalid argument
+
+
+syscalls.cc: open(path="/home/Administrator/hack-cygwin252/.git/refs/remotes/origin/dev002.lock", flags=0xa02[, mode=0666])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8a02, mode=0666)
+	fhandler.cc: fhandler_base::open(flags=0x108a02, mode=0666)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\refs\remotes\origin\dev002.lock"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0xc0100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x80,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x2,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=Invalid argument
+	fhandler_base::open_with_arch: Return 1, errno=Invalid argument
+syscalls.cc: Return 4, errno=Invalid argument
+
+
+syscalls.cc: lstat64(name=".git/refs/remotes/origin/dev002", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=Invalid argument
+syscalls.cc: lstat64: after init path_conv, errno=Invalid argument
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=Invalid argument
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=Invalid argument, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = Invalid argument
+		size = 41
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=Invalid argument
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: lstat64: return 0, errno=Invalid argument
+
+
+syscalls.cc: open(path=".git/refs/remotes/origin/dev002", flags=0x0[, mode=04000313130])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=03130)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=03130)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\refs\remotes\origin\dev002"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=Invalid argument
+	fhandler_base::open_with_arch: Return 1, errno=Invalid argument
+syscalls.cc: Return 5, errno=Invalid argument
+
+
+syscalls.cc: read(fd=5, ptr, len=256)
+sycalls.cc: read: return 41, errno=Invalid argument
+
+
+syscalls.cc: read(fd=5, ptr, len=215)
+sycalls.cc: read: return 0, errno=Invalid argument
+
+
+syscalls.cc: stat64(name=".git", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No error
+
+
+syscalls.cc: stat64(name=".git/logs", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No error
+
+
+syscalls.cc: stat64(name=".git/logs/refs", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No error
+
+
+syscalls.cc: stat64(name=".git/logs/refs/remotes", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No error
+
+
+syscalls.cc: stat64(name=".git/logs/refs/remotes/origin", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No error
+
+
+syscalls.cc: open(path=".git/logs/refs/remotes/origin/dev002", flags=0x209[, mode=0666])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8209, mode=0666)
+	fhandler.cc: fhandler_base::open(flags=0x108209, mode=0666)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\logs\refs\remotes\origin\dev002"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x40120080,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x80,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x3,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 4, errno=No error
+
+
+syscalls.cc: open(path=".git/logs/refs/remotes/origin/dev002", flags=0x9[, mode=04000312520])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8009, mode=02520)
+	fhandler.cc: fhandler_base::open(flags=0x108009, mode=02520)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\logs\refs\remotes\origin\dev002"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x40120080,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 4, errno=No error
+
+
+syscalls.cc: open(path="/usr/share/zoneinfo/Europe/Helsinki", flags=0x10000[, mode=00])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x18000, mode=00)
+	fhandler.cc: fhandler_base::open(flags=0x118000, mode=00)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\usr\share\zoneinfo\Europe\Helsinki"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 5, errno=No error
+
+
+syscalls.cc: read(fd=5, ptr, len=29000)
+sycalls.cc: read: return 1909, errno=No error
+
+
+syscalls.cc: lstat64(name=".git/HEAD", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No error
+syscalls.cc: lstat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 23
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: lstat64: return 0, errno=No error
+
+
+syscalls.cc: open(path=".git/HEAD", flags=0x0[, mode=026031037])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=01037)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=01037)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\HEAD"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 4, errno=No error
+
+
+syscalls.cc: read(fd=4, ptr, len=256)
+sycalls.cc: read: return 23, errno=No error
+
+
+syscalls.cc: read(fd=4, ptr, len=233)
+sycalls.cc: read: return 0, errno=No error
+
+
+syscalls.cc: lstat64(name=".git/refs/heads/dev002", *buf):
+syscalls.cc: lstat64: before init path_conv, errno=No error
+syscalls.cc: lstat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 41
+		mode = 0100644
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: lstat64: return 0, errno=No error
+
+
+syscalls.cc: open(path=".git/refs/heads/dev002", flags=0x0[, mode=04000262750])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8000, mode=02750)
+	fhandler.cc: fhandler_base::open(flags=0x108000, mode=02750)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\C:\cygwin\home\Administrator\hack-cygwin252\.git\refs\heads\dev002"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0x80100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x0,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x1,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 4, errno=No error
+
+
+syscalls.cc: read(fd=4, ptr, len=256)
+sycalls.cc: read: return 41, errno=No error
+
+
+syscalls.cc: read(fd=4, ptr, len=215)
+sycalls.cc: read: return 0, errno=No error
+
+syscalls.cc: fstat64(fd=1, struct stat *buf)
+	fhandler.cc: fhandler_base::fstat(struct stat *buf)
+	fhandler.cc: fhandler_base::fstat: return 0
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+
+syscalls.cc: stat64(name="/dev", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: stat64: return 0, errno=No error
+
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: fstat64: return 0, errno=No error
