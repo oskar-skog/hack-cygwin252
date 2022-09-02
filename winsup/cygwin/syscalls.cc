@@ -1988,36 +1988,58 @@ sync ()
 int __reg2
 stat_worker (path_conv &pc, struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+      hack_print(
+        "\tsyscalls.cc: stat_worker(path_conv&, struct stat*)\r\n"
+        "\terrno = %s\r\n", strerror(get_errno())
+      );
   int res = -1;
 
   __try
-    {
+  {
       if (pc.error)
-	{
+      {
 	  debug_printf ("got %d error from path_conv", pc.error);
+          if (HACK_DEBUG_STAT)
+              hack_print("\tsyscalls.cc: stat_worker: path_conv failed\r\n");
 	  set_errno (pc.error);
-	}
+      }
       else if (pc.exists ())
-	{
+      {
 	  fhandler_base *fh;
 
 	  if (!(fh = build_fh_pc (pc)))
-	    __leave;
+          {
+              if (HACK_DEBUG_STAT)
+                  hack_print(
+                      "\tsyscalls.cc: stat_worker: build_fh_pc failed\r\n"
+                  );
+              __leave;
+          }
 
 	  debug_printf ("(%S, %p, %p), file_attributes %d",
 			pc.get_nt_native_path (), buf, fh, (DWORD) *fh);
 	  memset (buf, 0, sizeof (*buf));
 	  res = fh->fstat (buf);
 	  if (!res)
-	    fh->stat_fixup (buf);
+              fh->stat_fixup (buf);
 	  delete fh;
-	}
+      }
       else
-	set_errno (ENOENT);
-    }
-  __except (EFAULT) {}
+          set_errno (ENOENT);
+  }
+  __except (EFAULT)
+  {
+      if (HACK_DEBUG_STAT)
+          hack_print("\tsyscalls.cc: stat_worker: __except(EFAULT)\r\n");
+  }
   __endtry
   syscall_printf ("%d = (%S,%p)", res, pc.get_nt_native_path (), buf);
+  if (HACK_DEBUG_STAT)
+  {
+      hack_print("\tsyscalls.cc: stat_worker: return %d, errno=%s\r\n",
+                 res, strerror(get_errno));
+  }
   return res;
 }
 
