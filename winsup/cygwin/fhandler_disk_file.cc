@@ -477,6 +477,16 @@ fhandler_base::fstat_helper (struct stat *buf)
   PFILE_ALL_INFORMATION pfai = pc.fai ();
   ULONG attributes = pc.file_attributes ();
 
+  if (HACK_DEBUG_STAT)
+  {
+      hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_helper: "
+                 "pc.fileattr = 0x%x\r\n", pc.fileattr);
+      hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_helper: "
+                 "pc.path = \"%s\"\r\n", pc.path);
+      hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_helper: "
+                 "pc.posix_path = \"%s\"\r\n", pc.posix_path);
+  }
+
   to_timestruc_t (&pfai->BasicInformation.LastAccessTime, &buf->st_atim);
   to_timestruc_t (&pfai->BasicInformation.LastWriteTime, &buf->st_mtim);
   /* If the ChangeTime is 0, the underlying FS doesn't support this timestamp
@@ -581,7 +591,9 @@ fhandler_base::fstat_helper (struct stat *buf)
       /* | S_IWGRP | S_IWOTH; we don't give write to group etc */
 
       // CORE-18247: Is pc.isdir() returning false for "/cygdrive/d" ??
-      // int isdir () const {return has_attribute (FILE_ATTRIBUTE_DIRECTORY);}
+      // path.h: class path_conv:
+      //    int isdir () const {return has_attribute (FILE_ATTRIBUTE_DIRECTORY);}
+      //    bool has_attribute (DWORD x) const {return exists () && (fileattr & x);}
       if (pc.isdir ())
 	buf->st_mode |= S_IFDIR | STD_WBITS | STD_XBITS;
       else if (buf->st_mode & S_IFMT)
@@ -595,6 +607,7 @@ fhandler_base::fstat_helper (struct stat *buf)
       else
 	{
           // CORE-18247: "C" only happens on btrfs, not on FAT32.
+          // (stat drive root)
           if (HACK_DEBUG_STAT)
             hack_print(
               "\tfhandler_disk_file.cc: fhandler_base::fstat_helper: C\r\n"
