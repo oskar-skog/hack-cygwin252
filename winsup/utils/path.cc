@@ -30,8 +30,6 @@ details. */
 #endif
 #include "loadlib.h"
 
-#include <subauth.h>
-#include "../cygwin/hack.h"
 
 #ifndef FSTAB_ONLY
 /* Used when treating / and \ as equivalent. */
@@ -140,8 +138,6 @@ is_exe (HANDLE fh)
 bool
 is_symlink (HANDLE fh)
 {
-  if (HACK_DEBUG_OPEN || HACK_DEBUG_READ || HACK_DEBUG_STAT)
-      hack_print("\r\nutils/path.cc: is_symlink\r\n\r\n");
   bool ret = false;
   int magic = get_word (fh, 0x0);
   if (magic != SHORTCUT_MAGIC && magic != SYMLINK_MAGIC)
@@ -188,8 +184,6 @@ out:
 bool
 readlink (HANDLE fh, char *path, int maxlen)
 {
-  if (HACK_DEBUG_OPEN || HACK_DEBUG_READ || HACK_DEBUG_STAT)
-      hack_print("\r\nutils/path.cc: readlink\r\n\r\n");
   DWORD rv;
   char *buf, *cp;
   unsigned short len;
