@@ -30,6 +30,7 @@ details. */
 #endif
 #include "loadlib.h"
 
+#include <subauth.h>
 #include "../cygwin/hack.h"
 
 #ifndef FSTAB_ONLY
