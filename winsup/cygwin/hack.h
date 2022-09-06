@@ -1,7 +1,7 @@
 #ifndef _HACK_H
 #define _HACK_H
 
-#define HACK_FORK_ATTEMPTS          10
+#define HACK_FORK_ATTEMPTS          50
 #define HACK_DEBUG_FORK             1
 
 // Qll kinds of logging for ReactOS CORE-18247
