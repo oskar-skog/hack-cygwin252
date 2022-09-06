@@ -22,11 +22,11 @@ int main(int argc, char **argv)
         fprintf(stderr, "Error: could not open specified path\n");
         return 2;
     }
-    FILE_BASIC_INFO info;
-    if (!GetFileInformationByHandleEx(h, FileBasicInfo, &info, sizeof(info))) {
+    BY_HANDLE_FILE_INFORMATION info;
+    if (!GetFileInformationByHandle(h, &info)) {
         fprintf(stderr, "Error: could not get file information\n");
         return 3;
     }
-    printf("Attributes: 0x%x\n", info.FileAttributes);
+    printf("Attributes: 0x%x\n", info.dwFileAttributes);
     return 0;
 }
