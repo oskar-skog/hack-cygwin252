@@ -1,11 +1,14 @@
 
 syscalls.cc: stat64(name="/cygdrive/c", struct stat *buf)
 syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: path_conv::check("/cygdrive/c", opt=0x4000a1, suffix_info *)
 	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
 		pfai->BasicInformation.FileAttributes = 0x16
+	path.cc: path_conv::check: out: fileattr = 0x16
 syscalls.cc: stat64: after init path_conv, errno=No error
 	syscalls.cc: stat_worker(path_conv&, struct stat*)
-	errno = No error
+		errno = No error
+		attributes = 0x16
 	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
 	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
@@ -33,11 +36,14 @@ syscalls.cc: stat64: return 0, errno=No error
 
 syscalls.cc: stat64(name="/cygdrive/c/", struct stat *buf)
 syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: path_conv::check("/cygdrive/c/", opt=0x4000a1, suffix_info *)
 	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
 		pfai->BasicInformation.FileAttributes = 0x16
+	path.cc: path_conv::check: out: fileattr = 0x16
 syscalls.cc: stat64: after init path_conv, errno=No error
 	syscalls.cc: stat_worker(path_conv&, struct stat*)
-	errno = No error
+		errno = No error
+		attributes = 0x16
 	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
 	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
@@ -65,11 +71,14 @@ syscalls.cc: stat64: return 0, errno=No error
 
 syscalls.cc: stat64(name="/cygdrive/d", struct stat *buf)
 syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: path_conv::check("/cygdrive/d", opt=0x4000a1, suffix_info *)
 	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
 		pfai->BasicInformation.FileAttributes = 0x30
+	path.cc: path_conv::check: out: fileattr = 0x30
 syscalls.cc: stat64: after init path_conv, errno=No error
 	syscalls.cc: stat_worker(path_conv&, struct stat*)
-	errno = No error
+		errno = No error
+		attributes = 0x30
 	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
 	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
@@ -97,11 +106,14 @@ syscalls.cc: stat64: return 0, errno=No error
 
 syscalls.cc: stat64(name="/cygdrive/d/", struct stat *buf)
 syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: path_conv::check("/cygdrive/d/", opt=0x4000a1, suffix_info *)
 	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
 		pfai->BasicInformation.FileAttributes = 0x30
+	path.cc: path_conv::check: out: fileattr = 0x30
 syscalls.cc: stat64: after init path_conv, errno=No error
 	syscalls.cc: stat_worker(path_conv&, struct stat*)
-	errno = No error
+		errno = No error
+		attributes = 0x30
 	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
 	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
@@ -129,11 +141,14 @@ syscalls.cc: stat64: return 0, errno=No error
 
 syscalls.cc: stat64(name="/cygdrive/e", struct stat *buf)
 syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: path_conv::check("/cygdrive/e", opt=0x4000a1, suffix_info *)
 	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
 		pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: path_conv::check: out: fileattr = 0x10
 syscalls.cc: stat64: after init path_conv, errno=No error
 	syscalls.cc: stat_worker(path_conv&, struct stat*)
-	errno = No error
+		errno = No error
+		attributes = 0x10
 	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
 	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
@@ -161,11 +176,14 @@ syscalls.cc: stat64: return 0, errno=No error
 
 syscalls.cc: stat64(name="/cygdrive/e/", struct stat *buf)
 syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: path_conv::check("/cygdrive/e/", opt=0x4000a1, suffix_info *)
 	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
 		pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: path_conv::check: out: fileattr = 0x10
 syscalls.cc: stat64: after init path_conv, errno=No error
 	syscalls.cc: stat_worker(path_conv&, struct stat*)
-	errno = No error
+		errno = No error
+		attributes = 0x10
 	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
 	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
