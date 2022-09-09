@@ -1,0 +1,7 @@
+Commit beb582d
+
+Hack and debug logging:
+    - fork(2) will try 50 times before failing, logging is enabled
+    - Some logging for open(2), read(2) and stat(2) family of functions,
+      logging is enabled.
+
