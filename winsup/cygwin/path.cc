@@ -2925,7 +2925,13 @@ restart:
 	  status = conv_hdl.get_finfo (h, fs.is_nfs ());
 	  if (NT_SUCCESS (status))
 	    fileattr = conv_hdl.get_dosattr (fs.is_nfs ());
+          else {
+            hack_print(
+              "\tpath.cc: symlink_info::check: conv_hdl.get_finfo() failed\r\n"
+            );
+          }
 	}
+      // CORE-18247:  WHAT has failed???
       if (!NT_SUCCESS (status))
 	{
 	  debug_printf ("%y = NtQueryInformationFile (%S)", status, &upath);
@@ -2953,6 +2959,14 @@ restart:
 	  if (status != STATUS_OBJECT_NAME_NOT_FOUND
 	      && status != STATUS_NO_SUCH_FILE) /* ENOENT on NFS or 9x share */
 	    {
+              // CORE-18247
+              if (HACK_DEBUG_OPEN || HACK_DEBUG_READ || HACK_DEBUG_STAT) {
+                hack_print(
+                  "\tpath.cc: symlink_info::check: "
+                  "File exists but can't be accessed. "
+                  "status = 0x%x\r\n", status
+                );
+              }
 	      /* The file exists, but the user can't access it for one reason
 		 or the other.  To get the file attributes we try to access the
 		 information by opening the parent directory and getting the
