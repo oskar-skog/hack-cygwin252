@@ -1,10 +1,13 @@
 #ifndef _HACK_H
 #define _HACK_H
 
-#define HACK_DEBUG_OPEN             1
+#define HACK_FORK_ATTEMPTS          50
 #define HACK_DEBUG_FORK             1
 
-#define HACK_FORK_ATTEMPTS          10
+// All kinds of logging for ReactOS CORE-18247
+#define HACK_DEBUG_OPEN             1
+#define HACK_DEBUG_STAT             1
+#define HACK_DEBUG_READ             1
 
 // Define buffer size
 #define HACK_MAXLEN                 1024
@@ -19,6 +22,9 @@ void hack_print(const char * format, ...);
 // Convert UTF-16 to UTF-8.  Needs pre-allocated buffer for dst.
 // Silently truncates if input is too long.  Always appends NUL.
 void hack_utf16_to_utf8(char * dst, size_t dst_size, LPWSTR src);
+
+// PUNICODE_STRING (why?)
+void hack_PUSTR_to_utf8(char * dst, size_t dst_size, PUNICODE_STRING src);
 
 // Global variable (not thread or re-entrant safe if you fiddle with it)
 // Disables debug log printing, used by hack_init to use POSIX functions

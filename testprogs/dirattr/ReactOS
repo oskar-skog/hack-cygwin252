@@ -1,0 +1,7 @@
+Administrator@REACTOS-HH6D1BF ~/hack-cygwin252/testprogs/dirattr
+$ ./dirattr C:
+Attributes: 0x10
+
+Administrator@REACTOS-HH6D1BF ~/hack-cygwin252/testprogs/dirattr
+$ ./dirattr D:
+Attributes: 0x30

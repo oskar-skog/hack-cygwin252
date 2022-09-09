@@ -30,6 +30,7 @@ details. */
 #endif
 #include "loadlib.h"
 
+
 #ifndef FSTAB_ONLY
 /* Used when treating / and \ as equivalent. */
 #define isslash(ch) \

@@ -70,6 +70,8 @@ details. */
 #undef _lseek64
 #undef _fstat64
 
+#include <stdint.h>
+#include <string.h>
 #include "hack.h"
 
 static int __stdcall mknod_worker (const char *, mode_t, mode_t, _major_t,
@@ -1169,6 +1171,11 @@ getsid (pid_t pid)
 extern "C" ssize_t
 read (int fd, void *ptr, size_t len)
 {
+  if (HACK_DEBUG_READ)
+    {
+      hack_print("\r\nsyscalls.cc: read(fd=%d, ptr, len=%jd)\r\n",
+                 fd, (intmax_t) len);
+    }
   size_t res = (size_t) -1;
 
   pthread_testcancel ();
@@ -1192,9 +1199,18 @@ read (int fd, void *ptr, size_t len)
       cfd->read (ptr, len);
       res = len;
     }
-  __except (EFAULT) {}
+  __except (EFAULT)
+    {
+      if (HACK_DEBUG_READ)
+        hack_print("syscalls.cc: read: __except (EFAULT)\r\n");
+    }
   __endtry
   syscall_printf ("%lR = read(%d, %p, %d)", res, fd, ptr, len);
+  if (HACK_DEBUG_READ)
+    {
+      hack_print("sycalls.cc: read: return %d, errno=%s\r\n\r\n",
+                 res, strerror(get_errno()));
+    }
   return (ssize_t) res;
 }
 
@@ -1406,8 +1422,8 @@ open (const char *unix_path, int flags, ...)
                     // errno already set
                     if (HACK_DEBUG_OPEN) {
                         hack_print(
-                            "syscalls.cc: A (build_fh_name): errno=%d\r\n",
-                            get_errno()
+                            "syscalls.cc: A (build_fh_name): errno=%s\r\n",
+                            strerror(get_errno())
                         );
                     }
                 }
@@ -1421,6 +1437,8 @@ open (const char *unix_path, int flags, ...)
 		{
 		  delete fh;
 		  set_errno (ENOTDIR);
+                  hack_print(
+                    "syscalls.cc: D (flags & O_DIRECTORY), ENOTDIR\r\n");
 		}
 	      else if (((flags & (O_CREAT | O_EXCL)) == (O_CREAT | O_EXCL))
 		       && fh->exists ())
@@ -1433,7 +1451,8 @@ open (const char *unix_path, int flags, ...)
 		       || !fh->open_with_arch (flags, mode & 07777))
                 {
                   if (HACK_DEBUG_OPEN)
-                      hack_print("syscalls.cc: B: errno=%d\r\n", get_errno());
+                    hack_print("syscalls.cc: B: errno=%s\r\n",
+                               strerror(get_errno()));
 		  delete fh;
                 }
 	      else
@@ -1450,12 +1469,14 @@ open (const char *unix_path, int flags, ...)
     }
   __except (EFAULT)
     {
-        if (HACK_DEBUG_OPEN)
-            hack_print("syscalls.cc: C (exception): errno=%d\r\n", get_errno());
+      if (HACK_DEBUG_OPEN)
+        hack_print("syscalls.cc: C (exception): errno=%s\r\n",
+                   strerror(get_errno()));
     }
   __endtry
   if (HACK_DEBUG_OPEN)
-      hack_print("syscalls.cc: Return %d, errno=%d\r\n\r\n", res, get_errno());
+      hack_print("syscalls.cc: Return %d, errno=%s\r\n\r\n", res,
+                 strerror(get_errno()));
   return res;
 }
 
@@ -1722,6 +1743,8 @@ fchmod (int fd, mode_t mode)
 static void
 stat64_to_stat32 (struct stat *src, struct __stat32 *dst)
 {
+  if (HACK_DEBUG_STAT)
+    hack_print("\tsyscalls.cc: stat64_to_stat32: Nothing to see here\r\n");
   dst->st_dev = ((src->st_dev >> 8) & 0xff00) | (src->st_dev & 0xff);
   dst->st_ino = ((unsigned) (src->st_ino >> 32)) | (unsigned) src->st_ino;
   dst->st_mode = src->st_mode;
@@ -1744,6 +1767,8 @@ static bool dev_st_inited;
 void
 fhandler_base::stat_fixup (struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+    hack_print("\tsyscalls.cc: fhandler_base::stat_fixup(struct stat *)\r\n");
   /* For devices, set inode number to device number.  This gives us a valid,
      unique inode number without having to call hash_path_name.  /dev/tty needs
      a bit of persuasion to get the same st_ino value in stat and fstat. */
@@ -1790,11 +1815,15 @@ fhandler_base::stat_fixup (struct stat *buf)
       else if (gnu_dev_major (buf->st_rdev) == DEV_CDROM_MAJOR)
 	buf->st_nlink = 2;
     }
+  if (HACK_DEBUG_STAT)
+    hack_print("\tsyscalls.cc: fhandler_base::stat_fixup: return void\r\n");
 }
 
 extern "C" int
 fstat64 (int fd, struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+    hack_print("syscalls.cc: fstat64(fd=%d, struct stat *buf)\r\n", fd);
   int res;
 
   cygheap_fdget cfd (fd);
@@ -1809,16 +1838,31 @@ fstat64 (int fd, struct stat *buf)
     }
 
   syscall_printf ("%R = fstat(%d, %p)", res, fd, buf);
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("syscalls.cc: fstat64: return %d, errno=%s\r\n",
+                 res, strerror(get_errno()));
+    }
   return res;
 }
 
 extern "C" int
 _fstat64_r (struct _reent *ptr, int fd, struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("\r\nsyscalls.cc: _fstat64_r(struct _reent *ptr, fd=%d,"
+                 " struct stat *buf)\r\n", fd);
+    }
   int ret;
 
   if ((ret = fstat64 (fd, buf)) == -1)
     ptr->_errno = get_errno ();
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("syscalls.cc: _fstat64_r: return %d, errno=%s\r\n\r\n",
+                 ret, strerror(get_errno()));
+    }
   return ret;
 }
 
@@ -1829,20 +1873,38 @@ EXPORT_ALIAS (_fstat64_r, _fstat_r)
 extern "C" int
 fstat (int fd, struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+    hack_print("\r\nsyscalls.cc: fstat(fd=%d, struct stat *buf)", fd);
   struct stat buf64;
   int ret = fstat64 (fd, &buf64);
   if (!ret)
-    stat64_to_stat32 (&buf64, (struct __stat32 *) buf);
+    {
+      if (HACK_DEBUG_STAT)
+        hack_print("syscalls.cc: fstat: stat64_to_stat32\r\n");
+      stat64_to_stat32 (&buf64, (struct __stat32 *) buf);
+    }
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("syscalls.cc: fstat: return %d, errno=%s\r\n\r\n",
+                 ret, strerror(get_errno()));
+    }
   return ret;
 }
 
 extern "C" int
 _fstat_r (struct _reent *ptr, int fd, struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+    hack_print("\r\nsyscalls.cc: _fstat_r(fd=%d, struct stat *buf)\r\n", fd);
   int ret;
 
   if ((ret = fstat (fd, buf)) == -1)
     ptr->_errno = get_errno ();
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("syscalls.cc: _fstat_r: return %d, errno=%s\r\n\r\n",
+                 ret, strerror(get_errno()));
+    }
   return ret;
 }
 #endif
@@ -1926,46 +1988,86 @@ sync ()
 int __reg2
 stat_worker (path_conv &pc, struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+      hack_print(
+        "\tsyscalls.cc: stat_worker(path_conv&, struct stat*)\r\n"
+        "\terrno = %s\r\n", strerror(get_errno())
+      );
   int res = -1;
 
   __try
-    {
+  {
       if (pc.error)
-	{
+      {
 	  debug_printf ("got %d error from path_conv", pc.error);
+          if (HACK_DEBUG_STAT)
+              hack_print("\tsyscalls.cc: stat_worker: path_conv failed\r\n");
 	  set_errno (pc.error);
-	}
+      }
       else if (pc.exists ())
-	{
+      {
 	  fhandler_base *fh;
 
 	  if (!(fh = build_fh_pc (pc)))
-	    __leave;
+          {
+              if (HACK_DEBUG_STAT)
+                  hack_print(
+                      "\tsyscalls.cc: stat_worker: build_fh_pc failed\r\n"
+                  );
+              __leave;
+          }
 
 	  debug_printf ("(%S, %p, %p), file_attributes %d",
 			pc.get_nt_native_path (), buf, fh, (DWORD) *fh);
 	  memset (buf, 0, sizeof (*buf));
 	  res = fh->fstat (buf);
 	  if (!res)
-	    fh->stat_fixup (buf);
+              fh->stat_fixup (buf);
 	  delete fh;
-	}
+      }
       else
-	set_errno (ENOENT);
-    }
-  __except (EFAULT) {}
+          set_errno (ENOENT);
+  }
+  __except (EFAULT)
+  {
+      if (HACK_DEBUG_STAT)
+          hack_print("\tsyscalls.cc: stat_worker: __except(EFAULT)\r\n");
+  }
   __endtry
   syscall_printf ("%d = (%S,%p)", res, pc.get_nt_native_path (), buf);
+  if (HACK_DEBUG_STAT)
+  {
+      hack_print("\tsyscalls.cc: stat_worker: return %d, errno=%s\r\n",
+                 res, strerror(get_errno()));
+  }
   return res;
 }
 
 extern "C" int
 stat64 (const char *__restrict name, struct stat *__restrict buf)
 {
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("\r\nsyscalls.cc: stat64(name=\"%s\", struct stat *buf)\r\n",
+                 name);
+      hack_print("syscalls.cc: stat64: before init path_conv, "
+                 "errno=%s\r\n", strerror(get_errno()));
+    }
   syscall_printf ("entering");
   path_conv pc (name, PC_SYM_FOLLOW | PC_POSIX | PC_KEEP_HANDLE,
 		stat_suffixes);
-  return stat_worker (pc, buf);
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("syscalls.cc: stat64: after init path_conv, "
+                 "errno=%s\r\n", strerror(get_errno()));
+    }
+  int result = stat_worker (pc, buf);           // CORE-18247
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("syscalls.cc: stat64: return %d, errno=%s\r\n\r\n",
+                 result, strerror(get_errno()));
+    }
+  return result;
 }
 
 extern "C" int
@@ -1986,10 +2088,24 @@ EXPORT_ALIAS (_stat64_r, _stat_r)
 extern "C" int
 stat (const char *__restrict name, struct stat *__restrict buf)
 {
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("\r\nsyscalls.cc: stat(name=\"%s\", struct stat *buf)\r\n",
+                 name);
+    }
   struct stat buf64;
   int ret = stat64 (name, &buf64);
   if (!ret)
-    stat64_to_stat32 (&buf64, (struct __stat32 *) buf);
+    {
+      if (HACK_DEBUG_STAT)
+        hack_print("syscalls.cc: stat: Call stat64_to_stat32\r\n");
+      stat64_to_stat32 (&buf64, (struct __stat32 *) buf);
+    }
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("syscalls.cc: stat: return %d, errno=%d\r\n\r\n",
+                 ret, strerror(get_errno()));
+    }
   return ret;
 }
 
@@ -2009,10 +2125,27 @@ _stat_r (struct _reent *__restrict ptr, const char *__restrict name,
 extern "C" int
 lstat64 (const char *__restrict name, struct stat *__restrict buf)
 {
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("\r\nsyscalls.cc: lstat64(name=\"%s\", *buf):\r\n", name);
+      hack_print("syscalls.cc: lstat64: before init path_conv, errno=%s\r\n",
+                 strerror(get_errno()));
+    }
   syscall_printf ("entering");
   path_conv pc (name, PC_SYM_NOFOLLOW | PC_POSIX | PC_KEEP_HANDLE,
 		stat_suffixes);
-  return stat_worker (pc, buf);
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("syscalls.cc: lstat64: after init path_conv, errno=%s\r\n",
+                 strerror(get_errno()));
+    }
+  int result = stat_worker (pc, buf);
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("syscalls.cc: lstat64: return %d, errno=%s\r\n\r\n",
+                 result, strerror(get_errno()));
+    }
+  return result;
 }
 
 #ifdef __x86_64__
@@ -2025,7 +2158,10 @@ lstat (const char *__restrict name, struct stat *__restrict buf)
   struct stat buf64;
   int ret = lstat64 (name, &buf64);
   if (!ret)
-    stat64_to_stat32 (&buf64, (struct __stat32 *) buf);
+    {
+      hack_print("syscalls.cc: lstat: Call stat64_to_stat32\r\n");
+      stat64_to_stat32 (&buf64, (struct __stat32 *) buf);
+    }
   return ret;
 }
 #endif
@@ -4521,6 +4657,9 @@ gen_full_path_at (char *path_ret, int dirfd, const char *pathname,
 	    return -1;
 	  if (!cfd->pc.isdir ())
 	    {
+              if (HACK_DEBUG_OPEN)
+                hack_print(
+                  "\tsyscalls.cc: gen_full_path_at: ENOTDIR (1)\r\n");
 	      set_errno (ENOTDIR);
 	      return -1;
 	    }
@@ -4528,6 +4667,9 @@ gen_full_path_at (char *path_ret, int dirfd, const char *pathname,
 	}
       if (!p)
 	{
+          if (HACK_DEBUG_OPEN)
+            hack_print(
+              "\tsyscalls.cc: gen_full_path_at: ENOTDIR (2)\r\n");
 	  set_errno (ENOTDIR);
 	  return -1;
 	}

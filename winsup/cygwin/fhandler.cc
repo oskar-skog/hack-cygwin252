@@ -30,6 +30,7 @@ details. */
 #include <asm/socket.h>
 #include "cygwait.h"
 
+#include <string.h>
 #include "hack.h"
 
 #define MAX_OVERLAPPED_WRITE_LEN (64 * 1024 * 1024)
@@ -356,12 +357,6 @@ fhandler_base::device_access_denied (int flags)
 int
 fhandler_base::fhaccess (int flags, bool effective)
 {
-  if (HACK_DEBUG_OPEN) {
-      hack_print(
-          "\tfhandler.cc: fhandler_base::fhaccess(flags=0x%x, effective=%d)\r\n",
-          (unsigned int) flags, effective
-      );
-  }
   int res = -1;
   if (error ())
     {
@@ -392,9 +387,6 @@ fhandler_base::fhaccess (int flags, bool effective)
     {
       res = check_registry_access (get_handle (), flags, effective);
       close ();
-      if (HACK_DEBUG_OPEN)
-          hack_print("\tfhandler.cc: Return (registry) %d, errno = %d\r\n",
-                     res, get_errno());
       return res;
     }
 
@@ -462,8 +454,6 @@ done:
       set_errno (EROFS);
       res = -1;
     }
-  if (HACK_DEBUG_OPEN)
-      hack_print("\tfhandler.cc: Return %d, errno = %d\r\n", res, get_errno());
   debug_printf ("returning %d", res);
   return res;
 }
@@ -523,7 +513,8 @@ fhandler_base::open_with_arch (int flags, mode_t mode)
   if (!nohandle ())
     set_unique_id ();
   if (HACK_DEBUG_OPEN)
-      hack_print("\tfhandler.cc: Return %d, errno=%d\r\n", res, get_errno());
+    hack_print("\tfhandler_base::open_with_arch: Return %d, errno=%s\r\n",
+               res, strerror(get_errno()));
   return res;
 }
 
@@ -563,6 +554,13 @@ done:
 int
 fhandler_base::open (int flags, mode_t mode)
 {
+  if (HACK_DEBUG_OPEN)
+    {
+      hack_print(
+        "\tfhandler.cc: fhandler_base::open(flags=0x%x, mode=0%o)\r\n",
+        (unsigned) flags, (unsigned) mode
+      );
+    }
   int res = 0;
   HANDLE fh;
   ULONG file_attributes = 0;
@@ -632,8 +630,14 @@ fhandler_base::open (int flags, mode_t mode)
     {
       /* Add the reparse point flag to native symlinks, otherwise we open the
 	 target, not the symlink.  This would break lstat. */
-      if (pc.is_rep_symlink ())
-	options |= FILE_OPEN_REPARSE_POINT;
+      if (pc.is_rep_symlink ()) {
+        options |= FILE_OPEN_REPARSE_POINT;
+        if (HACK_DEBUG_OPEN)
+          hack_print("\tfhandler_base::open: pc.is_rep_symlink() -> true\r\n");
+      } else {
+        if (HACK_DEBUG_OPEN)
+          hack_print("\tfhandler_base::open: pc.is_rep_symlink() -> false\r\n");
+      }
 
       if (pc.fs_is_nfs ())
 	{
@@ -701,6 +705,40 @@ fhandler_base::open (int flags, mode_t mode)
 
   status = NtCreateFile (&fh, access, &attr, &io, NULL, file_attributes, shared,
 			 create_disposition, options, p, plen);
+  if (HACK_DEBUG_OPEN)
+  {
+    char path_utf8[HACK_MAXLEN];
+    hack_PUSTR_to_utf8(path_utf8, HACK_MAXLEN, attr.ObjectName);
+    hack_print("\tfhandler_base::open: attr.ObjectName=\"%s\"\r\n", path_utf8);
+    hack_print(
+      "\tfhandler_base::open: NtCreateFile(\r\n"
+      "\t\tFileHandle = &fh,\r\n"
+      "\t\tDesiredAccess = 0x%x,\r\n"
+      "\t\tObjectAttributes = &attr,\r\n"
+      "\t\tIoStatusBlock = &io,\r\n"
+      "\t\tAllocationSize = NULL,\r\n"
+      "\t\tFileAttributes = 0x%lx,\r\n"
+      "\t\tShareAccess = 0x%lx,\r\n"
+      "\t\tCreateDisposition = 0x%lx,\r\n"
+      "\t\tCreateOptions = 0x%lx,\r\n"
+      "\t\tEaBuffer = p,\r\n"
+      "\t\tEaLength = 0x%lx,\r\n"
+      "\t) -> 0x%x\r\n"
+      ,
+      // &fh
+      (unsigned) access,
+      // &attr
+      // &io
+      // NULL
+      (unsigned long) file_attributes,
+      (unsigned long) shared,
+      (unsigned long) create_disposition,
+      (unsigned long) options,
+      // p
+      (unsigned long) plen,
+      (unsigned) status
+    );
+  }
   if (!NT_SUCCESS (status))
     {
       /* Trying to create a directory should return EISDIR, not ENOENT. */
@@ -776,6 +814,13 @@ done:
 
   syscall_printf ("%d = fhandler_base::open(%S, %y)",
 		  res, pc.get_nt_native_path (), flags);
+  if (HACK_DEBUG_OPEN)
+  {
+    hack_print(
+      "\tfhandler_base::open: return %d, errno=%s\r\n",
+      res, strerror(get_errno())
+    );
+  }
   return res;
 }
 
@@ -1315,8 +1360,17 @@ fhandler_base::ioctl (unsigned int cmd, void *buf)
 int __reg2
 fhandler_base::fstat (struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+    hack_print("\tfhandler.cc: fhandler_base::fstat(struct stat *buf)\r\n");
   if (is_fs_special ())
-    return fstat_fs (buf);
+    {
+      if (HACK_DEBUG_STAT)
+        {
+          hack_print("\tfhandler.cc: fhandler_base::fstat: "
+                     "tail call fstat_fs\r\n");
+        }
+      return fstat_fs (buf);
+    }
 
   switch (get_device ())
     {
@@ -1347,6 +1401,8 @@ fhandler_base::fstat (struct stat *buf)
   buf->st_mtim.tv_nsec = 0L;
   buf->st_atim = buf->st_mtim;
 
+  if (HACK_DEBUG_STAT)
+    hack_print("\tfhandler.cc: fhandler_base::fstat: return 0\r\n");
   return 0;
 }
 
@@ -1684,6 +1740,11 @@ fhandler_base::rmdir ()
 DIR *
 fhandler_base::opendir (int fd)
 {
+  if (HACK_DEBUG_OPEN)
+    {
+      hack_print("\tfhandler.cc: fhandler_base::opendir(fd=%d) "
+                 "set ENOTDIR\r\n", fd);
+    }
   set_errno (ENOTDIR);
   return NULL;
 }

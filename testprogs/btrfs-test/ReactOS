@@ -1,0 +1,147 @@
+
+syscalls.cc: stat64(name="/cygdrive/c", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	syscalls.cc: stat_worker(path_conv&, struct stat*)
+	errno = No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.fileattr = 0x10
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.path = "C:\"
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.posix_path = "/cygdrive/c"
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+	syscalls.cc: stat_worker: return 0, errno=No error
+syscalls.cc: stat64: return 0, errno=No error
+
+
+syscalls.cc: stat64(name="/cygdrive/c/", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	syscalls.cc: stat_worker(path_conv&, struct stat*)
+	errno = No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.fileattr = 0x10
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.path = "C:\"
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.posix_path = "/cygdrive/c"
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+	syscalls.cc: stat_worker: return 0, errno=No error
+syscalls.cc: stat64: return 0, errno=No error
+
+
+syscalls.cc: stat64(name="/cygdrive/d", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	syscalls.cc: stat_worker(path_conv&, struct stat*)
+	errno = No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.fileattr = 0x0
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.path = "D:\"
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.posix_path = "/cygdrive/d"
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: C
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = Permission denied
+		size = 0
+		mode = 0100640
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=Permission denied
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+	syscalls.cc: stat_worker: return 0, errno=Permission denied
+syscalls.cc: stat64: return 0, errno=Permission denied
+
+
+syscalls.cc: stat64(name="/cygdrive/d/", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: path_conv::check: ENOTDIR (5)
+syscalls.cc: stat64: after init path_conv, errno=No error
+	syscalls.cc: stat_worker(path_conv&, struct stat*)
+	errno = No error
+	syscalls.cc: stat_worker: path_conv failed
+	syscalls.cc: stat_worker: return -1, errno=Not a directory
+syscalls.cc: stat64: return -1, errno=Not a directory
+
+
+syscalls.cc: stat64(name="/cygdrive/e", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	syscalls.cc: stat_worker(path_conv&, struct stat*)
+	errno = No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.fileattr = 0x10
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.path = "E:\"
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.posix_path = "/cygdrive/e"
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+	syscalls.cc: stat_worker: return 0, errno=No error
+syscalls.cc: stat64: return 0, errno=No error
+
+
+syscalls.cc: stat64(name="/cygdrive/e/", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	syscalls.cc: stat_worker(path_conv&, struct stat*)
+	errno = No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.fileattr = 0x10
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.path = "E:\"
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.posix_path = "/cygdrive/e"
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+	syscalls.cc: stat_worker: return 0, errno=No error
+syscalls.cc: stat64: return 0, errno=No error
+

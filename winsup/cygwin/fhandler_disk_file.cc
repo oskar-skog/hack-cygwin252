@@ -28,6 +28,9 @@ details. */
 #define _COMPILING_NEWLIB
 #include <dirent.h>
 
+#include <string.h>
+#include "hack.h"
+
 class __DIR_mounts
 {
   int		 count;
@@ -316,6 +319,13 @@ fhandler_base::fstat_by_nfs_ea (struct stat *buf)
 int __reg2
 fhandler_base::fstat_by_handle (struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("\tfhandler_disk_file.cc: "
+                 "fhandler_base::fstat_by_handle(struct stat *buf)\r\n");
+      hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_by_handle: "
+                 "errno=%s\r\n", strerror(get_errno()));
+    }
   HANDLE h = get_stat_handle ();
   NTSTATUS status = 0;
 
@@ -333,12 +343,25 @@ fhandler_base::fstat_by_handle (struct stat *buf)
     }
   if (pc.isgood_inode (pc.fai ()->InternalInformation.IndexNumber.QuadPart))
     ino = pc.fai ()->InternalInformation.IndexNumber.QuadPart;
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_by_handle: "
+                 "errno=%s, tail call fstat_helper(buf)\r\n",
+                 strerror(get_errno()));
+    }
   return fstat_helper (buf);
 }
 
 int __reg2
 fhandler_base::fstat_by_name (struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+  {
+    hack_print("\tfhandler_disk_file.cc: "
+               "fhandler_base::fstat_by_name(struct stat *buf)\r\n");
+    hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_by_name: "
+               "errno=%s\r\n", strerror(get_errno()));
+  }
   NTSTATUS status;
   OBJECT_ATTRIBUTES attr;
   IO_STATUS_BLOCK io;
@@ -377,12 +400,20 @@ fhandler_base::fstat_by_name (struct stat *buf)
 	    ino = fdi_buf.fdi.FileId.QuadPart;
 	}
     }
+  if (HACK_DEBUG_STAT)
+  {
+    hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_by_name: "
+               "errno=%s, tail call fstat_helper(buf)\r\n",
+               strerror(get_errno()));
+  }
   return fstat_helper (buf);
 }
 
 int __reg2
 fhandler_base::fstat_fs (struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+    hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)\r\n");
   int res = -1;
   int oret;
   int open_flags = O_RDONLY | O_BINARY;
@@ -393,6 +424,12 @@ fhandler_base::fstat_fs (struct stat *buf)
 	res = pc.fs_is_nfs () ? fstat_by_nfs_ea (buf) : fstat_by_handle (buf);
       if (res)
 	res = fstat_by_name (buf);
+      if (HACK_DEBUG_STAT)
+        {
+          hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_fs: "
+                     "early return %d, errno=%s\r\n",
+                     res, strerror(get_errno()));
+        }
       return res;
     }
   /* First try to open with generic read access.  This allows to read the file
@@ -421,17 +458,34 @@ fhandler_base::fstat_fs (struct stat *buf)
   if (res)
     res = fstat_by_name (buf);
 
+  if (HACK_DEBUG_STAT)
+    {
+      hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_fs: "
+                 "return %d, errno=%s\r\n", res, strerror(get_errno()));
+    }
   return res;
 }
 
 int __reg2
 fhandler_base::fstat_helper (struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+    hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)\r\n");
   IO_STATUS_BLOCK st;
   FILE_COMPRESSION_INFORMATION fci;
   HANDLE h = get_stat_handle ();
   PFILE_ALL_INFORMATION pfai = pc.fai ();
   ULONG attributes = pc.file_attributes ();
+
+  if (HACK_DEBUG_STAT)
+  {
+      hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_helper: "
+                 "pc.fileattr = 0x%x\r\n", pc.hack_get_fileattr());
+      hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_helper: "
+                 "pc.path = \"%s\"\r\n", pc.hack_get_path());
+      hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_helper: "
+                 "pc.posix_path = \"%s\"\r\n", pc.hack_get_posix_path());
+  }
 
   to_timestruc_t (&pfai->BasicInformation.LastAccessTime, &buf->st_atim);
   to_timestruc_t (&pfai->BasicInformation.LastWriteTime, &buf->st_mtim);
@@ -498,9 +552,16 @@ fhandler_base::fstat_helper (struct stat *buf)
   else if (pc.issocket ())
     buf->st_mode = S_IFSOCK;
 
+  // CORE-18247
+  //    W2003: A    (NTFS, btrfs)     B: FAT32
+  //    ReactOS: B  (FAT32, btrfs)
   if (!get_file_attribute (is_fs_special () && !pc.issocket () ? NULL : h, pc,
 			   &buf->st_mode, &buf->st_uid, &buf->st_gid))
     {
+      if (HACK_DEBUG_STAT)
+        hack_print(
+          "\tfhandler_disk_file.cc: fhandler_base::fstat_helper: A\r\n"
+        );
       /* If read-only attribute is set, modify ntsec return value */
       if (::has_attribute (attributes, FILE_ATTRIBUTE_READONLY)
 	  && !pc.isdir () && !pc.issymlink ())
@@ -519,12 +580,20 @@ fhandler_base::fstat_helper (struct stat *buf)
     }
   else
     {
+      if (HACK_DEBUG_STAT)
+        hack_print(
+          "\tfhandler_disk_file.cc: fhandler_base::fstat_helper: B\r\n"
+        );
       buf->st_mode |= STD_RBITS;
 
       if (!::has_attribute (attributes, FILE_ATTRIBUTE_READONLY))
 	buf->st_mode |= STD_WBITS;
       /* | S_IWGRP | S_IWOTH; we don't give write to group etc */
 
+      // CORE-18247: Is pc.isdir() returning false for "/cygdrive/d" ??
+      // path.h: class path_conv:
+      //    int isdir () const {return has_attribute (FILE_ATTRIBUTE_DIRECTORY);}
+      //    bool has_attribute (DWORD x) const {return exists () && (fileattr & x);}
       if (pc.isdir ())
 	buf->st_mode |= S_IFDIR | STD_WBITS | STD_XBITS;
       else if (buf->st_mode & S_IFMT)
@@ -537,6 +606,12 @@ fhandler_base::fstat_helper (struct stat *buf)
 	}
       else
 	{
+          // CORE-18247: "C" only happens on btrfs, not on FAT32.
+          // (stat drive root)
+          if (HACK_DEBUG_STAT)
+            hack_print(
+              "\tfhandler_disk_file.cc: fhandler_base::fstat_helper: C\r\n"
+            );
 	  buf->st_mode |= S_IFREG;
 	  /* Check suffix for executable file. */
 	  if (pc.exec_state () != is_executable)
@@ -610,18 +685,34 @@ fhandler_base::fstat_helper (struct stat *buf)
 		  buf->st_ctim.tv_sec, buf->st_ctim.tv_nsec,
 		  buf->st_mtim.tv_sec, buf->st_mtim.tv_nsec,
 		  buf->st_birthtim.tv_sec, buf->st_birthtim.tv_nsec);
+  if (HACK_DEBUG_STAT)
+    hack_print(
+      "\tfhandler_disk_file.cc: fhandler_base::fstat_helper: return {\r\n"
+      "\t\terrno = %s\r\n"
+      "\t\tsize = %jd\r\n"
+      "\t\tmode = 0%o\r\n"
+      "\t}\r\n",
+      strerror(get_errno()),
+      (intmax_t) buf->st_size, (unsigned int) buf->st_mode
+    );
   return 0;
 }
 
 int __reg2
 fhandler_disk_file::fstat (struct stat *buf)
 {
+  if (HACK_DEBUG_STAT)
+    hack_print("\tfhandler_disk_file.cc: "
+               "fhandler_disk_file::fstat() -> fstat_fs()\r\n");
   return fstat_fs (buf);
 }
 
 int __reg2
 fhandler_disk_file::fstatvfs (struct statvfs *sfs)
 {
+  if (HACK_DEBUG_STAT)
+    hack_print("\tfhandler_disk_file.cc: "
+               "fhandler_disk_file::fstatvfs(struct statvfs *sfs)\r\n");
   int ret = -1, opened = 0;
   NTSTATUS status;
   IO_STATUS_BLOCK io;
@@ -634,6 +725,10 @@ fhandler_disk_file::fstatvfs (struct statvfs *sfs)
 
   if (!fh)
     {
+      if (HACK_DEBUG_STAT)
+        hack_print(
+          "\tfhandler_disk_file.cc: fhandler_disk_file::fstatvfs: A\r\n"
+        );
       OBJECT_ATTRIBUTES attr;
       opened = NT_SUCCESS (NtOpenFile (&fh, READ_CONTROL,
 				       pc.get_object_attr (attr, sec_none_nih),
@@ -652,6 +747,10 @@ fhandler_disk_file::fstatvfs (struct statvfs *sfs)
 	    goto out;
 	}
     }
+  if (HACK_DEBUG_STAT)
+    hack_print(
+      "\tfhandler_disk_file.cc: fhandler_disk_file::fstatvfs: B\r\n"
+    );
 
   sfs->f_files = ULONG_MAX;
   sfs->f_ffree = ULONG_MAX;
@@ -664,6 +763,10 @@ fhandler_disk_file::fstatvfs (struct statvfs *sfs)
 					 FileFsFullSizeInformation);
   if (NT_SUCCESS (status))
     {
+      if (HACK_DEBUG_STAT)
+        hack_print(
+          "\tfhandler_disk_file.cc: fhandler_disk_file::fstatvfs: C\r\n"
+        );
       sfs->f_bsize = full_fsi.BytesPerSector * full_fsi.SectorsPerAllocationUnit;
       sfs->f_frsize = sfs->f_bsize;
       sfs->f_blocks = (fsblkcnt_t) full_fsi.TotalAllocationUnits.QuadPart;
@@ -673,6 +776,10 @@ fhandler_disk_file::fstatvfs (struct statvfs *sfs)
 		      full_fsi.CallerAvailableAllocationUnits.QuadPart;
       if (sfs->f_bfree > sfs->f_bavail)
 	{
+          if (HACK_DEBUG_STAT)
+            hack_print(
+              "\tfhandler_disk_file.cc: fhandler_disk_file::fstatvfs: D\r\n"
+            );
 	  /* Quotas active.  We can't trust TotalAllocationUnits. */
 	  NTFS_VOLUME_DATA_BUFFER nvdb;
 
@@ -690,6 +797,10 @@ fhandler_disk_file::fstatvfs (struct statvfs *sfs)
   else if (status == STATUS_INVALID_PARAMETER /* Netapp */
 	   || status == STATUS_INVALID_INFO_CLASS)
     {
+      if (HACK_DEBUG_STAT)
+        hack_print(
+          "\tfhandler_disk_file.cc: fhandler_disk_file::fstatvfs: E\r\n"
+        );
       FILE_FS_SIZE_INFORMATION fsi;
       status = NtQueryVolumeInformationFile (fh, &io, &fsi, sizeof fsi,
 					     FileFsSizeInformation);
@@ -708,13 +819,23 @@ fhandler_disk_file::fstatvfs (struct statvfs *sfs)
 		      status, pc.get_nt_native_path ());
     }
   else
-    debug_printf ("%y = NtQueryVolumeInformationFile"
-		  "(%S, FileFsFullSizeInformation)", 
-		  status, pc.get_nt_native_path ());
+    {
+      debug_printf ("%y = NtQueryVolumeInformationFile"
+                    "(%S, FileFsFullSizeInformation)", 
+		    status, pc.get_nt_native_path ());
+      if (HACK_DEBUG_STAT)
+        hack_print(
+          "\tfhandler_disk_file.cc: fhandler_disk_file::fstatvfs: A\r\n"
+        );
+    }
 out:
   if (opened)
     NtClose (fh);
   syscall_printf ("%d = fstatvfs(%s, %p)", ret, get_name (), sfs);
+  if (HACK_DEBUG_STAT)
+    hack_print("\tfhandler_disk_file.cc: fhandler_disk_file::fstatvfs: "
+               "return %d = fstatvfs(\"%s\", struct statvfs *sfs), "
+               "errno=%s\r\n", ret, get_name(), strerror(get_errno()));
   return ret;
 }
 

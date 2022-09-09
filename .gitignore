@@ -47,3 +47,4 @@ lost+found
 # hack-cygwin252
 build
 installroot
+git.exe.stackdump

@@ -37,21 +37,24 @@ on [current build instructions](https://cygwin.com/faq/faq.html#faq.programming.
 ## Build instructions
 
 ```
-git clone git@github.com:oskar-skog/hack-cygwin252.git
+git clone https://github.com/oskar-skog/hack-cygwin252.git
 cd hack-cygwin252
 
 mkdir build
 mkdir installroot
 
 cd winsup
-./autogen.sh        # Will appear to have some errors
+./autogen.sh  # Will appear to have some errors
+./autogen.sh  # Runnint it once SHOULD be enough, but who knows...
 
 cd ../installroot
 prefix=$(pwd)
 
 cd ../build
-../configure "--prefix=$prefix"
-make
+../configure "--prefix=$prefix" --enable-debugging
+
+../autotouch  # Run before make if you have made changes to winsup/cygwin/hack.h
+make          # make -j4 for parallel build
 make install
 ```
 
@@ -60,12 +63,13 @@ To install it you need to end all Cygwin applications and copy it to
 `C:\cygwin\bin` (or wherever your Cygwin /bin happens to be).
 
 
-## Hacking
+## Hacking/Adding log messages
 
 ```C++
 #include "hack.h"
 void hack_print(const char * format, ...);
 void hack_utf16_to_utf8(char * dest, size_t bufsize, LPWSTR src);
+void hack_PUSTR_to_utf8(char * dst, size_t dst_size, PUNICODE_STRING src);
 ```
 
 `winsup/cygwin` contains all the things of interest.
@@ -77,6 +81,8 @@ change some defines in it.
 `dll_crt0_1` in `winsup/cygwin/dcrt0.cc` calls `main` of the program,
 `hack_init` is called immediately before.  `do_exit` in `dcrt0.cc`
 calls `hack_end`.
+
+`fork` will also call `hack_init` in the child process.
 
 ## Log files
 
