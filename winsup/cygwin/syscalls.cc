@@ -1991,7 +1991,10 @@ stat_worker (path_conv &pc, struct stat *buf)
   if (HACK_DEBUG_STAT)
       hack_print(
         "\tsyscalls.cc: stat_worker(path_conv&, struct stat*)\r\n"
-        "\terrno = %s\r\n", strerror(get_errno())
+        "\t\terrno = %s\r\n"
+        "\t\tattributes = 0x%x\r\n",
+        strerror(get_errno()),
+        pc.hack_get_fileattr()
       );
   int res = -1;
 

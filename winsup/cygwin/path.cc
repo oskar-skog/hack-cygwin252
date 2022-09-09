@@ -675,6 +675,12 @@ void
 path_conv::check (const char *src, unsigned opt,
 		  const suffix_info *suffixes)
 {
+  if (HACK_DEBUG_OPEN || HACK_DEBUG_READ || HACK_DEBUG_STAT) {
+    hack_print(
+      "\tpath.cc: path_conv::check(\"%s\", opt=0x%x, suffix_info *)\r\n",
+      src, opt
+    );
+  }
   /* The tmp_buf array is used when expanding symlinks.  It is NT_MAX_PATH * 2
      in length so that we can hold the expanded symlink plus a trailer.  */
   tmp_pathbuf tp;
@@ -896,14 +902,27 @@ path_conv::check (const char *src, unsigned opt,
                         }
 			break;
 		      case virt_file:
-			if (component == 0)
+			if (component == 0) {
+                          if (HACK_DEBUG_STAT) {
+                            hack_print(
+                              "\tpath.cc: path_conv::check: "
+                              "fileattr = 0; (1)\r\n"
+                            );
+                          }
 			  fileattr = 0;
+                        }
 			break;
 		      case virt_symlink:
 			goto is_virtual_symlink;
 		      case virt_pipe:
 			if (component == 0)
 			  {
+                            if (HACK_DEBUG_STAT) {
+                              hack_print(
+                                "\tpath.cc: path_conv::check: "
+                                "fileattr = 0; (2)\r\n"
+                              );
+                            }
 			    fileattr = 0;
 			    dev.parse (FH_PIPE);
 			  }
@@ -911,6 +930,12 @@ path_conv::check (const char *src, unsigned opt,
 		      case virt_socket:
 			if (component == 0)
 			  {
+                            if (HACK_DEBUG_STAT) {
+                              hack_print(
+                                "\tpath.cc: path_conv::check: "
+                                "fileattr = 0; (3)\r\n"
+                              );
+                            }
 			    fileattr = 0;
 			    dev.parse (FH_TCP);
 			  }
@@ -957,8 +982,11 @@ path_conv::check (const char *src, unsigned opt,
 	      /* devn should not be a device.  If it is, then stop parsing. */
 	      else if (dev != FH_FS)
 		{
-                  if (HACK_DEBUG_OPEN || HACK_DEBUG_STAT) {
-                    hack_print("\tpath.cc: path_conv::check: dev != FH_FS\r\n");
+                  if (HACK_DEBUG_STAT) {
+                    hack_print(
+                      "\tpath.cc: path_conv::check: "
+                      "fileattr = 0; (4)\r\n"
+                    );
                   }
 		  fileattr = 0;
 		  path_flags = sym.pflags;
@@ -998,9 +1026,12 @@ path_conv::check (const char *src, unsigned opt,
 
 	      if (sym.isdevice)
 		{
+                  if (HACK_DEBUG_OPEN || HACK_DEBUG_STAT) {
+                    hack_print("\tpath.cc: path_conv::check: sym.isdevice\r\n");
+                  }
 		  if (component)
 		    {
-                      if (HACK_DEBUG_OPEN)
+                      if (HACK_DEBUG_OPEN || HACK_DEBUG_STAT)
                         hack_print(
                           "\tpath.cc: path_conv::check: ENOTDIR (2)\r\n");
 		      error = ENOTDIR;
@@ -1017,7 +1048,7 @@ path_conv::check (const char *src, unsigned opt,
 		{
 		  if (component)
 		    {
-                      if (HACK_DEBUG_OPEN)
+                      if (HACK_DEBUG_OPEN || HACK_DEBUG_STAT)
                         hack_print(
                           "\tpath.cc: path_conv::check: ENOTDIR (3)\r\n");
 		      error = ENOTDIR;
@@ -1185,6 +1216,12 @@ path_conv::check (const char *src, unsigned opt,
 	add_ext = true;
 
     out:
+      if (HACK_DEBUG_READ || HACK_DEBUG_STAT) {
+        hack_print(
+          "\tpath.cc: path_conv::check: out: fileattr = 0x%x\r\n",
+          fileattr          
+        );
+      }
       set_path (THIS_path);
       if (add_ext)
 	add_ext_from_sym (sym);
@@ -2409,6 +2446,8 @@ symlink_info::check_reparse_point (HANDLE h, bool remote)
 int
 symlink_info::check_nfs_symlink (HANDLE h)
 {
+  if (HACK_DEBUG_OPEN || HACK_DEBUG_READ || HACK_DEBUG_STAT)
+    hack_print("\tpath.cc: symlink_info::check_nfs_symlink(HANDLE)\r\n");
   tmp_pathbuf tp;
   NTSTATUS status;
   IO_STATUS_BLOCK io;
@@ -2960,6 +2999,10 @@ restart:
                         "nt_status = 0x%x -> errno = %s\r\n",
                         status, strerror(geterrno_from_nt_status(status))
                       );
+                      hack_print(
+                        "\tpath.cc: symlink_info::check: "
+                        "fileattr = 0; (5)\r\n"
+                      );
                     }
                     fileattr = 0;
 		    set_error (geterrno_from_nt_status (status));
@@ -2991,6 +3034,12 @@ restart:
 			  set_error (ENOENT);
 			  continue;
 			}
+                      if (HACK_DEBUG_STAT) {
+                          hack_print(
+                            "\tpath.cc: symlink_info::check: "
+                            "fileattr = 0; (6)\r\n"
+                          );
+                        }
 		      fileattr = 0;
 		    }
 		  else
@@ -3054,6 +3103,11 @@ restart:
 	      /* A symlink is never a directory. */
 	      conv_hdl.fai ()->BasicInformation.FileAttributes
 		&= ~FILE_ATTRIBUTE_DIRECTORY;
+              if (HACK_DEBUG_STAT) {
+                hack_print(
+                  "\tpath.cc: symlink_info::check: remove dir attr\r\n"
+                );
+              }
 	      break;
 	    }
 	  else
