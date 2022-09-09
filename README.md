@@ -10,6 +10,9 @@ git://cygwin.com/git/newlib-cygwin.git
 
 ## Build environent
 
+For ReactOS, there is a [batch script](install-Cygwin.bat), on Windows you'll
+need to manually download the setup program.
+
 - Cygwin 2.5.2 on Windows Server 2003 SE SP 2
 - Cygwin 2.5.2 on ReactOS 0.4.15-dev-4994, using cygwin1.dll from here
 - may also work on XP but has not been tested
