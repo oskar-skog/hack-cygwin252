@@ -1,0 +1,14 @@
+#!/bin/sh
+
+cd ../winsup/cygwin || cd winsup/cygwin || {
+    echo "Could not cd to winsup/cygwin" >&2;
+    exit 1;
+}
+
+for file in *.cc; do
+    if grep -q hack.h "$file"; then
+        if [ hack.h -nt "$file" ]; then
+            touch "$file"
+        fi
+    fi
+done

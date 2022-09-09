@@ -44,15 +44,17 @@ mkdir build
 mkdir installroot
 
 cd winsup
-./autogen.sh        # Will appear to have some errors
-./autogen.sh        # Once SHOULD be enough, but who knows...
+./autogen.sh  # Will appear to have some errors
+./autogen.sh  # Runnint it once SHOULD be enough, but who knows...
 
 cd ../installroot
 prefix=$(pwd)
 
 cd ../build
 ../configure "--prefix=$prefix" --enable-debugging
-make                # make -j4 for parallel build
+
+../autotouch  # Run before make if you have made changes to winsup/cygwin/hack.h
+make          # make -j4 for parallel build
 make install
 ```
 
