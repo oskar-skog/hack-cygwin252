@@ -1,0 +1,5 @@
+configure: error: cannot find sources (cygwin-api.xml) in ../../../../winsup/doc
+configure: error: ../../../../winsup/doc/configure failed for doc
+make[1]: *** [Makefile:8904: configure-target-winsup] Error 1
+make[1]: Leaving directory '/home/Administrator/hack-cygwin252/build'
+make: *** [Makefile:854: all] Error 2

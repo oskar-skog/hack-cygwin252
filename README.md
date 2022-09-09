@@ -45,6 +45,7 @@ mkdir installroot
 
 cd winsup
 ./autogen.sh        # Will appear to have some errors
+./autogen.sh
 
 cd ../installroot
 prefix=$(pwd)
