@@ -3010,10 +3010,25 @@ restart:
 		}
 	      else
 		{
+                  // HANDLE dir
+                  // IO_STATUS_BLOCK io
+                  // struct {
+                  //   FILE_ID_BOTH_DIR_INFORMATION fdi;
+                  //   WCHAR dummy_buf[NAME_MAX + 1];
+                  // } fdi_buf;
+                  // UNICODE_STRING basename
+                  
+                  // CORE-18247: NT_SUCCESS(status) is falsy after this
 		  status = NtQueryDirectoryFile (dir, NULL, NULL, NULL, &io,
 						 &fdi_buf, sizeof fdi_buf,
 						 FileIdBothDirectoryInformation,
 						 TRUE, &basename, TRUE);
+                  if (HACK_DEBUG_STAT) {
+                    hack_print(
+                      "\tpath.cc: symlink_info::check: NtQueryDirectoryFile(...)"
+                      " -> 0x%x\r\n", status
+                    );
+                  }
 		  /* Take the opportunity to check file system while we're
 		     having the handle to the parent dir. */
 		  fs.update (&upath, dir);
