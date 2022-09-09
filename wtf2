@@ -1,8 +1,0 @@
-make[3]: Entering directory '/home/Administrator/hack-cygwin252/build/i686-pc-cygwin/winsup'
-make[3]: *** utils: No such file or directory.  Stop.
-make[3]: Leaving directory '/home/Administrator/hack-cygwin252/build/i686-pc-cygwin/winsup'
-make[2]: *** [Makefile:81: utils] Error 1
-make[2]: Leaving directory '/home/Administrator/hack-cygwin252/build/i686-pc-cygwin/winsup'
-make[1]: *** [Makefile:8948: all-target-winsup] Error 2
-make[1]: Leaving directory '/home/Administrator/hack-cygwin252/build'
-make: *** [Makefile:854: all] Error 2
