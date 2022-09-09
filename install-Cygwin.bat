@@ -1,7 +1,8 @@
 @echo off
 
-:: root MUST end with \
-::
+:: root MUST end with '\'.
+:: On ReactOS, it MUST NOT reside on a btrfs volume until CORE-18247 and
+:: CORE-18300 have been fixed.
 set root=C:\
 
 echo About to install Cygwin to %root%cygwin
