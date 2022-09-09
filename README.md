@@ -45,14 +45,14 @@ mkdir installroot
 
 cd winsup
 ./autogen.sh        # Will appear to have some errors
-./autogen.sh
+./autogen.sh        # Once SHOULD be enough, but who knows...
 
 cd ../installroot
 prefix=$(pwd)
 
 cd ../build
 ../configure "--prefix=$prefix" --enable-debugging
-make
+make                # make -j4 for parallel build
 make install
 ```
 
