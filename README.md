@@ -10,8 +10,9 @@ git://cygwin.com/git/newlib-cygwin.git
 
 ## Build environent
 
-Cygwin 2.5.2 on Windows Server 2003, may also work on XP but has not been
-tested.
+- Cygwin 2.5.2 on Windows Server 2003 SE SP 2
+- Cygwin 2.5.2 on ReactOS 0.4.15-dev-4994, using cygwin1.dll from here
+- may also work on XP but has not been tested
 
 You need to install the following packages:
 - gcc-g++
