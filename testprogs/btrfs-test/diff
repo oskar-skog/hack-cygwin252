@@ -1,9 +1,14 @@
 diff --git a/W2003 b/ReactOS
-index 96fb1a9..8bcc1e0 100644
+index 9f298ff..405328d 100644
 --- a/W2003
 +++ b/ReactOS
-@@ -3,115 +3,100 @@ syscalls.cc: stat64(name="/cygdrive/c", struct stat *buf)
+@@ -1,125 +1,110 @@
+ 
+ syscalls.cc: stat64(name="/cygdrive/c", struct stat *buf)
  syscalls.cc: stat64: before init path_conv, errno=No error
+ 	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
+-		pfai->BasicInformation.FileAttributes = 0x16
++		pfai->BasicInformation.FileAttributes = 0x10
  syscalls.cc: stat64: after init path_conv, errno=No error
  	syscalls.cc: stat_worker(path_conv&, struct stat*)
  	errno = No error
@@ -34,6 +39,9 @@ index 96fb1a9..8bcc1e0 100644
  
  syscalls.cc: stat64(name="/cygdrive/c/", struct stat *buf)
  syscalls.cc: stat64: before init path_conv, errno=No error
+ 	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
+-		pfai->BasicInformation.FileAttributes = 0x16
++		pfai->BasicInformation.FileAttributes = 0x10
  syscalls.cc: stat64: after init path_conv, errno=No error
  	syscalls.cc: stat_worker(path_conv&, struct stat*)
  	errno = No error
@@ -64,6 +72,9 @@ index 96fb1a9..8bcc1e0 100644
  
  syscalls.cc: stat64(name="/cygdrive/d", struct stat *buf)
  syscalls.cc: stat64: before init path_conv, errno=No error
+ 	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
+-		pfai->BasicInformation.FileAttributes = 0x30
++		pfai->BasicInformation.FileAttributes = 0x10
  syscalls.cc: stat64: after init path_conv, errno=No error
  	syscalls.cc: stat_worker(path_conv&, struct stat*)
  	errno = No error
@@ -84,7 +95,7 @@ index 96fb1a9..8bcc1e0 100644
 -		errno = No error
 +		errno = Permission denied
  		size = 0
--		mode = 040070
+-		mode = 040770
 +		mode = 0100640
  	}
 -	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
@@ -99,6 +110,9 @@ index 96fb1a9..8bcc1e0 100644
  
  syscalls.cc: stat64(name="/cygdrive/d/", struct stat *buf)
  syscalls.cc: stat64: before init path_conv, errno=No error
+ 	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
+-		pfai->BasicInformation.FileAttributes = 0x30
++		pfai->BasicInformation.FileAttributes = 0x10
 +	path.cc: path_conv::check: ENOTDIR (5)
  syscalls.cc: stat64: after init path_conv, errno=No error
  	syscalls.cc: stat_worker(path_conv&, struct stat*)
@@ -116,7 +130,7 @@ index 96fb1a9..8bcc1e0 100644
 -	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
 -		errno = No error
 -		size = 0
--		mode = 040070
+-		mode = 040770
 -	}
 -	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
 -	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
@@ -130,9 +144,9 @@ index 96fb1a9..8bcc1e0 100644
  
  syscalls.cc: stat64(name="/cygdrive/e", struct stat *buf)
  syscalls.cc: stat64: before init path_conv, errno=No error
+ 	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
+ 		pfai->BasicInformation.FileAttributes = 0x10
  syscalls.cc: stat64: after init path_conv, errno=No error
  	syscalls.cc: stat_worker(path_conv&, struct stat*)
  	errno = No error
  	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
- 	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
- 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)

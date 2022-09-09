@@ -1,6 +1,8 @@
 
 syscalls.cc: stat64(name="/cygdrive/c", struct stat *buf)
 syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
+		pfai->BasicInformation.FileAttributes = 0x10
 syscalls.cc: stat64: after init path_conv, errno=No error
 	syscalls.cc: stat_worker(path_conv&, struct stat*)
 	errno = No error
@@ -28,6 +30,8 @@ syscalls.cc: stat64: return 0, errno=No error
 
 syscalls.cc: stat64(name="/cygdrive/c/", struct stat *buf)
 syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
+		pfai->BasicInformation.FileAttributes = 0x10
 syscalls.cc: stat64: after init path_conv, errno=No error
 	syscalls.cc: stat_worker(path_conv&, struct stat*)
 	errno = No error
@@ -55,6 +59,8 @@ syscalls.cc: stat64: return 0, errno=No error
 
 syscalls.cc: stat64(name="/cygdrive/d", struct stat *buf)
 syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
+		pfai->BasicInformation.FileAttributes = 0x10
 syscalls.cc: stat64: after init path_conv, errno=No error
 	syscalls.cc: stat_worker(path_conv&, struct stat*)
 	errno = No error
@@ -83,6 +89,8 @@ syscalls.cc: stat64: return 0, errno=Permission denied
 
 syscalls.cc: stat64(name="/cygdrive/d/", struct stat *buf)
 syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
+		pfai->BasicInformation.FileAttributes = 0x10
 	path.cc: path_conv::check: ENOTDIR (5)
 syscalls.cc: stat64: after init path_conv, errno=No error
 	syscalls.cc: stat_worker(path_conv&, struct stat*)
@@ -94,6 +102,8 @@ syscalls.cc: stat64: return -1, errno=Not a directory
 
 syscalls.cc: stat64(name="/cygdrive/e", struct stat *buf)
 syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
+		pfai->BasicInformation.FileAttributes = 0x10
 syscalls.cc: stat64: after init path_conv, errno=No error
 	syscalls.cc: stat_worker(path_conv&, struct stat*)
 	errno = No error
@@ -121,6 +131,8 @@ syscalls.cc: stat64: return 0, errno=No error
 
 syscalls.cc: stat64(name="/cygdrive/e/", struct stat *buf)
 syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
+		pfai->BasicInformation.FileAttributes = 0x10
 syscalls.cc: stat64: after init path_conv, errno=No error
 	syscalls.cc: stat_worker(path_conv&, struct stat*)
 	errno = No error

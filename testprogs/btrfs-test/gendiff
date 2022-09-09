@@ -1,0 +1,1 @@
+git diff --no-index -U10 W2003 ReactOS >diff
