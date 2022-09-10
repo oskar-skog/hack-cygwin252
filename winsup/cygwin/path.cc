@@ -2808,6 +2808,12 @@ restart:
 			     FILE_OPEN_REPARSE_POINT
 			     | FILE_OPEN_FOR_BACKUP_INTENT,
 			     eabuf, easize);
+      if (HACK_DEBUG_STAT) {
+        hack_print(
+          "\tpath.cc: symlink_info::check: status "
+          "= NtCreateFile(...) = 0x%x\r\n", status
+        );
+      }
       debug_printf ("%y = NtCreateFile (%S)", status, &upath);
       /* No right to access EAs or EAs not supported? */
       if (!NT_SUCCESS (status)
@@ -2831,10 +2837,22 @@ restart:
 			       &attr, &io, FILE_SHARE_VALID_FLAGS,
 			       FILE_OPEN_REPARSE_POINT
 			       | FILE_OPEN_FOR_BACKUP_INTENT);
+          if (HACK_DEBUG_STAT) {
+            hack_print(
+              "\tpath.cc: symlink_info::check: status "
+              "= NtOpenFile(...) = 0x%x  // non-EA \r\n", status
+            );
+          }
 	  debug_printf ("%y = NtOpenFile (no-EAs %S)", status, &upath);
 	}
       if (status == STATUS_OBJECT_NAME_NOT_FOUND)
 	{
+          if (HACK_DEBUG_STAT) {
+            hack_print(
+              "\tpath.cc: symlink_info::check: status "
+              "== STATUS_OBJECT_NAME_NOT_FOUND\r\n"
+            );
+          }
 	  if (ci_flag == 0 && wincap.has_broken_udf ()
 	      && (!fs.inited () || fs.is_udf ()))
 	    {
@@ -2847,6 +2865,12 @@ restart:
 				   &attr, &io, FILE_SHARE_VALID_FLAGS,
 				   FILE_OPEN_REPARSE_POINT
 				   | FILE_OPEN_FOR_BACKUP_INTENT);
+              if (HACK_DEBUG_STAT) {
+                hack_print(
+                  "\tpath.cc: symlink_info::check: status "
+                  "= NtOpenFile(...) = 0x%x  // broken UDF\r\n", status
+                );
+              }
 	      debug_printf ("%y = NtOpenFile (broken-UDF, %S)", status, &upath);
 	      attr.Attributes = 0;
 	      if (NT_SUCCESS (status))
@@ -2858,6 +2882,12 @@ restart:
 		      NtClose (h);
 		      h = NULL;
 		      status = STATUS_OBJECT_NAME_NOT_FOUND;
+                      if (HACK_DEBUG_STAT) {
+                        hack_print(
+                          "\tpath.cc: symlink_info::check: set status "
+                          "= STATUS_OBJECT_NAME_NOT_FOUND\r\n"
+                        );
+                      } 
 		    }
 		}
 	    }
