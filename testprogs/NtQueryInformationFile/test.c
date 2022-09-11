@@ -15,7 +15,6 @@ int main(int argc, char **argv)
     test("\\??\\C:\\");
     test("\\??\\D:\\");
     test("\\??\\E:\\");
-    test("\\??\\F:\\");
     /* // These do not work on Windows 2003:
     test("C:\\");
     test("D:\\");
@@ -90,22 +89,17 @@ void test(char *path)
         printf("NtOpenFile status = 0x%lx\n", status);
     }
     
-    // Catch all
-    if (h == INVALID_HANDLE_VALUE)
-    {
-        printf("Error: handle == INVALID_HANDLE_VALUE\n\n");
-        return;
-    }
-    
-    
     FILE_ALL_INFORMATION fai;
     fai.BasicInformation.FileAttributes = 0xdeadbeef;
+    fai.StandardInformation.EndOfFile = 123456789;
     status = NtQueryInformationFile(h, &io, &fai, sizeof(fai), FileAllInformation);
     printf(
         "NtQueryInformationFile status = 0x%lx\n"
         "BasicInformation.FileAttributes = 0x%lx\n",
+        "StandardInformation.EndOfFile = %lld\n"
         status,
-        fai.BasicInformation.FileAttributes
+        fai.BasicInformation.FileAttributes,
+        (long long) fai.StandardInformation.EndOfFile
     );
 
     printf("\n");
