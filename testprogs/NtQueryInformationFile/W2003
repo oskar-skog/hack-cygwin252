@@ -1,0 +1,42 @@
+    C drive: NTFS
+Testing \??\C:\
+NtCreateFile status = 0x0
+NtQueryInformationFile status = 0x0
+BasicInformation.FileAttributes = 0x16
+StandardInformation.Directory = 1
+StandardInformation.EndOfFile.QuadPart = 0
+
+    D drive: btrfs
+Testing \??\D:\
+NtCreateFile status = 0x0
+NtQueryInformationFile status = 0x0
+BasicInformation.FileAttributes = 0x30
+StandardInformation.Directory = 1
+StandardInformation.EndOfFile.QuadPart = 0
+
+    E drive: FAT32
+Testing \??\E:\
+NtCreateFile status = 0xc000004f
+EAs not supported, using NtOpenFile instead
+NtOpenFile status = 0x0
+NtQueryInformationFile status = 0x0
+BasicInformation.FileAttributes = 0x10
+StandardInformation.Directory = 1
+StandardInformation.EndOfFile.QuadPart = 0
+
+    Windows explorer, STATUS_BUFFER_OVERFLOW
+Testing \??\C:\WINDOWS\explorer.exe
+NtCreateFile status = 0x0
+NtQueryInformationFile status = 0x80000005
+BasicInformation.FileAttributes = 0x20
+StandardInformation.Directory = 0
+StandardInformation.EndOfFile.QuadPart = 1053184
+
+    ReactOS explorer, not existing
+Testing \??\C:\ReactOS\explorer.exe
+NtCreateFile status = 0xc000003a
+NtQueryInformationFile status = 0xc0000008
+BasicInformation.FileAttributes = 0xdeadbeef
+StandardInformation.Directory = 255
+StandardInformation.EndOfFile.QuadPart = 123456789
+
