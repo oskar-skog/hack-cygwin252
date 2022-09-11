@@ -7,8 +7,6 @@
 #include <windows.h>
 #include <Winternl.h>
 
-
-PUNICODE_STRING convert(char *input);
 void test(char *path);
 
 int main(int argc, char **argv)
@@ -46,7 +44,7 @@ void test(char *path)
     
     HANDLE h;
     NTSTATUS status;
-    PUNICODE_STRING upath;
+    UNICODE_STRING upath;
     OBJECT_ATTRIBUTES attr;
     IO_STATUS_BLOCK io;
     
@@ -55,8 +53,7 @@ void test(char *path)
     
     const ULONG ci_flag = 0x40;     // This is what Cygwin does
     
-    upath = convert(path);
-    InitializeObjectAttributes(&attr, upath, ci_flag, NULL, NULL);
+    InitializeObjectAttributes(&attr, &upath, ci_flag, NULL, NULL);
     
     status = NtCreateFile(
                 &h,
@@ -115,7 +112,7 @@ PUNICODE_STRING convert(char *input)
 {
     wchar_t * buf = malloc(sizeof(wchar_t) * (strlen(input) + 1));
     PUNICODE_STRING thing = malloc(sizeof(UNICODE_STRING));
-    thing->Length = thing->MaximumLength = strlen(input);
+    thing->Length = thing->MaximumLength = strlen(input) * sizeof(wchar_t);
     thing->Buffer = buf;
     while ((*buf++ = *input++));
     return thing;
