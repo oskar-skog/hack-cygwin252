@@ -333,22 +333,42 @@ fhandler_base::fstat_by_handle (struct stat *buf)
      on the information stored in pc.fai.  So we overwrite them here. */
   if (get_io_handle ())
     {
+      if (HACK_DEBUG_STAT) {
+        hack_print(
+          "\tfhandler_disk_file.cc: fhandler_base::fstat_by_handle: "
+          "before pc.get_finfo(handle), attributes = 0x%x\r\n",
+          pc.hack_get_fileattr()
+        );
+      }
       status = pc.get_finfo (h);
       if (!NT_SUCCESS (status))
        {
 	 debug_printf ("%y = NtQueryInformationFile(%S, FileAllInformation)",
 		       status, pc.get_nt_native_path ());
+         if (HACK_DEBUG_STAT) {
+           hack_print(
+             "\tfhandler_disk_file.cc: fhandler_base::fstat_by_handle: "
+             "pc.get_finfo(handle) failed, status = 0x%x\r\n",
+             status
+           );
+         }
 	 return -1;
        }
+      if (HACK_DEBUG_STAT) {
+        hack_print(
+          "\tfhandler_disk_file.cc: fhandler_base::fstat_by_handle: "
+          "after pc.get_finfo(handle), attributes = 0x%x\r\n",
+          pc.hack_get_fileattr()
+        );
+      }
     }
   if (pc.isgood_inode (pc.fai ()->InternalInformation.IndexNumber.QuadPart))
     ino = pc.fai ()->InternalInformation.IndexNumber.QuadPart;
-  if (HACK_DEBUG_STAT)
-    {
+  if (HACK_DEBUG_STAT) {
       hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_by_handle: "
                  "errno=%s, tail call fstat_helper(buf)\r\n",
                  strerror(get_errno()));
-    }
+  }
   return fstat_helper (buf);
 }
 
@@ -474,11 +494,34 @@ fhandler_base::fstat_helper (struct stat *buf)
   IO_STATUS_BLOCK st;
   FILE_COMPRESSION_INFORMATION fci;
   HANDLE h = get_stat_handle ();
+  
+  if (HACK_DEBUG_STAT) {
+    hack_print(
+      "\tfhandler_disk_file.cc: fhandler_base::fstat_helper: "
+      "before pc.fai(), attributes = 0x%x\r\n",
+      pc.hack_get_fileattr()
+    );
+  }
+  
   PFILE_ALL_INFORMATION pfai = pc.fai ();
+  
+  if (HACK_DEBUG_STAT) {
+    hack_print(
+      "\tfhandler_disk_file.cc: fhandler_base::fstat_helper: "
+      "after pc.fai(), attributes = 0x%x\r\n",
+      pc.hack_get_fileattr()
+    );
+  }
+  
+  
   ULONG attributes = pc.file_attributes ();
+  
+  
 
   if (HACK_DEBUG_STAT)
   {
+      hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_helper: "
+                 "pc.file_attributes() -> 0x%x\r\n", attributes);
       hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_helper: "
                  "pc.fileattr = 0x%x\r\n", pc.hack_get_fileattr());
       hack_print("\tfhandler_disk_file.cc: fhandler_base::fstat_helper: "

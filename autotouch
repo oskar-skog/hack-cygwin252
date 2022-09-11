@@ -5,10 +5,14 @@ cd ../winsup/cygwin || cd winsup/cygwin || {
     exit 1;
 }
 
-for file in *.cc; do
-    if grep -q hack.h "$file"; then
-        if [ hack.h -nt "$file" ]; then
-            touch "$file"
+
+for header in hack.h path.h
+do
+    for file in *.cc; do
+        if grep -q "$header" "$file"; then
+            if [ "$header" -nt "$file" ]; then
+                touch "$file"
+            fi
         fi
-    fi
+    done
 done

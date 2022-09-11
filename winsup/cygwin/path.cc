@@ -563,6 +563,12 @@ warn_msdos (const char *src)
 static DWORD
 getfileattr (const char *path, bool caseinsensitive) /* path has to be always absolute. */
 {
+  if (HACK_DEBUG_STAT) {
+    hack_print(
+      "\tpath.cc: getfileattr(\"%s\", casesensitive=%d)\r\n",
+      path, (int) caseinsensitive       // I think it upgrades to int anyway
+    );
+  }
   tmp_pathbuf tp;
   UNICODE_STRING upath;
   OBJECT_ATTRIBUTES attr;
@@ -577,8 +583,15 @@ getfileattr (const char *path, bool caseinsensitive) /* path has to be always ab
   get_nt_native_path (path, upath, false);
 
   status = NtQueryAttributesFile (&attr, &fbi);
-  if (NT_SUCCESS (status))
+  if (NT_SUCCESS (status)) {
+    if (HACK_DEBUG_STAT) {
+      hack_print(
+        "\tpath.cc: getfileattr: Return 0x%x from NtQueryAttributesFile\r\n",
+        fbi.FileAttributes
+      );
+    }
     return fbi.FileAttributes;
+  }
 
   if (status != STATUS_OBJECT_NAME_NOT_FOUND
       && status != STATUS_NO_SUCH_FILE) /* File not found on 9x share */
@@ -605,10 +618,24 @@ getfileattr (const char *path, bool caseinsensitive) /* path has to be always ab
 					 FileBothDirectoryInformation,
 					 TRUE, &basename, TRUE);
 	  NtClose (dir);
-	  if (NT_SUCCESS (status) || status == STATUS_BUFFER_OVERFLOW)
+	  if (NT_SUCCESS (status) || status == STATUS_BUFFER_OVERFLOW) {
+            if (HACK_DEBUG_STAT) {
+              hack_print(
+                "\tpath.cc: getfileattr: Return 0x%x from "
+                "NtQueryDirectoryFile\r\n",
+                fdi.FileAttributes
+              );
+            }
 	    return fdi.FileAttributes;
+          }
 	}
     }
+  if (HACK_DEBUG_STAT) {
+    hack_print(
+      "\tpath.cc: getfileattr: Return 0x%x due to failure, status = 0x%x\r\n",
+      INVALID_FILE_ATTRIBUTES, status
+    );
+  }
   SetLastError (RtlNtStatusToDosError (status));
   return INVALID_FILE_ATTRIBUTES;
 }
@@ -648,6 +675,12 @@ void
 path_conv::check (const char *src, unsigned opt,
 		  const suffix_info *suffixes)
 {
+  if (HACK_DEBUG_OPEN || HACK_DEBUG_READ || HACK_DEBUG_STAT) {
+    hack_print(
+      "\tpath.cc: path_conv::check(\"%s\", opt=0x%x, suffix_info *)\r\n",
+      src, opt
+    );
+  }
   /* The tmp_buf array is used when expanding symlinks.  It is NT_MAX_PATH * 2
      in length so that we can hold the expanded symlink plus a trailer.  */
   tmp_pathbuf tp;
@@ -783,15 +816,30 @@ path_conv::check (const char *src, unsigned opt,
 
 	      if (iscygdrive_dev (dev))
 		{
-		  if (!component)
+                  if (HACK_DEBUG_STAT) {
+                    hack_print(
+                      "\tpath.cc: path_conv::check: "
+                      "iscygdrive_dev(dev)->true\r\n"
+                    );
+                  }
+		  if (!component) {
+                    if (HACK_DEBUG_STAT) {
+                      hack_print(
+                        "\tpath.cc: path_conv::check: !component\r\n"
+                      );
+                    } 
 		    fileattr = FILE_ATTRIBUTE_DIRECTORY
 			       | FILE_ATTRIBUTE_READONLY;
-		  else
-		    {
-		      fileattr = getfileattr (THIS_path,
-					      sym.pflags & MOUNT_NOPOSIX);
-		      dev = FH_FS;
-		    }
+                  } else {
+                    if (HACK_DEBUG_STAT) {
+                      hack_print(
+                        "\tpath.cc: path_conv::check: component\r\n"
+                      );
+                    }
+                    fileattr = getfileattr (THIS_path,
+                                            sym.pflags & MOUNT_NOPOSIX);
+                    dev = FH_FS;
+                  }
 		  goto out;
 		}
 	      else if (isdev_dev (dev))
@@ -844,18 +892,37 @@ path_conv::check (const char *src, unsigned opt,
 		    {
 		      case virt_directory:
 		      case virt_rootdir:
-			if (component == 0)
+			if (component == 0) {
 			  fileattr = FILE_ATTRIBUTE_DIRECTORY;
+                          if (HACK_DEBUG_STAT) {
+                            hack_print(
+                            "\tpath.cc: path_conv::check: case virt_rootdir\r\n"
+                            );
+                          }
+                        }
 			break;
 		      case virt_file:
-			if (component == 0)
+			if (component == 0) {
+                          if (HACK_DEBUG_STAT) {
+                            hack_print(
+                              "\tpath.cc: path_conv::check: "
+                              "fileattr = 0; (1)\r\n"
+                            );
+                          }
 			  fileattr = 0;
+                        }
 			break;
 		      case virt_symlink:
 			goto is_virtual_symlink;
 		      case virt_pipe:
 			if (component == 0)
 			  {
+                            if (HACK_DEBUG_STAT) {
+                              hack_print(
+                                "\tpath.cc: path_conv::check: "
+                                "fileattr = 0; (2)\r\n"
+                              );
+                            }
 			    fileattr = 0;
 			    dev.parse (FH_PIPE);
 			  }
@@ -863,6 +930,12 @@ path_conv::check (const char *src, unsigned opt,
 		      case virt_socket:
 			if (component == 0)
 			  {
+                            if (HACK_DEBUG_STAT) {
+                              hack_print(
+                                "\tpath.cc: path_conv::check: "
+                                "fileattr = 0; (3)\r\n"
+                              );
+                            }
 			    fileattr = 0;
 			    dev.parse (FH_TCP);
 			  }
@@ -881,6 +954,11 @@ path_conv::check (const char *src, unsigned opt,
 			   to a real file and attach the backslash. */
 			if (component == 0 && need_directory)
 			  {
+                            if (HACK_DEBUG_STAT) {
+                              hack_print(
+                                "\tpath.cc: path_conv::check: case virt_blk\r\n"
+                              );
+                            }
 			    dev.parse (FH_FS);
 			    strcat (full_path, "\\");
 			    fileattr = FILE_ATTRIBUTE_DIRECTORY
@@ -904,11 +982,17 @@ path_conv::check (const char *src, unsigned opt,
 	      /* devn should not be a device.  If it is, then stop parsing. */
 	      else if (dev != FH_FS)
 		{
+                  if (HACK_DEBUG_STAT) {
+                    hack_print(
+                      "\tpath.cc: path_conv::check: "
+                      "fileattr = 0; (4)\r\n"
+                    );
+                  }
 		  fileattr = 0;
 		  path_flags = sym.pflags;
 		  if (component)
 		    {
-                      if (HACK_DEBUG_OPEN)
+                      if (HACK_DEBUG_OPEN || HACK_DEBUG_STAT)
                         hack_print(
                           "\tpath.cc: path_conv::check: ENOTDIR (1)\r\n");
 		      error = ENOTDIR;
@@ -942,9 +1026,12 @@ path_conv::check (const char *src, unsigned opt,
 
 	      if (sym.isdevice)
 		{
+                  if (HACK_DEBUG_OPEN || HACK_DEBUG_STAT) {
+                    hack_print("\tpath.cc: path_conv::check: sym.isdevice\r\n");
+                  }
 		  if (component)
 		    {
-                      if (HACK_DEBUG_OPEN)
+                      if (HACK_DEBUG_OPEN || HACK_DEBUG_STAT)
                         hack_print(
                           "\tpath.cc: path_conv::check: ENOTDIR (2)\r\n");
 		      error = ENOTDIR;
@@ -961,7 +1048,7 @@ path_conv::check (const char *src, unsigned opt,
 		{
 		  if (component)
 		    {
-                      if (HACK_DEBUG_OPEN)
+                      if (HACK_DEBUG_OPEN || HACK_DEBUG_STAT)
                         hack_print(
                           "\tpath.cc: path_conv::check: ENOTDIR (3)\r\n");
 		      error = ENOTDIR;
@@ -1129,6 +1216,12 @@ path_conv::check (const char *src, unsigned opt,
 	add_ext = true;
 
     out:
+      if (HACK_DEBUG_READ || HACK_DEBUG_STAT) {
+        hack_print(
+          "\tpath.cc: path_conv::check: out: fileattr = 0x%x\r\n",
+          fileattr          
+        );
+      }
       set_path (THIS_path);
       if (add_ext)
 	add_ext_from_sym (sym);
@@ -1162,7 +1255,7 @@ path_conv::check (const char *src, unsigned opt,
 	path_flags &= ~PATH_SYMLINK;
       else
 	{
-          if (HACK_DEBUG_OPEN)
+          if (HACK_DEBUG_OPEN || HACK_DEBUG_STAT)
             hack_print(
               "\tpath.cc: path_conv::check: ENOTDIR (5)\r\n");
 	  debug_printf ("%s is a non-directory", path);
@@ -1316,12 +1409,40 @@ file_get_fai (HANDLE h, PFILE_ALL_INFORMATION pfai)
 {
   NTSTATUS status;
   IO_STATUS_BLOCK io;
+  if (HACK_DEBUG_STAT) {
+    hack_print(
+      "\tpath.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)\r\n"
+    );
+  }
 
   /* Some FSes (Netapps) don't implement FileNetworkOpenInformation. */
   status = NtQueryInformationFile (h, &io, pfai, sizeof *pfai,
 				   FileAllInformation);
-  if (status == STATUS_BUFFER_OVERFLOW)
+  if (HACK_DEBUG_STAT) {
+    hack_print(
+      "\tpath.cc: file_get_fai: "
+      "NtQueryInformationFile(...) -> 0x%x\r\n",
+      status
+    );
+    hack_print(
+      "\tpath.cc: file_get_fai: "
+      "pfai->BasicInformation.FileAttributes = 0x%x\r\n",
+      pfai->BasicInformation.FileAttributes
+    );
+  }
+  if (status == STATUS_BUFFER_OVERFLOW) {
     status = STATUS_SUCCESS;
+    if (HACK_DEBUG_STAT || HACK_DEBUG_READ || HACK_DEBUG_OPEN) {
+      hack_print(
+        "\tpath.cc: file_get_fai: status == STATUS_BUFFER_OVERFLOW\r\n"
+      );
+    }
+  }
+  if (HACK_DEBUG_STAT) {
+    hack_print(
+      "\tpath.cc: file_get_fai: Return 0x%x\r\n", status
+    );
+  }
   return status;
 }
 
@@ -2326,7 +2447,13 @@ symlink_info::check_reparse_point (HANDLE h, bool remote)
   sys_wcstombs (srcbuf, SYMLINK_MAX + 7, subst.Buffer,
 		subst.Length / sizeof (WCHAR));
   pflags |= PATH_SYMLINK | PATH_REP;
+  
   /* A symlink is never a directory. */
+  if (HACK_DEBUG_STAT) {
+    hack_print(
+      "\tpath.cc: symlink_info::check_reparse_point: remove dir attr\r\n"
+    );
+  }
   fileattr &= ~FILE_ATTRIBUTE_DIRECTORY;
   return posixify (srcbuf);
 }
@@ -2334,6 +2461,8 @@ symlink_info::check_reparse_point (HANDLE h, bool remote)
 int
 symlink_info::check_nfs_symlink (HANDLE h)
 {
+  if (HACK_DEBUG_OPEN || HACK_DEBUG_READ || HACK_DEBUG_STAT)
+    hack_print("\tpath.cc: symlink_info::check_nfs_symlink(HANDLE)\r\n");
   tmp_pathbuf tp;
   NTSTATUS status;
   IO_STATUS_BLOCK io;
@@ -2643,6 +2772,17 @@ symlink_info::check (char *path, const suffix_info *suffixes, fs_info &fs,
   tmp_pathbuf tp;
   tp.u_get (&upath);
   InitializeObjectAttributes (&attr, &upath, ci_flag, NULL, NULL);
+  
+  if (HACK_DEBUG_STAT) {
+    char buf[HACK_MAXLEN];
+    hack_PUSTR_to_utf8(buf, HACK_MAXLEN, &upath);
+    hack_print(
+      "\tpath.cc: symlink_info::check: InitializeObjectAttributes("
+      "&attr, PUNICODE_STRING(\"%s\"), ci_flag=0x%x, NULL, NULL"
+      ")\r\n",
+      buf, ci_flag
+    );
+  }
 
   /* This label is used in case we encounter a FS which only handles
      DOS paths.  See below. */
@@ -2677,6 +2817,15 @@ restart:
     {
       error = 0;
       get_nt_native_path (suffix.path, upath, pflags & PATH_DOS);
+      if (HACK_DEBUG_STAT) {
+        char buf[HACK_MAXLEN];
+        hack_PUSTR_to_utf8(buf, HACK_MAXLEN, &upath);
+        hack_print(
+          "\tpath.cc: symlink_info::check: Update path to \"%s\"\r\n",
+          buf
+        );
+      }
+      
       if (h)
 	{
 	  NtClose (h);
@@ -2694,6 +2843,19 @@ restart:
 			     FILE_OPEN_REPARSE_POINT
 			     | FILE_OPEN_FOR_BACKUP_INTENT,
 			     eabuf, easize);
+      if (HACK_DEBUG_STAT) {
+        if (status == STATUS_EAS_NOT_SUPPORTED) {
+          hack_print(
+            "\tpath.cc: symlink_info::check: status "
+            "= NtCreateFile(...) = STATUS_EAS_NOT_SUPPORTED\r\n"
+          );
+        } else {
+          hack_print(
+            "\tpath.cc: symlink_info::check: status "
+            "= NtCreateFile(...) = 0x%x\r\n", status
+          );
+        }
+      }
       debug_printf ("%y = NtCreateFile (%S)", status, &upath);
       /* No right to access EAs or EAs not supported? */
       if (!NT_SUCCESS (status)
@@ -2717,10 +2879,22 @@ restart:
 			       &attr, &io, FILE_SHARE_VALID_FLAGS,
 			       FILE_OPEN_REPARSE_POINT
 			       | FILE_OPEN_FOR_BACKUP_INTENT);
+          if (HACK_DEBUG_STAT) {
+            hack_print(
+              "\tpath.cc: symlink_info::check: status "
+              "= NtOpenFile(...) = 0x%x  // non-EA \r\n", status
+            );
+          }
 	  debug_printf ("%y = NtOpenFile (no-EAs %S)", status, &upath);
 	}
       if (status == STATUS_OBJECT_NAME_NOT_FOUND)
 	{
+          if (HACK_DEBUG_STAT) {
+            hack_print(
+              "\tpath.cc: symlink_info::check: status "
+              "== STATUS_OBJECT_NAME_NOT_FOUND\r\n"
+            );
+          }
 	  if (ci_flag == 0 && wincap.has_broken_udf ()
 	      && (!fs.inited () || fs.is_udf ()))
 	    {
@@ -2733,6 +2907,12 @@ restart:
 				   &attr, &io, FILE_SHARE_VALID_FLAGS,
 				   FILE_OPEN_REPARSE_POINT
 				   | FILE_OPEN_FOR_BACKUP_INTENT);
+              if (HACK_DEBUG_STAT) {
+                hack_print(
+                  "\tpath.cc: symlink_info::check: status "
+                  "= NtOpenFile(...) = 0x%x  // broken UDF\r\n", status
+                );
+              }
 	      debug_printf ("%y = NtOpenFile (broken-UDF, %S)", status, &upath);
 	      attr.Attributes = 0;
 	      if (NT_SUCCESS (status))
@@ -2744,6 +2924,12 @@ restart:
 		      NtClose (h);
 		      h = NULL;
 		      status = STATUS_OBJECT_NAME_NOT_FOUND;
+                      if (HACK_DEBUG_STAT) {
+                        hack_print(
+                          "\tpath.cc: symlink_info::check: set status "
+                          "= STATUS_OBJECT_NAME_NOT_FOUND\r\n"
+                        );
+                      } 
 		    }
 		}
 	    }
@@ -2811,7 +2997,13 @@ restart:
 	  status = conv_hdl.get_finfo (h, fs.is_nfs ());
 	  if (NT_SUCCESS (status))
 	    fileattr = conv_hdl.get_dosattr (fs.is_nfs ());
+          else {
+            hack_print(
+              "\tpath.cc: symlink_info::check: conv_hdl.get_finfo() failed\r\n"
+            );
+          }
 	}
+      // CORE-18247:  WHAT has failed???
       if (!NT_SUCCESS (status))
 	{
 	  debug_printf ("%y = NtQueryInformationFile (%S)", status, &upath);
@@ -2839,6 +3031,14 @@ restart:
 	  if (status != STATUS_OBJECT_NAME_NOT_FOUND
 	      && status != STATUS_NO_SUCH_FILE) /* ENOENT on NFS or 9x share */
 	    {
+              // CORE-18247
+              if (HACK_DEBUG_OPEN || HACK_DEBUG_READ || HACK_DEBUG_STAT) {
+                hack_print(
+                  "\tpath.cc: symlink_info::check: "
+                  "File exists but can't be accessed. "
+                  "status = 0x%x\r\n", status
+                );
+              }
 	      /* The file exists, but the user can't access it for one reason
 		 or the other.  To get the file attributes we try to access the
 		 information by opening the parent directory and getting the
@@ -2867,20 +3067,54 @@ restart:
 		     This case is only recognized by the length of the
 		     basename part.  If it's 0, the incoming file is the
 		     root of a drive.  So we at least know it's a directory. */
-		  if (basename.Length)
-		    fileattr = FILE_ATTRIBUTE_DIRECTORY;
-		  else
-		    {
-		      fileattr = 0;
-		      set_error (geterrno_from_nt_status (status));
-		    }
+                  // Isn't this the wrong way around?   BUG ???
+		  if (basename.Length) {
+                    if (HACK_DEBUG_STAT || HACK_DEBUG_OPEN || HACK_DEBUG_READ) {
+                      hack_print(
+                        "\tpath.cc: symlink_info::check: "
+                        "basename.Length is truthy, "
+                        "fileattr = FILE_ATTRIBUTE_DIRECTORY\r\n"
+                      );
+                    }
+                    fileattr = FILE_ATTRIBUTE_DIRECTORY;
+                  } else {
+                    if (HACK_DEBUG_STAT || HACK_DEBUG_OPEN || HACK_DEBUG_READ) {
+                      hack_print(
+                        "\tpath.cc: symlink_info::check: "
+                        "basename.Length is falsy, "
+                        "nt_status = 0x%x -> errno = %s\r\n",
+                        status, strerror(geterrno_from_nt_status(status))
+                      );
+                      hack_print(
+                        "\tpath.cc: symlink_info::check: "
+                        "fileattr = 0; (5)\r\n"
+                      );
+                    }
+                    fileattr = 0;
+		    set_error (geterrno_from_nt_status (status));
+                  }
 		}
 	      else
 		{
+                  // HANDLE dir
+                  // IO_STATUS_BLOCK io
+                  // struct {
+                  //   FILE_ID_BOTH_DIR_INFORMATION fdi;
+                  //   WCHAR dummy_buf[NAME_MAX + 1];
+                  // } fdi_buf;
+                  // UNICODE_STRING basename
+                  
+                  // CORE-18247: NT_SUCCESS(status) is falsy after this
 		  status = NtQueryDirectoryFile (dir, NULL, NULL, NULL, &io,
 						 &fdi_buf, sizeof fdi_buf,
 						 FileIdBothDirectoryInformation,
 						 TRUE, &basename, TRUE);
+                  if (HACK_DEBUG_STAT) {
+                    hack_print(
+                      "\tpath.cc: symlink_info::check: NtQueryDirectoryFile(...)"
+                      " -> 0x%x\r\n", status
+                    );
+                  }
 		  /* Take the opportunity to check file system while we're
 		     having the handle to the parent dir. */
 		  fs.update (&upath, dir);
@@ -2901,11 +3135,27 @@ restart:
 			  set_error (ENOENT);
 			  continue;
 			}
+                      if (HACK_DEBUG_STAT) {
+                          hack_print(
+                            "\tpath.cc: symlink_info::check: "
+                            "fileattr = 0; (6)\r\n"
+                          );
+                        }
 		      fileattr = 0;
 		    }
 		  else
 		    {
 		      PFILE_ALL_INFORMATION pfai = conv_hdl.fai ();
+                      
+                      if (HACK_DEBUG_STAT) {
+                        hack_print(
+                          "\tpath.cc: symlink_info::check: "
+                          "Modifying pfai->BasicInformation.FileAttributes\r\n"
+                          "\t\tOld: 0x%d\r\n\t\tNew: 0x%d\r\n",
+                          pfai->BasicInformation.FileAttributes,
+                          fdi_buf.fdi.FileAttributes
+                        );
+                      }
 
 		      fileattr = fdi_buf.fdi.FileAttributes;
 		      memcpy (&pfai->BasicInformation.CreationTime,
@@ -2954,6 +3204,11 @@ restart:
 	      /* A symlink is never a directory. */
 	      conv_hdl.fai ()->BasicInformation.FileAttributes
 		&= ~FILE_ATTRIBUTE_DIRECTORY;
+              if (HACK_DEBUG_STAT) {
+                hack_print(
+                  "\tpath.cc: symlink_info::check: remove dir attr\r\n"
+                );
+              }
 	      break;
 	    }
 	  else

@@ -1,15 +1,30 @@
 
 syscalls.cc: stat64(name="/cygdrive/c", struct stat *buf)
 syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: path_conv::check("/cygdrive/c", opt=0x4000a1, suffix_info *)
+	path.cc: symlink_info::check: InitializeObjectAttributes(&attr, PUNICODE_STRING(""), ci_flag=0x40, NULL, NULL)
+	path.cc: symlink_info::check: Update path to "\??\C:\"
+	path.cc: symlink_info::check: status = NtCreateFile(...) = STATUS_EAS_NOT_SUPPORTED
+	path.cc: symlink_info::check: status = NtOpenFile(...) = 0x0  // non-EA 
+	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
+	path.cc: file_get_fai: NtQueryInformationFile(...) -> 0x0
+	path.cc: file_get_fai: pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: file_get_fai: Return 0x0
+	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0x0
+	path.cc: path_conv::check: out: fileattr = 0x10
 syscalls.cc: stat64: after init path_conv, errno=No error
 	syscalls.cc: stat_worker(path_conv&, struct stat*)
-	errno = No error
+		errno = No error
+		attributes = 0x10
 	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
 	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: before pc.fai(), attributes = 0x10
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: after pc.fai(), attributes = 0x10
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.file_attributes() -> 0x10
 	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.fileattr = 0x10
 	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.path = "C:\"
 	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.posix_path = "/cygdrive/c"
@@ -28,15 +43,30 @@ syscalls.cc: stat64: return 0, errno=No error
 
 syscalls.cc: stat64(name="/cygdrive/c/", struct stat *buf)
 syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: path_conv::check("/cygdrive/c/", opt=0x4000a1, suffix_info *)
+	path.cc: symlink_info::check: InitializeObjectAttributes(&attr, PUNICODE_STRING(""), ci_flag=0x40, NULL, NULL)
+	path.cc: symlink_info::check: Update path to "\??\C:\"
+	path.cc: symlink_info::check: status = NtCreateFile(...) = STATUS_EAS_NOT_SUPPORTED
+	path.cc: symlink_info::check: status = NtOpenFile(...) = 0x0  // non-EA 
+	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
+	path.cc: file_get_fai: NtQueryInformationFile(...) -> 0x0
+	path.cc: file_get_fai: pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: file_get_fai: Return 0x0
+	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0x0
+	path.cc: path_conv::check: out: fileattr = 0x10
 syscalls.cc: stat64: after init path_conv, errno=No error
 	syscalls.cc: stat_worker(path_conv&, struct stat*)
-	errno = No error
+		errno = No error
+		attributes = 0x10
 	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
 	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: before pc.fai(), attributes = 0x10
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: after pc.fai(), attributes = 0x10
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.file_attributes() -> 0x10
 	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.fileattr = 0x10
 	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.path = "C:\"
 	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.posix_path = "/cygdrive/c"
@@ -55,15 +85,33 @@ syscalls.cc: stat64: return 0, errno=No error
 
 syscalls.cc: stat64(name="/cygdrive/d", struct stat *buf)
 syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: path_conv::check("/cygdrive/d", opt=0x4000a1, suffix_info *)
+	path.cc: symlink_info::check: InitializeObjectAttributes(&attr, PUNICODE_STRING(""), ci_flag=0x40, NULL, NULL)
+	path.cc: symlink_info::check: Update path to "\??\D:\"
+	path.cc: symlink_info::check: status = NtCreateFile(...) = 0x0
+	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
+	path.cc: file_get_fai: NtQueryInformationFile(...) -> 0xc0000022
+	path.cc: file_get_fai: pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: file_get_fai: Return 0xc0000022
+	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0xc0000022
+	path.cc: symlink_info::check: conv_hdl.get_finfo() failed
+	path.cc: symlink_info::check: File exists but can't be accessed. status = 0xc0000022
+	path.cc: symlink_info::check: NtQueryDirectoryFile(...) -> 0xc0000022
+	path.cc: symlink_info::check: fileattr = 0; (6)
+	path.cc: path_conv::check: out: fileattr = 0x0
 syscalls.cc: stat64: after init path_conv, errno=No error
 	syscalls.cc: stat_worker(path_conv&, struct stat*)
-	errno = No error
+		errno = No error
+		attributes = 0x0
 	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
 	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: before pc.fai(), attributes = 0x0
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: after pc.fai(), attributes = 0x0
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.file_attributes() -> 0x0
 	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.fileattr = 0x0
 	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.path = "D:\"
 	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.posix_path = "/cygdrive/d"
@@ -83,10 +131,25 @@ syscalls.cc: stat64: return 0, errno=Permission denied
 
 syscalls.cc: stat64(name="/cygdrive/d/", struct stat *buf)
 syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: path_conv::check("/cygdrive/d/", opt=0x4000a1, suffix_info *)
+	path.cc: symlink_info::check: InitializeObjectAttributes(&attr, PUNICODE_STRING(""), ci_flag=0x40, NULL, NULL)
+	path.cc: symlink_info::check: Update path to "\??\D:\"
+	path.cc: symlink_info::check: status = NtCreateFile(...) = 0x0
+	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
+	path.cc: file_get_fai: NtQueryInformationFile(...) -> 0xc0000022
+	path.cc: file_get_fai: pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: file_get_fai: Return 0xc0000022
+	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0xc0000022
+	path.cc: symlink_info::check: conv_hdl.get_finfo() failed
+	path.cc: symlink_info::check: File exists but can't be accessed. status = 0xc0000022
+	path.cc: symlink_info::check: NtQueryDirectoryFile(...) -> 0xc0000022
+	path.cc: symlink_info::check: fileattr = 0; (6)
+	path.cc: path_conv::check: out: fileattr = 0x0
 	path.cc: path_conv::check: ENOTDIR (5)
 syscalls.cc: stat64: after init path_conv, errno=No error
 	syscalls.cc: stat_worker(path_conv&, struct stat*)
-	errno = No error
+		errno = No error
+		attributes = 0x0
 	syscalls.cc: stat_worker: path_conv failed
 	syscalls.cc: stat_worker: return -1, errno=Not a directory
 syscalls.cc: stat64: return -1, errno=Not a directory
@@ -94,15 +157,30 @@ syscalls.cc: stat64: return -1, errno=Not a directory
 
 syscalls.cc: stat64(name="/cygdrive/e", struct stat *buf)
 syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: path_conv::check("/cygdrive/e", opt=0x4000a1, suffix_info *)
+	path.cc: symlink_info::check: InitializeObjectAttributes(&attr, PUNICODE_STRING(""), ci_flag=0x40, NULL, NULL)
+	path.cc: symlink_info::check: Update path to "\??\E:\"
+	path.cc: symlink_info::check: status = NtCreateFile(...) = 0xc0000022
+	path.cc: symlink_info::check: status = NtOpenFile(...) = 0x0  // non-EA 
+	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
+	path.cc: file_get_fai: NtQueryInformationFile(...) -> 0x0
+	path.cc: file_get_fai: pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: file_get_fai: Return 0x0
+	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0x0
+	path.cc: path_conv::check: out: fileattr = 0x10
 syscalls.cc: stat64: after init path_conv, errno=No error
 	syscalls.cc: stat_worker(path_conv&, struct stat*)
-	errno = No error
+		errno = No error
+		attributes = 0x10
 	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
 	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: before pc.fai(), attributes = 0x10
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: after pc.fai(), attributes = 0x10
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.file_attributes() -> 0x10
 	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.fileattr = 0x10
 	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.path = "E:\"
 	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.posix_path = "/cygdrive/e"
@@ -121,15 +199,30 @@ syscalls.cc: stat64: return 0, errno=No error
 
 syscalls.cc: stat64(name="/cygdrive/e/", struct stat *buf)
 syscalls.cc: stat64: before init path_conv, errno=No error
+	path.cc: path_conv::check("/cygdrive/e/", opt=0x4000a1, suffix_info *)
+	path.cc: symlink_info::check: InitializeObjectAttributes(&attr, PUNICODE_STRING(""), ci_flag=0x40, NULL, NULL)
+	path.cc: symlink_info::check: Update path to "\??\E:\"
+	path.cc: symlink_info::check: status = NtCreateFile(...) = 0xc0000022
+	path.cc: symlink_info::check: status = NtOpenFile(...) = 0x0  // non-EA 
+	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
+	path.cc: file_get_fai: NtQueryInformationFile(...) -> 0x0
+	path.cc: file_get_fai: pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: file_get_fai: Return 0x0
+	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0x0
+	path.cc: path_conv::check: out: fileattr = 0x10
 syscalls.cc: stat64: after init path_conv, errno=No error
 	syscalls.cc: stat_worker(path_conv&, struct stat*)
-	errno = No error
+		errno = No error
+		attributes = 0x10
 	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
 	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
 	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
 	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: before pc.fai(), attributes = 0x10
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: after pc.fai(), attributes = 0x10
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.file_attributes() -> 0x10
 	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.fileattr = 0x10
 	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.path = "E:\"
 	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.posix_path = "/cygdrive/e"
