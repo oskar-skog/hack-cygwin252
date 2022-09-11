@@ -15,6 +15,9 @@ int main(int argc, char **argv)
     test("\\??\\C:\\");
     test("\\??\\D:\\");
     test("\\??\\E:\\");
+    test("\\??\\F:\\");
+    test("\\??\\G:\\");
+    test("\\??\\Z:\\");
     test("\\??\\C:\\WINDOWS\\explorer.exe");
     test("\\??\\C:\\ReactOS\\explorer.exe");
     /* // These do not work on Windows 2003:
