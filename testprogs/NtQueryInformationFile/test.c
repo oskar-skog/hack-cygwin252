@@ -96,7 +96,7 @@ void test(char *path)
     printf(
         "NtQueryInformationFile status = 0x%lx\n"
         "BasicInformation.FileAttributes = 0x%lx\n"
-        "StandardInformation.EndOfFile.QuadPart = %lld\n",
+        "StandardInformation.EndOfFile.QuadPart = %Ld\n",
         status,
         fai.BasicInformation.FileAttributes,
         (long long) fai.StandardInformation.EndOfFile.QuadPart
