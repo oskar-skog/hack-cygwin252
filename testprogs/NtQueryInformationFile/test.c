@@ -1,70 +1,18 @@
 // Native Windows application
+// Compile with i686-w64-mingw32-gcc
 
-//#include <ntifs.h>
+#include <ntstatus.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
 #include <Winternl.h>
 
 
-
-// NT Functions
-// https://stackoverflow.com/questions/2964941/not-able-to-include-ntifs-h-in-win32-project
-
-typedef NTSTATUS (__stdcall *_NtCreateFile)(
-    OUT PHANDLE FileHandle,
-    IN ACCESS_MASK DesiredAccess,
-    IN POBJECT_ATTRIBUTES ObjectAttributes,
-    OUT PIO_STATUS_BLOCK IoStatusBlock,
-    IN PLARGE_INTEGER AllocationSize OPTIONAL,
-    IN ULONG FileAttributes,
-    IN ULONG ShareAccess,
-    IN ULONG CreateDisposition,
-    IN ULONG CreateOptions,
-    IN PVOID EaBuffer OPTIONAL,
-    IN ULONG EaLength
-);
-_NtCreateFile NtCreateFile;
-
-__kernel_entry NTSTATUS NtOpenFile(
-    [out] PHANDLE            FileHandle,
-    [in]  ACCESS_MASK        DesiredAccess,
-    [in]  POBJECT_ATTRIBUTES ObjectAttributes,
-    [out] PIO_STATUS_BLOCK   IoStatusBlock,
-    [in]  ULONG              ShareAccess,
-    [in]  ULONG              OpenOptions
-);
-
-__kernel_entry NTSYSCALLAPI NTSTATUS NtQueryInformationFile(
-    [in]  HANDLE                 FileHandle,
-    [out] PIO_STATUS_BLOCK       IoStatusBlock,
-    [out] PVOID                  FileInformation,
-    [in]  ULONG                  Length,
-    [in]  FILE_INFORMATION_CLASS FileInformationClass
-);
-
-int load_ntfuncs()
-{
-    HMODULE lib = GetModuleHandle("ntdll.dll");
-    if (!lib)
-        return 0;
-    NtCreateFile = (_NtCreateFile) GetProcAddress(lib, "NtCreateFile");
-    NtOpenFile = GetProcAddress(lib, "NtOpenFile");
-    NtQueryInformationFile = GetProcAddress(lib, "NtQueryInformationFile");
-    return (!!NtCreateFile) && (!!NtOpenFile) && (!!NtQueryInformationFile);
-}
-
-
 PUNICODE_STRING convert(char *input);
 void test(char *path);
-int load_ntfuncs(void);
 
 int main(int argc, char **argv)
 {
-    if (!load_ntfuncs()) {
-        printf("Failed to load functions.\n");
-        return 1;
-    }
     test("\\??\\C:\\");
     test("\\??\\D:\\");
     test("\\??\\E:\\");
@@ -127,7 +75,6 @@ void test(char *path)
     
     
     FILE_ALL_INFORMATION fai;
-    NTSTATUS status;
     IO_STATUS_BLOCK io;
     fai.BasicInformation.FileAttributes = 0xdeadbeef;
     status = NtQueryInformationFile(h, &io, &fai, sizeof(fai), FileAllInformation);
