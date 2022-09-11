@@ -15,9 +15,12 @@ int main(int argc, char **argv)
     test("\\??\\C:\\");
     test("\\??\\D:\\");
     test("\\??\\E:\\");
+    test("\\??\\F:\\");
+    /* // These do not work on Windows 2003:
     test("C:\\");
     test("D:\\");
     test("E:\\");
+    */
     return 0;
 }
 
@@ -75,7 +78,7 @@ void test(char *path)
     
     if (status == STATUS_EAS_NOT_SUPPORTED || status == STATUS_NOT_SUPPORTED)
     {
-        printf("Using NtOpenFile instead\n");
+        printf("EAs not supported, using NtOpenFile instead\n");
         status = NtOpenFile(
                 &h,
                 READ_CONTROL | FILE_READ_ATTRIBUTES,
