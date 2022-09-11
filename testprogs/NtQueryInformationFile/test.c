@@ -99,7 +99,7 @@ void test(char *path)
     fai.BasicInformation.FileAttributes = 0xdeadbeef;
     status = NtQueryInformationFile(h, &io, &fai, sizeof(fai), FileAllInformation);
     printf(
-        "NtQueryInformationFile statys = 0x%lx\n"
+        "NtQueryInformationFile status = 0x%lx\n"
         "BasicInformation.FileAttributes = 0x%lx\n",
         status,
         fai.BasicInformation.FileAttributes
@@ -114,10 +114,9 @@ void test(char *path)
 PUNICODE_STRING convert(char *input)
 {
     wchar_t * buf = malloc(sizeof(wchar_t) * (strlen(input) + 1));
-    wchar_t * dst = buf;
-    while ((*dst++ = *input++));
     PUNICODE_STRING thing = malloc(sizeof(UNICODE_STRING));
     thing->Length = thing->MaximumLength = strlen(input);
     thing->Buffer = buf;
+    while ((*buf++ = *input++));
     return thing;
 }
