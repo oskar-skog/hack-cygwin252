@@ -1409,14 +1409,24 @@ file_get_fai (HANDLE h, PFILE_ALL_INFORMATION pfai)
 {
   NTSTATUS status;
   IO_STATUS_BLOCK io;
+  if (HACK_DEBUG_STAT) {
+    hack_print(
+      "\tpath.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)\r\n"
+    );
+  }
 
   /* Some FSes (Netapps) don't implement FileNetworkOpenInformation. */
   status = NtQueryInformationFile (h, &io, pfai, sizeof *pfai,
 				   FileAllInformation);
   if (HACK_DEBUG_STAT) {
     hack_print(
-      "\tpath.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)\r\n"
-      "\t\tpfai->BasicInformation.FileAttributes = 0x%x\r\n",
+      "\tpath.cc: file_get_fai: "
+      "NtQueryInformationFile(...) -> 0x%x\r\n",
+      status
+    );
+    hack_print(
+      "\tpath.cc: file_get_fai: "
+      "pfai->BasicInformation.FileAttributes = 0x%x\r\n",
       pfai->BasicInformation.FileAttributes
     );
   }
@@ -1427,6 +1437,11 @@ file_get_fai (HANDLE h, PFILE_ALL_INFORMATION pfai)
         "\tpath.cc: file_get_fai: status == STATUS_BUFFER_OVERFLOW\r\n"
       );
     }
+  }
+  if (HACK_DEBUG_STAT) {
+    hack_print(
+      "\tpath.cc: file_get_fai: Return 0x%x\r\n", status
+    );
   }
   return status;
 }
