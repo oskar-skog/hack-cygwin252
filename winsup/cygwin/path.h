@@ -15,6 +15,8 @@ details. */
 #include <fcntl.h>
 #include <alloca.h>
 
+#include "hack.h"
+
 extern inline bool
 has_attribute (DWORD attributes, DWORD attribs_to_test)
 {
@@ -122,7 +124,17 @@ public:
   { return (struct fattr3 *) &attribs._fattr3; }
   inline NTSTATUS get_finfo (HANDLE h, bool nfs)
   {
-    return nfs ? nfs_fetch_fattr3 (h, nfsattr ()) : file_get_fai (h, fai ());
+    NTSTATUS ret = nfs ? nfs_fetch_fattr3(h, nfsattr()) : file_get_fai(h, fai());
+    if (HACK_DEBUG_STAT) {
+      hack_print(
+        "\tpath.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=%d): "
+        "%s -> (NTSTATUS) 0x%x\r\n",
+        nfs,
+        nfs ? "nfs_fetch_fattr3(h, nfsattr())" : "file_get_fai(h, fai())",
+        ret
+      );
+    }
+    return ret
   }
   inline ino_t get_ino (bool nfs) const
   {

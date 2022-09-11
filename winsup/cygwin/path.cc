@@ -2757,6 +2757,17 @@ symlink_info::check (char *path, const suffix_info *suffixes, fs_info &fs,
   tmp_pathbuf tp;
   tp.u_get (&upath);
   InitializeObjectAttributes (&attr, &upath, ci_flag, NULL, NULL);
+  
+  if (HACK_DEBUG_STAT) {
+    char buf[HACK_MAXLEN];
+    hack_PUSTR_to_utf8(buf, HACK_MAXLEN, &upath);
+    hack_print(
+      "\tpath.cc: symlink_info::check: InitializeObjectAttributes("
+      "&attr, PUNICODE_STRING(\"%s\"), ci_flag=0x%x, NULL, NULL"
+      ")\r\n",
+      buf, ci_flag
+    );
+  }
 
   /* This label is used in case we encounter a FS which only handles
      DOS paths.  See below. */
@@ -2791,6 +2802,15 @@ restart:
     {
       error = 0;
       get_nt_native_path (suffix.path, upath, pflags & PATH_DOS);
+      if (HACK_DEBUG_STAT) {
+        char buf[HACK_MAXLEN];
+        hack_PUSTR_to_utf8(buf, HACK_MAXLEN, &upath);
+        hack_print(
+          "\tpath.cc: symlink_info::check: Update path to \"%s\"\r\n",
+          buf
+        );
+      }
+      
       if (h)
 	{
 	  NtClose (h);
@@ -2809,10 +2829,17 @@ restart:
 			     | FILE_OPEN_FOR_BACKUP_INTENT,
 			     eabuf, easize);
       if (HACK_DEBUG_STAT) {
-        hack_print(
-          "\tpath.cc: symlink_info::check: status "
-          "= NtCreateFile(...) = 0x%x\r\n", status
-        );
+        if (status == STATUS_EAS_NOT_SUPPORTED) {
+          hack_print(
+            "\tpath.cc: symlink_info::check: status "
+            "= NtCreateFile(...) = STATUS_EAS_NOT_SUPPORTED\r\n"
+          );
+        } else {
+          hack_print(
+            "\tpath.cc: symlink_info::check: status "
+            "= NtCreateFile(...) = 0x%x\r\n", status
+          );
+        }
       }
       debug_printf ("%y = NtCreateFile (%S)", status, &upath);
       /* No right to access EAs or EAs not supported? */
