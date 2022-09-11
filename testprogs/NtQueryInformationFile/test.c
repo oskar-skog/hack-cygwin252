@@ -22,8 +22,26 @@ int main(int argc, char **argv)
     return 0;
 }
 
+// From winsup/cygwin/nfs*
+#define NFS_ACT_ON_LINK "NfsActOnLink"
+struct nfs_aol_ffei_t {
+    ULONG NextEntryOffset;
+    UCHAR Flags;
+    UCHAR EaNameLength;
+    USHORT EaValueLength;
+    CHAR EaName[sizeof (NFS_ACT_ON_LINK)];
+};
+struct nfs_aol_ffei_t nfs_aol_ffei = {
+    0,
+    0,
+    sizeof (NFS_ACT_ON_LINK) - 1,
+    0,
+    NFS_ACT_ON_LINK
+};
+
 void test(char *path)
 {
+    // Based on symlink_info::check from winsup/cygwin/path.cc
     printf("Testing %s\n", path);
     
     HANDLE h;
@@ -31,6 +49,9 @@ void test(char *path)
     PUNICODE_STRING upath;
     OBJECT_ATTRIBUTES attr;
     IO_STATUS_BLOCK io;
+    
+    PVOID eabuf = &nfs_aol_ffei;
+    ULONG easize = sizeof nfs_aol_ffei;
     
     const ULONG ci_flag = 0x40;     // This is what Cygwin does
     
