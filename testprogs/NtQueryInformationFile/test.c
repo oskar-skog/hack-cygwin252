@@ -91,15 +91,15 @@ void test(char *path)
     
     FILE_ALL_INFORMATION fai;
     fai.BasicInformation.FileAttributes = 0xdeadbeef;
-    fai.StandardInformation.EndOfFile = 123456789;
+    fai.StandardInformation.EndOfFile.QuadPart = 123456789;
     status = NtQueryInformationFile(h, &io, &fai, sizeof(fai), FileAllInformation);
     printf(
         "NtQueryInformationFile status = 0x%lx\n"
-        "BasicInformation.FileAttributes = 0x%lx\n",
-        "StandardInformation.EndOfFile = %lld\n"
+        "BasicInformation.FileAttributes = 0x%lx\n"
+        "StandardInformation.EndOfFile.QuadPart = %lld\n"
         status,
         fai.BasicInformation.FileAttributes,
-        (long long) fai.StandardInformation.EndOfFile
+        (long long) fai.StandardInformation.EndOfFile.QuadPart
     );
 
     printf("\n");
