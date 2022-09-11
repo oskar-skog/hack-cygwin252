@@ -71,7 +71,7 @@ void test(char *path)
                 eabuf,
                 easize
     );
-    printf("NtCreateFile status = 0x%x\n", status);
+    printf("NtCreateFile status = 0x%lx\n", status);
     
     if (status == STATUS_EAS_NOT_SUPPORTED || status == STATUS_NOT_SUPPORTED)
     {
@@ -84,7 +84,7 @@ void test(char *path)
                 FILE_SHARE_VALID_FLAGS,
                 FILE_OPEN_REPARSE_POINT | FILE_OPEN_FOR_BACKUP_INTENT
         );
-        printf("NtOpenFile status = 0x%x", status);
+        printf("NtOpenFile status = 0x%lx\n", status);
     }
     
     // Catch all
@@ -96,15 +96,16 @@ void test(char *path)
     
     
     FILE_ALL_INFORMATION fai;
-    IO_STATUS_BLOCK io;
     fai.BasicInformation.FileAttributes = 0xdeadbeef;
     status = NtQueryInformationFile(h, &io, &fai, sizeof(fai), FileAllInformation);
     printf(
-        "NtQueryInformationFile statys = 0x%x\n"
-        "BasicInformation.FileAttributes = 0x%x\n",
+        "NtQueryInformationFile statys = 0x%lx\n"
+        "BasicInformation.FileAttributes = 0x%lx\n",
         status,
         fai.BasicInformation.FileAttributes
     );
+
+    printf("\n");
 
     return;
 }
@@ -114,7 +115,7 @@ PUNICODE_STRING convert(char *input)
 {
     wchar_t * buf = malloc(sizeof(wchar_t) * (strlen(input) + 1));
     wchar_t * dst = buf;
-    while (*dst++ = *input++);
+    while ((*dst++ = *input++));
     PUNICODE_STRING thing = malloc(sizeof(UNICODE_STRING));
     thing->Length = thing->MaximumLength = strlen(input);
     thing->Buffer = buf;
