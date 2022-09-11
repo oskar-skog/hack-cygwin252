@@ -134,7 +134,7 @@ public:
         ret
       );
     }
-    return ret
+    return ret;
   }
   inline ino_t get_ino (bool nfs) const
   {
