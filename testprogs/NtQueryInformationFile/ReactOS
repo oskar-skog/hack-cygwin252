@@ -16,7 +16,7 @@ BasicInformation.FileAttributes = 0xdeadbeef
 StandardInformation.Directory = 255
 StandardInformation.EndOfFile.QuadPart = 123456789
 
-    E drive: empty CDROM
+    E drive: empty CDROM, becomes STATUS_ACCESS_DENIED instead of STATUS_NO_MEDIA_IN_DEVICE
 Testing \??\E:\
 NtCreateFile status = 0xc0000022
 NtQueryInformationFile status = 0xc0000022
@@ -42,7 +42,7 @@ BasicInformation.FileAttributes = 0x10
 StandardInformation.Directory = 1
 StandardInformation.EndOfFile.QuadPart = 4096
 
-    Windows explorer, WHAT?
+    Windows explorer, STATUS_OBJECT_PATH_NOT_FOUND but datastructures are populated
 Testing \??\C:\WINDOWS\explorer.exe
 NtCreateFile status = 0xc000004f
 EAs not supported, using NtOpenFile instead

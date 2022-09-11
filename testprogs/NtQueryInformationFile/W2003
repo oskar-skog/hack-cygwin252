@@ -24,7 +24,33 @@ BasicInformation.FileAttributes = 0x10
 StandardInformation.Directory = 1
 StandardInformation.EndOfFile.QuadPart = 0
 
-    Windows explorer, STATUS_BUFFER_OVERFLOW
+    F drive: Empty CD drive
+Testing \??\F:\
+NtCreateFile status = 0xc0000013
+NtQueryInformationFile status = 0xc0000008
+BasicInformation.FileAttributes = 0xdeadbeef
+StandardInformation.Directory = 255
+StandardInformation.EndOfFile.QuadPart = 123456789
+
+    No G drive
+Testing \??\G:\
+NtCreateFile status = 0xc000003a
+NtQueryInformationFile status = 0xc0000008
+BasicInformation.FileAttributes = 0xdeadbeef
+StandardInformation.Directory = 255
+StandardInformation.EndOfFile.QuadPart = 123456789
+
+    Z drive: \\vboxsvr\vm-shared
+Testing \??\Z:\
+NtCreateFile status = 0xc000004f
+EAs not supported, using NtOpenFile instead
+NtOpenFile status = 0x0
+NtQueryInformationFile status = 0x80000005
+BasicInformation.FileAttributes = 0x10
+StandardInformation.Directory = 1
+StandardInformation.EndOfFile.QuadPart = 4096
+
+    Windows explorer, STATUS_BUFFER_OVERFLOW is expected by Cygwin
 Testing \??\C:\WINDOWS\explorer.exe
 NtCreateFile status = 0x0
 NtQueryInformationFile status = 0x80000005
