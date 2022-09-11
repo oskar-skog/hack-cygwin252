@@ -2,6 +2,7 @@
 // Compile with i686-w64-mingw32-gcc
 
 #include <ntstatus.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
