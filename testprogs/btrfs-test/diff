@@ -1,19 +1,22 @@
 diff --git a/W2003 b/ReactOS
-index f803dbd..4d407c7 100644
+index 8830945..05af80a 100644
 --- a/W2003
 +++ b/ReactOS
-@@ -1,159 +1,151 @@
+@@ -1,173 +1,165 @@
  
  syscalls.cc: stat64(name="/cygdrive/c", struct stat *buf)
  syscalls.cc: stat64: before init path_conv, errno=No error
  	path.cc: path_conv::check("/cygdrive/c", opt=0x4000a1, suffix_info *)
+ 	path.cc: symlink_info::check: InitializeObjectAttributes(&attr, PUNICODE_STRING(""), ci_flag=0x40, NULL, NULL)
+ 	path.cc: symlink_info::check: Update path to "\??\C:\"
 -	path.cc: symlink_info::check: status = NtCreateFile(...) = 0x0
-+	path.cc: symlink_info::check: status = NtCreateFile(...) = 0xc000004f
++	path.cc: symlink_info::check: status = NtCreateFile(...) = STATUS_EAS_NOT_SUPPORTED
 +	path.cc: symlink_info::check: status = NtOpenFile(...) = 0x0  // non-EA 
  	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
 -		pfai->BasicInformation.FileAttributes = 0x16
--	path.cc: path_conv::check: out: fileattr = 0x16
 +		pfai->BasicInformation.FileAttributes = 0x10
+ 	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0x0
+-	path.cc: path_conv::check: out: fileattr = 0x16
 +	path.cc: path_conv::check: out: fileattr = 0x10
  syscalls.cc: stat64: after init path_conv, errno=No error
  	syscalls.cc: stat_worker(path_conv&, struct stat*)
@@ -54,13 +57,16 @@ index f803dbd..4d407c7 100644
  syscalls.cc: stat64(name="/cygdrive/c/", struct stat *buf)
  syscalls.cc: stat64: before init path_conv, errno=No error
  	path.cc: path_conv::check("/cygdrive/c/", opt=0x4000a1, suffix_info *)
+ 	path.cc: symlink_info::check: InitializeObjectAttributes(&attr, PUNICODE_STRING(""), ci_flag=0x40, NULL, NULL)
+ 	path.cc: symlink_info::check: Update path to "\??\C:\"
 -	path.cc: symlink_info::check: status = NtCreateFile(...) = 0x0
-+	path.cc: symlink_info::check: status = NtCreateFile(...) = 0xc000004f
++	path.cc: symlink_info::check: status = NtCreateFile(...) = STATUS_EAS_NOT_SUPPORTED
 +	path.cc: symlink_info::check: status = NtOpenFile(...) = 0x0  // non-EA 
  	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
 -		pfai->BasicInformation.FileAttributes = 0x16
--	path.cc: path_conv::check: out: fileattr = 0x16
 +		pfai->BasicInformation.FileAttributes = 0x10
+ 	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0x0
+-	path.cc: path_conv::check: out: fileattr = 0x16
 +	path.cc: path_conv::check: out: fileattr = 0x10
  syscalls.cc: stat64: after init path_conv, errno=No error
  	syscalls.cc: stat_worker(path_conv&, struct stat*)
@@ -101,11 +107,15 @@ index f803dbd..4d407c7 100644
  syscalls.cc: stat64(name="/cygdrive/d", struct stat *buf)
  syscalls.cc: stat64: before init path_conv, errno=No error
  	path.cc: path_conv::check("/cygdrive/d", opt=0x4000a1, suffix_info *)
+ 	path.cc: symlink_info::check: InitializeObjectAttributes(&attr, PUNICODE_STRING(""), ci_flag=0x40, NULL, NULL)
+ 	path.cc: symlink_info::check: Update path to "\??\D:\"
  	path.cc: symlink_info::check: status = NtCreateFile(...) = 0x0
  	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
 -		pfai->BasicInformation.FileAttributes = 0x30
+-	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0x0
 -	path.cc: path_conv::check: out: fileattr = 0x30
 +		pfai->BasicInformation.FileAttributes = 0x10
++	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0xc0000022
 +	path.cc: symlink_info::check: conv_hdl.get_finfo() failed
 +	path.cc: symlink_info::check: File exists but can't be accessed. status = 0xc0000022
 +	path.cc: symlink_info::check: NtQueryDirectoryFile(...) -> 0xc0000022
@@ -155,11 +165,15 @@ index f803dbd..4d407c7 100644
  syscalls.cc: stat64(name="/cygdrive/d/", struct stat *buf)
  syscalls.cc: stat64: before init path_conv, errno=No error
  	path.cc: path_conv::check("/cygdrive/d/", opt=0x4000a1, suffix_info *)
+ 	path.cc: symlink_info::check: InitializeObjectAttributes(&attr, PUNICODE_STRING(""), ci_flag=0x40, NULL, NULL)
+ 	path.cc: symlink_info::check: Update path to "\??\D:\"
  	path.cc: symlink_info::check: status = NtCreateFile(...) = 0x0
  	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
 -		pfai->BasicInformation.FileAttributes = 0x30
+-	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0x0
 -	path.cc: path_conv::check: out: fileattr = 0x30
 +		pfai->BasicInformation.FileAttributes = 0x10
++	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0xc0000022
 +	path.cc: symlink_info::check: conv_hdl.get_finfo() failed
 +	path.cc: symlink_info::check: File exists but can't be accessed. status = 0xc0000022
 +	path.cc: symlink_info::check: NtQueryDirectoryFile(...) -> 0xc0000022
@@ -202,21 +216,21 @@ index f803dbd..4d407c7 100644
  syscalls.cc: stat64(name="/cygdrive/e", struct stat *buf)
  syscalls.cc: stat64: before init path_conv, errno=No error
  	path.cc: path_conv::check("/cygdrive/e", opt=0x4000a1, suffix_info *)
--	path.cc: symlink_info::check: status = NtCreateFile(...) = 0xc000004f
+ 	path.cc: symlink_info::check: InitializeObjectAttributes(&attr, PUNICODE_STRING(""), ci_flag=0x40, NULL, NULL)
+ 	path.cc: symlink_info::check: Update path to "\??\E:\"
+-	path.cc: symlink_info::check: status = NtCreateFile(...) = STATUS_EAS_NOT_SUPPORTED
 +	path.cc: symlink_info::check: status = NtCreateFile(...) = 0xc0000022
  	path.cc: symlink_info::check: status = NtOpenFile(...) = 0x0  // non-EA 
  	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
  		pfai->BasicInformation.FileAttributes = 0x10
+ 	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0x0
  	path.cc: path_conv::check: out: fileattr = 0x10
  syscalls.cc: stat64: after init path_conv, errno=No error
  	syscalls.cc: stat_worker(path_conv&, struct stat*)
  		errno = No error
  		attributes = 0x10
  	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
- 	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
-@@ -176,21 +168,21 @@ syscalls.cc: stat64: after init path_conv, errno=No error
- 	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
- 	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+@@ -193,21 +185,21 @@ syscalls.cc: stat64: after init path_conv, errno=No error
  	syscalls.cc: fhandler_base::stat_fixup: return void
  	syscalls.cc: stat_worker: return 0, errno=No error
  syscalls.cc: stat64: return 0, errno=No error
@@ -225,15 +239,17 @@ index f803dbd..4d407c7 100644
  syscalls.cc: stat64(name="/cygdrive/e/", struct stat *buf)
  syscalls.cc: stat64: before init path_conv, errno=No error
  	path.cc: path_conv::check("/cygdrive/e/", opt=0x4000a1, suffix_info *)
--	path.cc: symlink_info::check: status = NtCreateFile(...) = 0xc000004f
+ 	path.cc: symlink_info::check: InitializeObjectAttributes(&attr, PUNICODE_STRING(""), ci_flag=0x40, NULL, NULL)
+ 	path.cc: symlink_info::check: Update path to "\??\E:\"
+-	path.cc: symlink_info::check: status = NtCreateFile(...) = STATUS_EAS_NOT_SUPPORTED
 +	path.cc: symlink_info::check: status = NtCreateFile(...) = 0xc0000022
  	path.cc: symlink_info::check: status = NtOpenFile(...) = 0x0  // non-EA 
  	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
  		pfai->BasicInformation.FileAttributes = 0x10
+ 	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0x0
  	path.cc: path_conv::check: out: fileattr = 0x10
  syscalls.cc: stat64: after init path_conv, errno=No error
  	syscalls.cc: stat_worker(path_conv&, struct stat*)
  		errno = No error
  		attributes = 0x10
  	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
- 	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
