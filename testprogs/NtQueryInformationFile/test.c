@@ -15,6 +15,8 @@ int main(int argc, char **argv)
     test("\\??\\C:\\");
     test("\\??\\D:\\");
     test("\\??\\E:\\");
+    test("\\??\\C:\\WINDOWS\\explorer.exe");
+    test("\\??\\C:\\ReactOS\\explorer.exe");
     /* // These do not work on Windows 2003:
     test("C:\\");
     test("D:\\");
@@ -90,15 +92,22 @@ void test(char *path)
     }
     
     FILE_ALL_INFORMATION fai;
+    // Default values to see if they get set by NtQueryInformationFile
+    // regardless of status
     fai.BasicInformation.FileAttributes = 0xdeadbeef;
+    fai.StandardInformation.Directory = -1;
     fai.StandardInformation.EndOfFile.QuadPart = 123456789;
-    status = NtQueryInformationFile(h, &io, &fai, sizeof(fai), FileAllInformation);
+    //
+    status = NtQueryInformationFile(h, &io, &fai, sizeof(fai),
+                                    FileAllInformation);
     printf(
         "NtQueryInformationFile status = 0x%lx\n"
         "BasicInformation.FileAttributes = 0x%lx\n"
+        "StandardInformation.Directory = %d\n"
         "StandardInformation.EndOfFile.QuadPart = %I64d\n",
         status,
         fai.BasicInformation.FileAttributes,
+        fai.StandardInformation.Directory,
         (long long) fai.StandardInformation.EndOfFile.QuadPart
     );
 
