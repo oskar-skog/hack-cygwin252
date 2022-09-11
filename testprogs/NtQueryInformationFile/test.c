@@ -2,7 +2,6 @@
 // Compile with i686-w64-mingw32-gcc
 
 #include <ntstatus.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
@@ -97,10 +96,10 @@ void test(char *path)
     printf(
         "NtQueryInformationFile status = 0x%lx\n"
         "BasicInformation.FileAttributes = 0x%lx\n"
-        "StandardInformation.EndOfFile.QuadPart = %jd\n",
+        "StandardInformation.EndOfFile.QuadPart = %lld\n",
         status,
         fai.BasicInformation.FileAttributes,
-        (intmax_t) fai.StandardInformation.EndOfFile.QuadPart
+        (long long) fai.StandardInformation.EndOfFile.QuadPart
     );
 
     printf("\n");
