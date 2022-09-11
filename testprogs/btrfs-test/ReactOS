@@ -7,7 +7,9 @@ syscalls.cc: stat64: before init path_conv, errno=No error
 	path.cc: symlink_info::check: status = NtCreateFile(...) = STATUS_EAS_NOT_SUPPORTED
 	path.cc: symlink_info::check: status = NtOpenFile(...) = 0x0  // non-EA 
 	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
-		pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: file_get_fai: NtQueryInformationFile(...) -> 0x0
+	path.cc: file_get_fai: pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: file_get_fai: Return 0x0
 	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0x0
 	path.cc: path_conv::check: out: fileattr = 0x10
 syscalls.cc: stat64: after init path_conv, errno=No error
@@ -47,7 +49,9 @@ syscalls.cc: stat64: before init path_conv, errno=No error
 	path.cc: symlink_info::check: status = NtCreateFile(...) = STATUS_EAS_NOT_SUPPORTED
 	path.cc: symlink_info::check: status = NtOpenFile(...) = 0x0  // non-EA 
 	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
-		pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: file_get_fai: NtQueryInformationFile(...) -> 0x0
+	path.cc: file_get_fai: pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: file_get_fai: Return 0x0
 	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0x0
 	path.cc: path_conv::check: out: fileattr = 0x10
 syscalls.cc: stat64: after init path_conv, errno=No error
@@ -86,7 +90,9 @@ syscalls.cc: stat64: before init path_conv, errno=No error
 	path.cc: symlink_info::check: Update path to "\??\D:\"
 	path.cc: symlink_info::check: status = NtCreateFile(...) = 0x0
 	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
-		pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: file_get_fai: NtQueryInformationFile(...) -> 0xc0000022
+	path.cc: file_get_fai: pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: file_get_fai: Return 0xc0000022
 	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0xc0000022
 	path.cc: symlink_info::check: conv_hdl.get_finfo() failed
 	path.cc: symlink_info::check: File exists but can't be accessed. status = 0xc0000022
@@ -130,7 +136,9 @@ syscalls.cc: stat64: before init path_conv, errno=No error
 	path.cc: symlink_info::check: Update path to "\??\D:\"
 	path.cc: symlink_info::check: status = NtCreateFile(...) = 0x0
 	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
-		pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: file_get_fai: NtQueryInformationFile(...) -> 0xc0000022
+	path.cc: file_get_fai: pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: file_get_fai: Return 0xc0000022
 	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0xc0000022
 	path.cc: symlink_info::check: conv_hdl.get_finfo() failed
 	path.cc: symlink_info::check: File exists but can't be accessed. status = 0xc0000022
@@ -155,7 +163,9 @@ syscalls.cc: stat64: before init path_conv, errno=No error
 	path.cc: symlink_info::check: status = NtCreateFile(...) = 0xc0000022
 	path.cc: symlink_info::check: status = NtOpenFile(...) = 0x0  // non-EA 
 	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
-		pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: file_get_fai: NtQueryInformationFile(...) -> 0x0
+	path.cc: file_get_fai: pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: file_get_fai: Return 0x0
 	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0x0
 	path.cc: path_conv::check: out: fileattr = 0x10
 syscalls.cc: stat64: after init path_conv, errno=No error
@@ -195,7 +205,9 @@ syscalls.cc: stat64: before init path_conv, errno=No error
 	path.cc: symlink_info::check: status = NtCreateFile(...) = 0xc0000022
 	path.cc: symlink_info::check: status = NtOpenFile(...) = 0x0  // non-EA 
 	path.cc: file_get_fai(HANDLE, PFILE_ALL_INFORMATION)
-		pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: file_get_fai: NtQueryInformationFile(...) -> 0x0
+	path.cc: file_get_fai: pfai->BasicInformation.FileAttributes = 0x10
+	path.cc: file_get_fai: Return 0x0
 	path.h: path_conv_handle::get_finfo(HANDLE h, bool nfs=0): file_get_fai(h, fai()) -> (NTSTATUS) 0x0
 	path.cc: path_conv::check: out: fileattr = 0x10
 syscalls.cc: stat64: after init path_conv, errno=No error
