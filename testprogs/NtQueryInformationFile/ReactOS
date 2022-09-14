@@ -16,7 +16,16 @@ BasicInformation.FileAttributes = 0xdeadbeef
 StandardInformation.Directory = 255
 StandardInformation.EndOfFile.QuadPart = 123456789
 
-    E drive: empty CDROM, becomes STATUS_ACCESS_DENIED instead of STATUS_NO_MEDIA_IN_DEVICE
+    E drive: VirtualBox guest additions, STATUS_ACCESS_DENIED 
+Testing \??\E:\
+NtCreateFile status = 0xc0000022
+NtQueryInformationFile status = 0xc0000022
+BasicInformation.FileAttributes = 0xdeadbeef
+StandardInformation.Directory = 255
+StandardInformation.EndOfFile.QuadPart = 123456789
+
+    E drive: empty CDROM drive, STATUS_ACCESS_DENIED instead of
+    STATUS_NO_MEDIA_IN_DEVICE
 Testing \??\E:\
 NtCreateFile status = 0xc0000022
 NtQueryInformationFile status = 0xc0000022
@@ -33,6 +42,7 @@ StandardInformation.Directory = 255
 StandardInformation.EndOfFile.QuadPart = 123456789
 
     Z drive: \\vboxsvr\vm-shared
+    subst Z: \\vboxdvr\vm-shared
 Testing \??\Z:\
 NtCreateFile status = 0xc000004f
 EAs not supported, using NtOpenFile instead
