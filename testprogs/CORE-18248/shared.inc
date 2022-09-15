@@ -7,5 +7,14 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#define FLUSH   do{ fflush(stdout); usleep(500000); }while(0);
+
 char * const path = "//Vboxsvr/VM-shared/testfile";
-#define DEL_TESTFILE system("cmd /c 'del \\\\Vboxsvr\\VM-shared\\testfile'");
+
+#define DEL_TESTFILE do {                                       \
+    printf("Deleting test file\n");                             \
+    FLUSH;                                                      \
+    system("rm '\\\\Vboxsvr\\VM-shared\\testfile'");            \
+    printf("Starting test\n");                                  \
+    FLUSH;                                                      \
+} while (0);
