@@ -1,5 +1,7 @@
 // Native Windows application
-// Compile with i686-w64-mingw32-gcc
+
+// Compile with
+// i686-w64-mingw32-gcc test.c -lntdll -o test.exe
 
 #include <ntstatus.h>
 #include <stdio.h>
