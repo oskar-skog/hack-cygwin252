@@ -1,0 +1,4 @@
+1       Open for writing only                   Open for writing only
+2       Open for reading and writing            Open for reading and writing
+3       Open for writing only                   Write test                          Re-open and verify test
+4       Open for reading and writing            Write test                          Seek to zero and verify test
