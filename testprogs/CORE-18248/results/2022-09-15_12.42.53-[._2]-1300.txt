@@ -1,0 +1,84 @@
+
+syscalls.cc: _fstat64_r(struct _reent *ptr, fd=1, struct stat *buf)
+syscalls.cc: fstat64(fd=1, struct stat *buf)
+	fhandler.cc: fhandler_base::fstat(struct stat *buf)
+	fhandler.cc: fhandler_base::fstat: return 0
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+
+syscalls.cc: stat64(name="/dev", struct stat *buf)
+syscalls.cc: stat64: before init path_conv, errno=No error
+syscalls.cc: stat64: after init path_conv, errno=No error
+	syscalls.cc: stat_worker(path_conv&, struct stat*)
+	errno = No error
+	fhandler_disk_file.cc: fhandler_disk_file::fstat() -> fstat_fs()
+	fhandler_disk_file.cc: fhandler_base::fstat_fs(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle(struct stat *buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error
+	fhandler_disk_file.cc: fhandler_base::fstat_by_handle: errno=No error, tail call fstat_helper(buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper(*buf)
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.fileattr = 0x10
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.path = "C:\cygwin\dev"
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: pc.posix_path = "/dev"
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: B
+	fhandler_disk_file.cc: fhandler_base::fstat_helper: return {
+		errno = No error
+		size = 0
+		mode = 040755
+	}
+	fhandler_disk_file.cc: fhandler_base::fstat_fs: early return 0, errno=No error
+	syscalls.cc: fhandler_base::stat_fixup(struct stat *)
+	syscalls.cc: fhandler_base::stat_fixup: return void
+	syscalls.cc: stat_worker: return 0, errno=No error
+syscalls.cc: stat64: return 0, errno=No error
+
+	syscalls.cc: fhandler_base::stat_fixup: return void
+syscalls.cc: fstat64: return 0, errno=No error
+syscalls.cc: _fstat64_r: return 0, errno=No error
+
+
+syscalls.cc: open(path="//Vboxsvr/VM-shared/testfile", flags=0x602[, mode=0644])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8602, mode=0644)
+	fhandler.cc: fhandler_base::open(flags=0x108602, mode=0644)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\UNC\Vboxsvr\VM-shared\testfile"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0xc0100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x80,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x3,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 1, errno=No error
+	fhandler_base::open_with_arch: Return 1, errno=No error
+syscalls.cc: Return 3, errno=No error
+
+
+syscalls.cc: open(path="//Vboxsvr/VM-shared/testfile", flags=0x602[, mode=0644])
+	fhandler.cc: fhandler_base::open_with_arch(flags=0x8602, mode=0644)
+	fhandler.cc: fhandler_base::open(flags=0x108602, mode=0644)
+	fhandler_base::open: pc.is_rep_symlink() -> false
+	fhandler_base::open: attr.ObjectName="\??\UNC\Vboxsvr\VM-shared\testfile"
+	fhandler_base::open: NtCreateFile(
+		FileHandle = &fh,
+		DesiredAccess = 0xc0100000,
+		ObjectAttributes = &attr,
+		IoStatusBlock = &io,
+		AllocationSize = NULL,
+		FileAttributes = 0x80,
+		ShareAccess = 0x7,
+		CreateDisposition = 0x3,
+		CreateOptions = 0x4020,
+		EaBuffer = p,
+		EaLength = 0x0,
+	) -> 0x0
+	fhandler_base::open: return 0, errno=Invalid argument
+	fhandler_base::open_with_arch: Return 0, errno=Invalid argument
+syscalls.cc: B: errno=Invalid argument
+syscalls.cc: Return -1, errno=Invalid argument
+
