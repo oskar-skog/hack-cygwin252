@@ -21,7 +21,7 @@ int main()
     // Verify that message is present
     result = lseek(fd, 0, SEEK_SET);
     if (result != 0) {
-        printf("lseek(2) returned %d, errno = %d (%s)\n"
+        printf("lseek(2) returned %d, errno = %d (%s)\n",
                result, errno, strerror(errno));
         return 1;
     }
@@ -33,7 +33,7 @@ int main()
     buf[strlen(message)] = 0;
     result = read(fd, buf, strlen(message));
     if (result != strlen(message)) {
-        printf("lseek(2) returned %d, errno = %d (%s)\n"
+        printf("lseek(2) returned %d, errno = %d (%s)\n",
                result, errno, strerror(errno));
         return 1;
     }

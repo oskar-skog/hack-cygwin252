@@ -8,5 +8,4 @@
 #include <unistd.h>
 
 char * const path = "//Vboxsvr/VM-shared/testfile";
-// Cygwin's bash will call the Windows del:
-#define DEL_TESTFILE system("del '\\\\Vboxsvr\\VM-shared\\testfile'");
+#define DEL_TESTFILE system("cmd /c 'del \\\\Vboxsvr\\VM-shared\\testfile'");
