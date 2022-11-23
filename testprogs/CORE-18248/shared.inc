@@ -8,12 +8,13 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+// Use UNC path to bypass CORE-18250
+char * const path = "//Vboxsvr/VM-shared/testfile";
+
 // Flush should be automatic if stdout is a terminal.
 // The problem turns out to be that the break happens before the terminal
 // gets around to display anything.
 #define FLUSH   do{ fflush(stdout); usleep(500000); }while(0);
-
-char * const path = "//Vboxsvr/VM-shared/testfile";
 
 #define DEL_TESTFILE do {                                       \
     char *cmd = NULL;                                           \

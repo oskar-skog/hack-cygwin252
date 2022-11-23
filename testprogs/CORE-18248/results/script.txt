@@ -1,0 +1,42 @@
+Script started on Thu Sep 15 15:42:34 2022
+
+Administrator@REACTOS-XXET9FN ~/hack-cygwin252/testprogs/CORE-18248
+$ ./1
+rm '//Vboxsvr/VM-shared/testfile'
+Starting test
+Calling open the first time
+Calling open the second time
+    (breaks to debugger)
+Second call to open(2) failed, errno = 22 (Invalid argument)
+
+Administrator@REACTOS-XXET9FN ~/hack-cygwin252/testprogs/CORE-18248
+$ ./2
+rm '//Vboxsvr/VM-shared/testfile'
+Starting test
+Calling open the first time
+Calling open the second time
+    (breaks to debugger)
+Second call to open(2) failed, errno = 22 (Invalid argument)
+
+Administrator@REACTOS-XXET9FN ~/hack-cygwin252/testprogs/CORE-18248
+$ ./3
+rm '//Vboxsvr/VM-shared/testfile'
+Starting test
+write(2) returned -1, errno = 22 (Invalid argument)
+
+Administrator@REACTOS-XXET9FN ~/hack-cygwin252/testprogs/CORE-18248
+$ # No break
+
+Administrator@REACTOS-XXET9FN ~/hack-cygwin252/testprogs/CORE-18248
+$ ./4
+rm '//Vboxsvr/VM-shared/testfile'
+Starting test
+write(2) returned -1, errno = 22 (Invalid argument)
+
+Administrator@REACTOS-XXET9FN ~/hack-cygwin252/testprogs/CORE-18248
+$ # No break
+
+Administrator@REACTOS-XXET9FN ~/hack-cygwin252/testprogs/CORE-18248
+$ exit
+
+Script done on Thu Sep 15 15:43:41 2022
