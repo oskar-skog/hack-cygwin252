@@ -1,0 +1,80 @@
+diff --git a/2022-11-23-cmd b/2022-11-23-cygwin
+index dc0f142..ed6c628 100644
+--- a/2022-11-23-cmd
++++ b/2022-11-23-cygwin
+@@ -7,51 +7,51 @@ BasicInformation.FileAttributes = 0x10
+ StandardInformation.Directory = 1
+ StandardInformation.EndOfFile.QuadPart = 0
+ 
+ Testing \??\D:\
+ NtCreateFile status = 0x0
+-NtQueryInformationFile status = 0x0
+-BasicInformation.FileAttributes = 0x30
+-StandardInformation.Directory = 1
+-StandardInformation.EndOfFile.QuadPart = 0
++NtQueryInformationFile status = 0xc0000022
++BasicInformation.FileAttributes = 0xdeadbeef
++StandardInformation.Directory = 255
++StandardInformation.EndOfFile.QuadPart = 123456789
+ 
+ Testing \??\E:\
+ NtCreateFile status = 0xc0000022
+-NtQueryInformationFile status = 0x0
+-BasicInformation.FileAttributes = 0x30
+-StandardInformation.Directory = 1
+-StandardInformation.EndOfFile.QuadPart = 0
++NtQueryInformationFile status = 0xc0000022
++BasicInformation.FileAttributes = 0xdeadbeef
++StandardInformation.Directory = 255
++StandardInformation.EndOfFile.QuadPart = 123456789
+ 
+ Testing \??\F:\
+ NtCreateFile status = 0xc000003a
+-NtQueryInformationFile status = 0x0
+-BasicInformation.FileAttributes = 0x30
+-StandardInformation.Directory = 1
+-StandardInformation.EndOfFile.QuadPart = 0
++NtQueryInformationFile status = 0xc0000022
++BasicInformation.FileAttributes = 0xdeadbeef
++StandardInformation.Directory = 255
++StandardInformation.EndOfFile.QuadPart = 123456789
+ 
+ Testing \??\G:\
+ NtCreateFile status = 0xc000003a
+-NtQueryInformationFile status = 0x0
+-BasicInformation.FileAttributes = 0x30
+-StandardInformation.Directory = 1
+-StandardInformation.EndOfFile.QuadPart = 0
++NtQueryInformationFile status = 0xc0000022
++BasicInformation.FileAttributes = 0xdeadbeef
++StandardInformation.Directory = 255
++StandardInformation.EndOfFile.QuadPart = 123456789
+ 
+ Testing \??\Z:\
+ NtCreateFile status = 0xc000003a
+-NtQueryInformationFile status = 0x0
+-BasicInformation.FileAttributes = 0x30
+-StandardInformation.Directory = 1
+-StandardInformation.EndOfFile.QuadPart = 0
++NtQueryInformationFile status = 0xc0000022
++BasicInformation.FileAttributes = 0xdeadbeef
++StandardInformation.Directory = 255
++StandardInformation.EndOfFile.QuadPart = 123456789
+ 
+ Testing \??\C:\WINDOWS\explorer.exe
+ NtCreateFile status = 0xc000004f
+ EAs not supported, using NtOpenFile instead
+ NtOpenFile status = 0xc000003a
+-NtQueryInformationFile status = 0x0
+-BasicInformation.FileAttributes = 0x30
+-StandardInformation.Directory = 1
+-StandardInformation.EndOfFile.QuadPart = 0
++NtQueryInformationFile status = 0xc0000022
++BasicInformation.FileAttributes = 0xdeadbeef
++StandardInformation.Directory = 255
++StandardInformation.EndOfFile.QuadPart = 123456789
+ 
+ Testing \??\C:\ReactOS\explorer.exe
+ NtCreateFile status = 0xc000004f
+ EAs not supported, using NtOpenFile instead
+ NtOpenFile status = 0x0

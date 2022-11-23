@@ -1,0 +1,1 @@
+git diff --no-index -U5 2022-11-23-cmd 2022-11-23-cygwin >2022-11-23-diff
