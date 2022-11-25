@@ -1,0 +1,7 @@
+Commit f78c186
+
+Hack and debug logging:
+    - fork(2) will try 50 times before failing
+    - No logging is enabled, although files will still be created in
+      C:\cygdbg\ *if* it exists
+
