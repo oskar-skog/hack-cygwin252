@@ -586,7 +586,7 @@ extern "C" int fork()
         // Get command name, doesn't work correctly but close enough
         for (int i = 0; i < HACK_MAXLEN; i++)
             if (cmdline[i] == ' ') cmdline[i] = 0;
-            hack_init(cmdline);
+        hack_init(cmdline);
         hack_print(
             "fork.cc: fork() returned in child, PPID = %d\r\n", getppid()
         );
