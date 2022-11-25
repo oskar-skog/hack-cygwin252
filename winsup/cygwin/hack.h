@@ -2,12 +2,12 @@
 #define _HACK_H
 
 #define HACK_FORK_ATTEMPTS          50
-#define HACK_DEBUG_FORK             1
+#define HACK_DEBUG_FORK             0
 
 // All kinds of logging for ReactOS CORE-18247
-#define HACK_DEBUG_OPEN             1
-#define HACK_DEBUG_STAT             1
-#define HACK_DEBUG_READ             1
+#define HACK_DEBUG_OPEN             0
+#define HACK_DEBUG_STAT             0
+#define HACK_DEBUG_READ             0
 
 // Define buffer size
 #define HACK_MAXLEN                 1024
